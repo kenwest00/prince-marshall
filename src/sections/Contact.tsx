@@ -5,10 +5,13 @@ import SectionHead from '../components/SectionHead'
 import { useFadeItems } from '../lib/motion'
 
 /**
- * Optional: set VITE_FORM_ENDPOINT (for example a Formspree URL) at build time
- * to POST inquiries as JSON. Without it, the form composes an email instead.
+ * Inquiries are POSTed as JSON to FormSubmit (free, no account), which emails
+ * them to site.email. Set VITE_FORM_ENDPOINT at build time to use another
+ * service (e.g. Formspree) instead.
  */
-const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT as string | undefined
+const FORM_ENDPOINT =
+  (import.meta.env.VITE_FORM_ENDPOINT as string | undefined) ||
+  `https://formsubmit.co/ajax/${site.email}`
 
 type Status = 'idle' | 'sending' | 'sent' | 'mailto' | 'error'
 
@@ -43,7 +46,12 @@ export default function Contact() {
         const res = await fetch(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(data),
+          body: JSON.stringify({
+            ...data,
+            _subject: `Inquiry from ${data.organization || data.name}`,
+            _captcha: 'false',
+            _template: 'table',
+          }),
         })
         if (!res.ok) throw new Error(String(res.status))
         setStatus('sent')
