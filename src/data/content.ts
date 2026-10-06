@@ -127,8 +127,8 @@ export const kura = {
     'Your data leaves as easily as it arrives: open exports, no lock-in.',
   ],
   cta: 'Request a walkthrough',
-  recordLabel: 'One record, every view',
-  recordTabs: ['Details', 'Provenance', 'Condition', 'Location', 'Valuation', 'Loans', 'Documents', 'History'],
+  visualLabel: 'One object, five orbits of record — explore the rings',
+  ringLabels: ['What you hold', 'Where it is', 'Condition', 'Provenance', 'Worth'],
 }
 
 export interface Environment {
