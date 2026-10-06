@@ -116,8 +116,7 @@ export default function LogoTile({
     const pointer = { x: 0, y: 0, seen: false }
     const glyphs = Array.from(root.querySelectorAll<HTMLElement>('[data-g]')).map((el) => ({
       el,
-      w: 100,
-      wt: 800,
+      wt: 700,
       x: 0,
       y: 0,
     }))
@@ -141,9 +140,6 @@ export default function LogoTile({
 
     const RADIUS = 280
     const frame = () => {
-      const p = tlRef.current?.progress() ?? 0
-      const wFar = lerp(76, 94, p)
-      const wNear = lerp(122, 106, p)
 
       for (const g of glyphs) {
         const r = g.el.getBoundingClientRect()
@@ -154,16 +150,13 @@ export default function LogoTile({
         const d = Math.hypot(dx, dy) || 1
         const infl = pointer.seen ? Math.exp(-Math.pow(d / RADIUS, 2)) : 0
 
-        const tw = pointer.seen ? lerp(wFar, wNear, infl) : 100
-        const twt = pointer.seen ? lerp(600, 900, infl) : 800
-        g.w += (tw - g.w) * 0.16
+        const twt = pointer.seen ? lerp(500, 700, infl) : 700
         g.wt += (twt - g.wt) * 0.16
         const tx = pointer.seen ? (dx / d) * infl * 4 : 0
         const ty = pointer.seen ? (dy / d) * infl * 3 : 0
         g.x += (tx - g.x) * 0.2
         g.y += (ty - g.y) * 0.2
 
-        g.el.style.fontStretch = `${g.w.toFixed(1)}%`
         g.el.style.fontWeight = `${Math.round(g.wt)}`
         g.el.style.transform = `translate3d(${g.x.toFixed(2)}px, ${g.y.toFixed(2)}px, 0)`
       }
@@ -202,7 +195,6 @@ export default function LogoTile({
       window.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('pointerleave', onLeave)
       glyphs.forEach((g) => {
-        g.el.style.fontStretch = ''
         g.el.style.fontWeight = ''
         g.el.style.transform = ''
       })

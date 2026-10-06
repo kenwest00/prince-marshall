@@ -170,10 +170,10 @@ summary::-webkit-details-marker {
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  font-family: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 800;
+  font-family: 'Space Grotesk Variable', 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.05em;
 }
 .logo-tile__row {
   display: inline-flex;
@@ -188,7 +188,7 @@ summary::-webkit-details-marker {
 .logo-word > [data-g],
 .logo-rest {
   font-variation-settings: normal;
-  will-change: transform, font-stretch;
+  will-change: transform;
 }
 .logo-rest {
   display: inline-grid;
