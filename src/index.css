@@ -252,3 +252,9 @@ summary::-webkit-details-marker {
 @media (prefers-reduced-motion: reduce) {
   .signal-dot { animation: none; }
 }
+
+/* ---------- kinetic client index ---------- */
+.client-name { color: #fff; cursor: default; }
+.client-name--outline { color: transparent; -webkit-text-stroke: 1.5px #fff; }
+.client-name:hover { color: var(--signal); -webkit-text-stroke-color: var(--signal); }
+.client-name--outline:hover { color: transparent; }
