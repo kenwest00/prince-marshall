@@ -2,6 +2,7 @@ import { contact, kura } from '../data/content'
 import { useFadeItems, useWordReveal } from '../lib/motion'
 import PillButton from '../components/PillButton'
 import RollText from '../components/RollText'
+import { RING_COLORS } from '../lib/palette'
 import KuraField from '../components/KuraField'
 import { useState } from 'react'
 import { openContact } from '../lib/contactEvents'
@@ -34,7 +35,7 @@ export default function Kura() {
             {kura.name}
           </h2>
           <p className="mt-6 text-2xl font-bold leading-tight tracking-tight md:text-4xl">{kura.tagline}</p>
-          <p className="type-label mt-4 inline-block border border-[#0a0a0a] px-3 py-1.5">{kura.status}</p>
+          <p className="type-label mt-4 inline-flex items-center gap-2 bg-[#0a0a0a] px-3 py-1.5 text-white"><span className="signal-dot signal-dot--on-dark" aria-hidden="true" />{kura.status}</p>
         </div>
       </div>
 
@@ -53,6 +54,7 @@ export default function Kura() {
                 onMouseEnter={() => setActive(i)}
                 onMouseLeave={() => setActive(null)}
                 className={`fade-item grid grid-cols-[2.5rem_1fr] gap-4 border-t border-[#0a0a0a]/25 py-5 transition-colors last:border-b ${active === i ? 'bg-[#0a0a0a] px-4 text-white' : ''}`}
+                style={active === i ? { boxShadow: `inset 5px 0 0 ${RING_COLORS[i]}` } : undefined}
               >
                 <span className={`type-label pt-1 ${active === i ? 'text-white/80' : 'text-[#0a0a0a]/70'}`}>{String(i + 1).padStart(2, '0')}</span>
                 <div>

@@ -45,8 +45,8 @@
   }
 
   ::selection {
-    background: #0a0a0a;
-    color: #ffffff;
+    background: #c8ff2e;
+    color: #0a0a0a;
   }
 }
 
@@ -229,4 +229,26 @@ summary::-webkit-details-marker {
 .logo-btn:focus-visible {
   outline: 2px solid #0a0a0a;
   outline-offset: 4px;
+}
+
+/* ---------- signal colour (used sparingly) ---------- */
+:root { --signal: #c8ff2e; }
+.logo-tile--dark .logo-plus { color: var(--signal); }
+.signal-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  background: var(--signal);
+  box-shadow: 0 0 0 1px #0a0a0a;
+  vertical-align: middle;
+  animation: signal-pulse 2.2s ease-in-out infinite;
+}
+.signal-dot--on-dark { box-shadow: none; }
+@keyframes signal-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.55); opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-dot { animation: none; }
 }

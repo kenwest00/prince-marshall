@@ -149,7 +149,7 @@ export default function Contact() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#0a0a0a] px-7 py-3 text-sm font-bold tracking-tight text-white transition-colors duration-300 hover:bg-[#2a2a2a] disabled:opacity-60"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#0a0a0a] px-7 py-3 text-sm font-bold tracking-tight text-white transition-colors duration-300 hover:bg-[#c8ff2e] hover:text-[#0a0a0a] disabled:opacity-60"
           >
             <RollText text={status === 'sending' ? f.sending : f.submit} />
           </button>
@@ -179,7 +179,7 @@ export default function Contact() {
 
         <div ref={sideRef} className="space-y-10">
           <div className="fade-item">
-            <p className="type-label">{contact.availability}</p>
+            <p className="type-label"><span className="signal-dot mr-2" aria-hidden="true" />{contact.availability}</p>
             <p className="type-label mt-1 text-[#0a0a0a]/70">{contact.writeTo}</p>
             <a
               href={`mailto:${site.email}`}

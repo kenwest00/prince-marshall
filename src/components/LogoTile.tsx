@@ -56,7 +56,7 @@ export default function LogoTile({
   const barsRef = useRef<SVGRectElement[]>([])
   const tlRef = useRef<gsap.core.Timeline | null>(null)
 
-  const tone = variant === 'dark' ? 'bg-[#0a0a0a] text-white' : 'bg-white text-[#0a0a0a]'
+  const tone = variant === 'dark' ? 'logo-tile--dark bg-[#0a0a0a] text-white' : 'bg-white text-[#0a0a0a]'
   const collapsedFont = size * COLLAPSED_FONT_RATIO
 
   /* ---------- unfold / fold timeline ---------- */

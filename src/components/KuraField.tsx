@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { reducedMotion } from '../lib/motion'
+import { RING_COLORS } from '../lib/palette'
 
 /**
  * KURA field — an experimental, generative portrait of a collection.
@@ -20,7 +21,6 @@ interface Props {
 const N = 820
 const RINGS = 5
 const INK = '#0a0a0a'
-const PAPER = '#f4f3f0'
 
 const GOLD = Math.PI * (3 - Math.sqrt(5))
 
@@ -175,7 +175,7 @@ export default function KuraField({ labels, active, onActive, className = '' }: 
           } else pen = false
         }
         ctx.lineWidth = on ? 1.6 : 1
-        ctx.strokeStyle = on ? '#ffffff' : 'rgba(255,255,255,0.22)'
+        ctx.strokeStyle = on ? RING_COLORS[k] : 'rgba(255,255,255,0.22)'
         ctx.setLineDash(on ? [2, 5] : [])
         ctx.lineDashOffset = on ? -t * 24 : 0
         ctx.stroke()
@@ -218,8 +218,8 @@ export default function KuraField({ labels, active, onActive, className = '' }: 
         const a = t * (0.55 - k * 0.07) * (k % 2 ? -1 : 1) + k * 1.37
         const m = proj(ringPoint(k, a), wx)
         const on = k === lit
-        ctx.strokeStyle = '#ffffff'
-        ctx.fillStyle = '#ffffff'
+        ctx.strokeStyle = on ? RING_COLORS[k] : '#ffffff'
+        ctx.fillStyle = on ? RING_COLORS[k] : '#ffffff'
         if (on) {
           const s = 7
           ctx.lineWidth = 3
@@ -237,7 +237,7 @@ export default function KuraField({ labels, active, onActive, className = '' }: 
           let ty = m.y - 24
           if (tx + tw + 16 > w - 6) tx = m.x - 14 - tw - 16
           if (ty < 6) ty = m.y + 12
-          ctx.fillStyle = PAPER
+          ctx.fillStyle = RING_COLORS[k]
           ctx.fillRect(tx, ty, tw + 16, 20)
           ctx.fillStyle = INK
           ctx.textBaseline = 'middle'
