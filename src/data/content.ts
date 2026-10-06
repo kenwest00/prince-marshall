@@ -277,6 +277,9 @@ export const contact = {
     name: 'Your name',
     email: 'Work email',
     organization: 'Organization',
+    topic: 'Reason for contact',
+    topicOptions: ['A project or engagement', 'KURA walkthrough', 'Something else'],
+    kuraPrefill: 'I would like a walkthrough of KURA. ',
     environment: 'Environment',
     environmentOptions: [
       'Museum or collection',

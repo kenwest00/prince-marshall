@@ -1,9 +1,9 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { contact, site } from '../data/content'
 import RollText from '../components/RollText'
 import SectionHead from '../components/SectionHead'
-import { useFadeItems } from '../lib/motion'
-
+import { scrollToTarget, useFadeItems } from '../lib/motion'
+import { CONTACT_TOPIC_EVENT } from '../lib/contactEvents'
 /**
  * Inquiries are POSTed as JSON to FormSubmit (free, no account), which emails
  * them to site.email. Set VITE_FORM_ENDPOINT at build time to use another
@@ -22,6 +22,25 @@ export default function Contact() {
   const f = contact.form
   const [status, setStatus] = useState<Status>('idle')
   const sideRef = useFadeItems<HTMLDivElement>()
+  const [topic, setTopic] = useState(f.topicOptions[0])
+  const messageRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const next = (e as CustomEvent<string>).detail
+      if (!f.topicOptions.includes(next)) return
+      setTopic(next)
+      const msg = messageRef.current
+      if (msg && !msg.value.trim() && next === f.topicOptions[1]) msg.value = f.kuraPrefill
+      scrollToTarget('#contact')
+      window.setTimeout(() => {
+        const el = document.querySelector<HTMLInputElement>('#contact input[name="name"]')
+        el?.focus({ preventScroll: true })
+      }, 700)
+    }
+    window.addEventListener(CONTACT_TOPIC_EVENT, handler)
+    return () => window.removeEventListener(CONTACT_TOPIC_EVENT, handler)
+  }, [f.topicOptions, f.kuraPrefill])
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -31,6 +50,7 @@ export default function Contact() {
     if (data.website) return
 
     const body = [
+      `Reason: ${data.topic}`,
       `Name: ${data.name}`,
       `Email: ${data.email}`,
       `Organization: ${data.organization}`,
@@ -48,7 +68,7 @@ export default function Contact() {
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
             ...data,
-            _subject: `Inquiry from ${data.organization || data.name}`,
+            _subject: `${data.topic}: ${data.organization || data.name}`,
             _captcha: 'false',
             _template: 'table',
           }),
@@ -62,7 +82,7 @@ export default function Contact() {
       return
     }
 
-    const subject = encodeURIComponent(`Inquiry from ${data.organization || data.name}`)
+    const subject = encodeURIComponent(`${data.topic}: ${data.organization || data.name}`)
     window.location.href = `mailto:${site.email}?subject=${subject}&body=${encodeURIComponent(body)}`
     setStatus('mailto')
   }
@@ -83,6 +103,14 @@ export default function Contact() {
               <input name="email" type="email" required autoComplete="email" className={fieldClass} />
             </label>
           </div>
+          <label className="type-label block">
+            {f.topic}
+            <select name="topic" className={fieldClass} value={topic} onChange={(e) => setTopic(e.target.value)}>
+              {f.topicOptions.map((o) => (
+                <option key={o}>{o}</option>
+              ))}
+            </select>
+          </label>
           <label className="type-label block">
             {f.organization}
             <input name="organization" type="text" autoComplete="organization" className={fieldClass} />
@@ -107,7 +135,7 @@ export default function Contact() {
           </div>
           <label className="type-label block">
             {f.message} <span className="sr-only">({f.required})</span>
-            <textarea name="message" required rows={5} className={fieldClass} />
+            <textarea ref={messageRef} name="message" required rows={5} className={fieldClass} />
           </label>
 
           {/* honeypot, hidden from people and assistive tech */}

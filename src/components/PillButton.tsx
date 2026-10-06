@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 interface PillButtonProps {
   children: ReactNode
   href?: string
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent) => void
   className?: string
   inverted?: boolean
   ariaLabel?: string

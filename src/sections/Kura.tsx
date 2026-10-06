@@ -1,9 +1,10 @@
-import { kura, site } from '../data/content'
+import { contact, kura } from '../data/content'
 import { useFadeItems, useWordReveal } from '../lib/motion'
 import PillButton from '../components/PillButton'
 import RollText from '../components/RollText'
 import KuraField from '../components/KuraField'
 import { useState } from 'react'
+import { openContact } from '../lib/contactEvents'
 
 /** Generative portrait of a collection: one object, five orbits of record. */
 function KuraVisual({ active, onActive }: { active: number | null; onActive: (i: number | null) => void }) {
@@ -19,7 +20,6 @@ export default function Kura() {
   const nameRef = useWordReveal<HTMLHeadingElement>()
   const contentRef = useFadeItems<HTMLDivElement>()
   const [active, setActive] = useState<number | null>(null)
-  const subject = encodeURIComponent('KURA walkthrough request')
 
   return (
     <section id={kura.id} aria-labelledby="kura-heading" className="hairline-t bg-[#f4f3f0] px-5 py-24 md:px-10 md:py-36">
@@ -79,7 +79,13 @@ export default function Kura() {
         </div>
 
         <div className="fade-item mt-14">
-          <PillButton href={`mailto:${site.email}?subject=${subject}`}>
+          <PillButton
+            href="#contact"
+            onClick={(e) => {
+              e?.preventDefault()
+              openContact(contact.form.topicOptions[1])
+            }}
+          >
             <RollText text={kura.cta} />
           </PillButton>
         </div>
