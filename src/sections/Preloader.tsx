@@ -15,11 +15,26 @@ interface PreloaderProps {
 export default function Preloader({ onDone }: PreloaderProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
   const counterRef = useRef<HTMLSpanElement>(null)
-  const [gone, setGone] = useState(false)
+  const [gone, setGone] = useState(() => {
+    try {
+      return sessionStorage.getItem('pm-intro-seen') === '1'
+    } catch {
+      return false
+    }
+  })
   const doneRef = useRef(onDone)
   doneRef.current = onDone
 
   useEffect(() => {
+    if (gone) {
+      doneRef.current()
+      return
+    }
+    try {
+      sessionStorage.setItem('pm-intro-seen', '1')
+    } catch {
+      /* storage unavailable: intro simply plays each load */
+    }
     const overlay = overlayRef.current
     const counter = counterRef.current
     if (!overlay || !counter) return
@@ -41,15 +56,16 @@ export default function Preloader({ onDone }: PreloaderProps) {
       .timeline({ onComplete: () => setGone(true) })
       .to(obj, {
         v: 100,
-        duration: 1.5,
+        duration: 0.7,
         ease: 'power3.out',
         onUpdate: () => {
           counter.textContent = `${Math.round(obj.v)}%`
         },
       })
-      .to({}, { duration: 0.2 })
+      .to({}, { duration: 0.1 })
       .add(() => doneRef.current())
-      .to(overlay, { yPercent: -100, duration: 0.8, ease: 'power4.inOut' })
+      .to(overlay, { yPercent: -100, duration: 0.6, ease: 'power4.inOut' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (gone) return null
@@ -61,9 +77,9 @@ export default function Preloader({ onDone }: PreloaderProps) {
         <span className="type-label">Loading</span>
       </div>
       <div className="flex items-end justify-between gap-6">
-        <h1 className="font-display text-[clamp(3rem,11vw,11rem)] leading-[0.92] tracking-[-0.035em]">
+        <p className="font-display text-[clamp(3rem,11vw,11rem)] leading-[0.92] tracking-[-0.035em]">
           {site.name}
-        </h1>
+        </p>
         <span
           ref={counterRef}
           className="type-label shrink-0 text-[clamp(1.5rem,3vw,2.5rem)] font-extrabold tabular-nums"

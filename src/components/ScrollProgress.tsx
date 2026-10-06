@@ -33,7 +33,7 @@ export default function ScrollProgress() {
   }, [])
 
   return (
-    <div className="fixed bottom-4 right-5 z-[55] mix-blend-difference md:right-8">
+    <div className="fixed bottom-4 right-5 z-[55] hidden mix-blend-difference md:right-8 md:block" aria-hidden="true">
       <span className="type-label text-white">{progress}%</span>
     </div>
   )

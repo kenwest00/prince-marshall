@@ -3,9 +3,13 @@ import SideColumn from '../sections/SideColumn'
 import Preloader from '../sections/Preloader'
 import Hero from '../sections/Hero'
 import Statement from '../sections/Statement'
-import Work from '../sections/Work'
-import Recognition from '../sections/Recognition'
-import Quote from '../sections/Quote'
+import Method from '../sections/Method'
+import Kura from '../sections/Kura'
+import Environments from '../sections/Environments'
+import Trust from '../sections/Trust'
+import Studio from '../sections/Studio'
+import Faq from '../sections/Faq'
+import StructuredData from '../components/StructuredData'
 import Contact from '../sections/Contact'
 import Footer from '../sections/Footer'
 import MenuOverlay from '../components/MenuOverlay'
@@ -64,13 +68,21 @@ export default function Home() {
 
   return (
     <>
+      <a
+        href="#main"
+        data-no-smooth
+        className="fixed left-3 top-3 z-[80] -translate-y-20 bg-[#0a0a0a] px-4 py-3 text-sm font-bold text-white focus:translate-y-0"
+      >
+        Skip to content
+      </a>
+      <StructuredData />
       <Preloader onDone={handlePreloaderDone} />
 
       <SideColumn />
 
       {/* Menu button — top right of viewport, label rolls Menu ⇄ Close */}
       <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
-        <PillButton onClick={() => setMenuOpen((v) => !v)} ariaLabel="Toggle menu">
+        <PillButton onClick={() => setMenuOpen((v) => !v)} ariaLabel={menuOpen ? 'Close menu' : 'Open menu'}>
           <MenuLabel open={menuOpen} />
         </PillButton>
       </div>
@@ -82,12 +94,15 @@ export default function Home() {
       <ScrollProgress />
 
       {/* Main content, offset by the fixed left column */}
-      <main className="md:ml-[320px]">
+      <main id="main" className="md:ml-[320px]">
         <Hero active={loaded} />
         <Statement />
-        <Work />
-        <Recognition />
-        <Quote />
+        <Method />
+        <Kura />
+        <Environments />
+        <Trust />
+        <Studio />
+        <Faq />
         <Contact />
         <Footer />
       </main>

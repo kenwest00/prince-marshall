@@ -75,6 +75,11 @@ export function splitWords(el: HTMLElement): HTMLSpanElement[] {
         mask.style.display = 'inline-block'
         mask.style.overflow = 'hidden'
         mask.style.verticalAlign = 'top'
+        // room for descenders / tight tracking; offset so layout is unchanged
+        mask.style.paddingBottom = '0.14em'
+        mask.style.marginBottom = '-0.14em'
+        mask.style.paddingRight = '0.06em'
+        mask.style.marginRight = '-0.06em'
         const inner = document.createElement('span')
         inner.style.display = 'inline-block'
         inner.style.willChange = 'transform'
@@ -152,6 +157,36 @@ export function useWordReveal<T extends HTMLElement = HTMLElement>(
       el.innerHTML = original
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return ref
+}
+
+/**
+ * React hook: fades/raises every `.fade-item` descendant of the returned
+ * container ref as it scrolls into view (once). No-op under reduced motion.
+ */
+export function useFadeItems<T extends HTMLElement = HTMLElement>(): RefObject<T | null> {
+  const ref = useRef<T>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || reducedMotion) return
+    const items = Array.from(el.querySelectorAll<HTMLElement>('.fade-item'))
+    if (!items.length) return
+
+    const ctx = gsap.context(() => {
+      gsap.set(items, { autoAlpha: 0, y: 28 })
+      gsap.to(items, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.07,
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+      })
+    }, el)
+    return () => ctx.revert()
   }, [])
 
   return ref

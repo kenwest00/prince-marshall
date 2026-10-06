@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { hero, site } from '../data/content'
+import PillButton from '../components/PillButton'
+import RollText from '../components/RollText'
 import { reducedMotion } from '../lib/motion'
 
 interface HeroProps {
@@ -46,7 +48,7 @@ export default function Hero({ active }: HeroProps) {
     return () => ctx.revert()
   }, [active])
 
-  const allLines = [{ text: hero.nameLine, right: true }, ...hero.stackedLines.map((l) => ({ text: l.text, right: l.align === 'right' }))]
+  const allLines = hero.stackedLines.map((l) => ({ text: l.text, right: l.align === 'right' }))
 
   return (
     <section
@@ -69,24 +71,36 @@ export default function Hero({ active }: HeroProps) {
       <div className="flex-1" />
 
       <div className="pb-16 md:pb-24">
-        <div className="mt-10 md:mt-16">
+        <h1 className="mt-10 md:mt-16">
+          <span className="font-display mb-6 block text-right text-[clamp(1.25rem,2.4vw,2.25rem)] leading-none tracking-[-0.02em] md:mb-10">
+            {hero.nameLine}
+          </span>
           {allLines.map((line, i) => (
-            <div key={line.text} className={`overflow-hidden ${line.right ? 'text-right' : 'text-left'}`}>
+            <span key={line.text} className={`block overflow-hidden ${line.right ? 'text-right' : 'text-left'}`}>
               <span
                 ref={(el) => {
                   if (el) lineRefs.current[i] = el
                 }}
-                className="type-hero block will-change-transform"
+                className="type-hero-md block pb-[0.12em] -mb-[0.12em] will-change-transform"
               >
                 {line.text}
               </span>
-            </div>
+            </span>
           ))}
-        </div>
+        </h1>
 
         <p ref={statementRef} className="mt-12 max-w-xl text-lg font-bold leading-snug tracking-tight md:mt-16 md:text-xl">
           {hero.statement}
         </p>
+
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <PillButton href="#contact">
+            <RollText text={hero.primaryCta} />
+          </PillButton>
+          <a href="#method" className="type-label inline-flex min-h-[44px] items-center underline underline-offset-4">
+            {hero.secondaryCta}
+          </a>
+        </div>
       </div>
     </section>
   )

@@ -1,6 +1,5 @@
 import { footer, site } from '../data/content'
 import { useWordReveal } from '../lib/motion'
-import RollText from '../components/RollText'
 
 export default function Footer() {
   const wordmarkRef = useWordReveal<HTMLParagraphElement>({ stagger: 0.08 })
@@ -8,8 +7,8 @@ export default function Footer() {
   return (
     <footer className="hairline-t px-5 pb-24 pt-6 md:px-10">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <RollText text={footer.left} className="type-label" />
-        <RollText text={footer.cheeky} className="type-label text-[#0a0a0a]/50" />
+        <p className="type-label">{footer.left}</p>
+        <p className="type-label text-[#0a0a0a]/70">{footer.right}</p>
       </div>
 
       <div className="mt-8 overflow-hidden md:mt-12" aria-hidden="true">

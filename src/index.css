@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -76,6 +74,14 @@
     font-size: clamp(3.5rem, 11vw, 11rem);
   }
 
+  .type-hero-md {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    font-size: clamp(2.75rem, 8vw, 8.5rem);
+  }
+
   .type-statement {
     font-family: 'Archivo', sans-serif;
     font-weight: 800;
@@ -119,25 +125,6 @@
   }
 }
 
-/* Recognition rows: black fill wipes in left-to-right on hover */
-.rec-row::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: #0a0a0a;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.rec-row:hover::before {
-  transform: scaleX(1);
-}
-
-.rec-row:hover span {
-  color: #ffffff;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -146,4 +133,20 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid #0a0a0a;
+  outline-offset: 3px;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px #ffffff, 0 0 0 5px #0a0a0a;
+}
+
+summary::-webkit-details-marker {
+  display: none;
 }

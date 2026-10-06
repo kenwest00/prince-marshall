@@ -14,8 +14,8 @@ export default function SideColumn() {
           <Totem variant="dark" className="h-44 w-auto xl:h-56" wobble intro />
         </a>
         <p className="type-label">
-          <span className="block">Creative &</span>
-          <span className="block">Strategy</span>
+          <span className="block">Research-led</span>
+          <span className="block">enterprise tools</span>
         </p>
       </aside>
 

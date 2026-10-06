@@ -8,29 +8,37 @@ interface RollTextProps {
 }
 
 /**
- * Template's .link-inner label/shadow pattern: two stacked copies of the
- * label inside an overflow-hidden box; on hover the stack rolls up so the
- * copy slides in from below (power3.out, 0.4s).
+ * Hover label roll: the visible label sits in normal flow (so the wrapper is
+ * exactly one line tall and clips the shadow copy); a second copy waits just
+ * below and both slide up together on hover.
  */
 export default function RollText({ text, className = '' }: RollTextProps) {
-  const stackRef = useRef<HTMLSpanElement>(null)
+  const topRef = useRef<HTMLSpanElement>(null)
+  const bottomRef = useRef<HTMLSpanElement>(null)
 
   const roll = (yPercent: number) => {
-    if (reducedMotion || !stackRef.current) return
-    gsap.to(stackRef.current, { yPercent, duration: 0.4, ease: 'power3.out', overwrite: 'auto' })
+    if (reducedMotion) return
+    gsap.to([topRef.current, bottomRef.current], {
+      yPercent,
+      duration: 0.4,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    })
   }
 
   return (
     <span
-      className={`inline-block overflow-hidden align-top ${className}`}
+      className={`relative inline-block overflow-hidden align-top ${className}`}
       onMouseEnter={() => roll(-100)}
       onMouseLeave={() => roll(0)}
+      onFocus={() => roll(-100)}
+      onBlur={() => roll(0)}
     >
-      <span ref={stackRef} className="flex flex-col will-change-transform">
-        <span className="block">{text}</span>
-        <span className="block" aria-hidden="true">
-          {text}
-        </span>
+      <span ref={topRef} className="block will-change-transform">
+        {text}
+      </span>
+      <span ref={bottomRef} className="absolute left-0 top-full block w-full will-change-transform" aria-hidden="true">
+        {text}
       </span>
     </span>
   )

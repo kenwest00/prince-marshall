@@ -96,7 +96,7 @@ export default function MenuOverlay({ open, onClose, onNavigate }: MenuOverlayPr
                 className="group flex items-baseline gap-4 py-3 md:gap-8 md:py-4"
               >
                 {item.number && (
-                  <span className="type-label w-8 shrink-0 text-[#0a0a0a]/50 transition-colors group-hover:text-[#0a0a0a] md:w-12">
+                  <span className="type-label w-8 shrink-0 text-[#0a0a0a]/70 transition-colors group-hover:text-[#0a0a0a] md:w-12">
                     {parseInt(item.number, 10)}
                   </span>
                 )}
