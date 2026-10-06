@@ -94,7 +94,7 @@ export const kura = {
   eyebrow: 'Featured product',
   name: 'KURA',
   tagline: 'Full transparency into an art collection.',
-  status: 'In active development · pilot partners welcome',
+  status: 'Collection management platform',
   intro:
     'KURA is a collection management platform for museums, municipalities, universities and private collections that need one trustworthy record of what they hold, where it is, what condition it is in, where it came from and what it is worth.',
   pillars: [
@@ -253,8 +253,8 @@ export const faq = {
       a: 'From a single department to a multi-site organization. We are a small studio by design, so we take on a limited number of engagements at a time.',
     },
     {
-      q: 'Is KURA available now?',
-      a: 'KURA is in active development and we are working with pilot partners. Request a walkthrough and we will show you where it stands today and what is planned.',
+      q: 'How do I get started with KURA?',
+      a: 'Request a walkthrough. We show you KURA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
     },
   ] as FaqItem[],
 }

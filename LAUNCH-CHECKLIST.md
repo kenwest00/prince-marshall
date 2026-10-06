@@ -5,7 +5,7 @@ Do not publish until each item is confirmed or the related copy is removed.
 ## Facts and claims
 - [ ] Studio bio (Studio section): confirm you are comfortable with "UX research leader who has run research and roadmaps for civic technology programs" and "Fortune 500 teams across retail, consumer goods, insurance and hospitality." Names of employers/clients are intentionally NOT used. Check your State of Connecticut outside-activity policy and any client NDAs before adding names.
 - [ ] Commitments on the site: reply within two business days; 30-minute intro call; "no obligation" proposal; WCAG 2.1 AA testing; plain-language security documentation / questionnaire support; "we do not put your data into AI tools without written approval." Keep only what you will honor.
-- [ ] KURA status line says "In active development · pilot partners welcome." Update as it changes. The five pillars describe the product specification; only publish pillars that are built and demonstrable by the time buyers visit.
+- [ ] KURA chip reads "Collection management platform" and the FAQ invites a walkthrough. Make sure the walkthrough you give matches what the site says. The five pillars describe the product specification; only publish pillars that are built and demonstrable by the time buyers visit.
 - [ ] No certifications (SOC 2, ISO 27001, VPAT) are claimed. Do not add any until you hold them.
 - [ ] Data ownership FAQ answer: have counsel review before using in contracts.
 
