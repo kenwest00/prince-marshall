@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kenwest00.github.io/prince-marshall/sitemap.xml
+Sitemap: https://princeandmarshall.com/sitemap.xml

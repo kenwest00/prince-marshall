@@ -9,7 +9,7 @@ export const site = {
   label: 'Research-led enterprise tools',
   metaTop: ['Independent studio', 'Research-led enterprise tools'],
   email: 'hello@princeandmarshall.com',
-  url: 'https://kenwest00.github.io/prince-marshall/',
+  url: 'https://princeandmarshall.com/',
   location: 'Metro Atlanta, working nationwide',
   title: 'prince + marshall — We research, design and build enterprise tools',
   description:
