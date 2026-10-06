@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import gsap from 'gsap'
-import Totem from './Totem'
+import LogoTile from './LogoTile'
 import { getLenis, reducedMotion, refreshScroll, scrollToTarget, startScroll } from '../lib/motion'
 
 export interface TransitionHandle {
@@ -65,7 +65,7 @@ const TransitionOverlay = forwardRef<TransitionHandle>(function TransitionOverla
       aria-hidden="true"
     >
       <div ref={totemRef}>
-        <Totem variant="light" className="h-40 w-auto md:h-56" />
+        <LogoTile variant="light" size={160} />
       </div>
     </div>
   )

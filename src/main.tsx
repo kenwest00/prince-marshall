@@ -4,6 +4,7 @@ import '@fontsource/archivo/500.css'
 import '@fontsource/archivo/600.css'
 import '@fontsource/archivo/700.css'
 import '@fontsource/archivo/800.css'
+import '@fontsource-variable/archivo/standard.css'
 import './index.css'
 import App from './App.tsx'
 

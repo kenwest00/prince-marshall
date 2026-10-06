@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { menu, site } from '../data/content'
 import { getLenis, reducedMotion } from '../lib/motion'
-import Totem from './Totem'
+import LogoTile from './LogoTile'
 import PillButton from './PillButton'
 import RollText from './RollText'
 
@@ -77,7 +77,7 @@ export default function MenuOverlay({ open, onClose, onNavigate }: MenuOverlayPr
       aria-hidden={!open}
     >
       <div className="flex items-center justify-between px-5 py-5 md:px-10">
-        <Totem variant="dark" className="h-10 w-auto md:h-12" />
+        <LogoTile size={48} />
         <PillButton onClick={onClose}>
           <RollText text={menu.closeLabel} />
         </PillButton>
