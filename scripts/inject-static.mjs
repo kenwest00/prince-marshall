@@ -37,6 +37,7 @@ const html = `
     <p><a href="#contact">${esc(c.hero.primaryCta)}</a></p>
   </section>
   <section id="statement"><h2>${c.statement.lines.map((l) => esc(l.text)).join(' ')}</h2></section>
+  <section id="${c.clients.id}"><h2>${esc(c.clients.heading)}</h2>${li(c.clients.items.map((i) => esc(i.name)))}</section>
   <section id="${c.method.id}">
     <h2>${esc(c.method.heading)}</h2>
     <p>${esc(c.method.intro)}</p>

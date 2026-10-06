@@ -37,6 +37,26 @@ export const statement = {
   ] as { text: string; align: 'left' | 'right' }[],
 }
 
+export interface Client {
+  name: string
+  /** Optional path under public/, e.g. './clients/apple.svg'. Without it the name is typeset as a wordmark. */
+  logo?: string
+}
+
+export const clients = {
+  id: 'clients',
+  eyebrow: 'Clients',
+  heading: 'Organizations we have worked with.',
+  items: [
+    { name: 'Apple' },
+    { name: 'IBM' },
+    { name: 'The Home Depot' },
+    { name: 'AT&T' },
+    { name: 'State of Connecticut' },
+    { name: 'Japan Post' },
+  ] as Client[],
+}
+
 export interface MethodStep {
   number: string
   name: string

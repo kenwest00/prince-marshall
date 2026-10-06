@@ -20,3 +20,4 @@ Do not publish until each item is confirmed or the related copy is removed.
 - [ ] Real KURA screenshots (use only data you are willing to show; avoid sample valuations that look genuine).
 - [ ] One or more case studies with permission: problem, approach, outcome, and a measurable result.
 - [ ] A named testimonial or reference from a real client.
+- [ ] Clients strip lists Apple, IBM, The Home Depot, AT&T, State of Connecticut, Japan Post as typeset names. Confirm you are permitted to name each (check contracts/NDAs). To show official logos, put each SVG in public/clients/ and set `logo: './clients/name.svg'` in src/data/content.ts.

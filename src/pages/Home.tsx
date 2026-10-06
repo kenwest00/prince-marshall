@@ -3,6 +3,7 @@ import SideColumn from '../sections/SideColumn'
 import Preloader from '../sections/Preloader'
 import Hero from '../sections/Hero'
 import Statement from '../sections/Statement'
+import Clients from '../sections/Clients'
 import Method from '../sections/Method'
 import Kura from '../sections/Kura'
 import Environments from '../sections/Environments'
@@ -97,6 +98,7 @@ export default function Home() {
       <main id="main" className="md:ml-[320px]">
         <Hero active={loaded} />
         <Statement />
+        <Clients />
         <Method />
         <Kura />
         <Environments />
