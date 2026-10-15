@@ -340,3 +340,213 @@ export const menu = {
     { number: '07', label: 'Contact', href: '#contact' },
   ],
 }
+
+/* ---------------------------------------------------------------------------
+ * The Ride-Along — landing page for solo and small trades businesses
+ * (served at /ride-along/). Every visible string on that page lives here.
+ * Fields left empty ('' / null / []) are hidden on the page until filled.
+ * ------------------------------------------------------------------------- */
+export const rideAlong = {
+  url: 'https://princeandmarshall.com/ride-along/',
+  title: "Win the jobs you're already losing | The Ride-Along from prince + marshall",
+  description:
+    'For HVAC, plumbing and pest control pros. We ride along for a day, find where jobs and money slip away, and set up the fix that wins them back. $2,500, fixed.',
+
+  /** Digits only, e.g. '4045551234'. Empty = text/call buttons fall back to the note form. */
+  phone: '',
+  smsKeyword: 'RIDE',
+  price: 2500,
+
+  header: { home: 'prince + marshall home' },
+
+  hero: {
+    label: 'The Ride-Along, from prince + marshall',
+    h1: "Win the jobs you're already losing.",
+    sub: 'Every call you miss on a job is a customer calling someone else. We ride along for a day, find where jobs and money slip away, and set up the fix that wins them back.',
+    priceStrong: '$2,500, fixed.',
+    priceRest: 'If we find nothing worth fixing, we stop, you keep the written answer, and you never pay the second half.',
+    under: 'For HVAC, plumbing and pest control pros who work solo or with a small crew. One day of your time. No software to learn.',
+  },
+
+  cta: {
+    text: 'Text RIDE to',
+    call: 'Call',
+    note: 'Send a note',
+    book: 'Book a ride-along',
+  },
+
+  why: {
+    eyebrow: 'Why now',
+    heading: "Your customers won't wait. Your competitors know it.",
+    paragraphs: [
+      "A homeowner with a dead AC or a flooded basement calls the first number they find. If you don't pick up, they call the next one, and the job is gone before you're off the ladder.",
+      "The pros pulling ahead aren't working harder than you. They text back in seconds, follow up on every quote and ask every happy customer for a review. Every week you run on missed calls and kitchen-table paperwork is work going to someone else.",
+    ],
+    trades: [
+      { title: 'HVAC', body: "peak-season calls you can't take from an attic." },
+      { title: 'Plumbing', body: 'emergencies that go to whoever answers first.' },
+      { title: 'Pest control', body: 'recurring plans that lapse because nobody followed up.' },
+    ],
+    /** Only when true for the current season, e.g. 'The summer rush is coming. Fix the phone before it rings nonstop, not during.' */
+    season: '',
+    /** Only with a named, opened source. */
+    stat: null as null | { text: string; source: string; url: string },
+  },
+
+  calculator: {
+    eyebrow: 'Your numbers',
+    heading: 'What is a missed call costing you?',
+    intro: 'Your numbers, not ours. Nothing you type leaves this page.',
+    missed: { label: 'Calls you miss in a typical week', value: 3, min: 0, max: 50, step: 1 },
+    booked: { label: 'Out of 10 of those callers, how many would have booked?', value: 4, min: 0, max: 10, step: 1 },
+    job: {
+      label: 'Your average job ($)',
+      value: 350,
+      min: 0,
+      max: 20000,
+      step: 50,
+      help: 'Pest control? Use what a recurring customer is worth in a year, not one visit.',
+    },
+    resultPre: 'About',
+    resultPost: 'a year walking to someone else.',
+    paybackPre: 'The Ride-Along pays for itself if it wins back',
+    paybackPost: 'jobs.',
+    paybackOne: 'job.',
+    fine: 'An estimate from the numbers you entered. We work out the real figure with you on the ride-along.',
+  },
+
+  outcomes: {
+    eyebrow: 'The outcome',
+    heading: 'More jobs. Faster money. Your evenings back.',
+    items: [
+      { title: 'More jobs from the calls you already get', body: 'a missed call gets an instant text back, so the customer waits for you instead of dialing someone else.' },
+      { title: 'Quotes that close', body: 'follow-ups go out on their own, so "let me think about it" doesn\'t go cold.' },
+      { title: 'Paid faster', body: 'invoices and reminders go out from the job site, not the kitchen table.' },
+      { title: 'A reputation that brings the next customer', body: 'every happy customer gets a review request while the job is still fresh.' },
+      { title: 'Your nights and weekends', body: 'less admin, more life.' },
+    ],
+    closing: 'We start with the fix that pays you the most, and we prove it with your numbers before we build anything.',
+  },
+
+  how: {
+    eyebrow: 'How it works',
+    heading: 'One day in your truck. One fix that pays for itself.',
+    steps: [
+      {
+        number: '01',
+        name: 'Ride along',
+        when: 'Days 1 to 2',
+        body: 'We work beside you on real jobs and look at where business actually happens: your phone, texts, quotes and invoices.',
+        deliverable: 'A clear picture of where money is leaking, in dollars.',
+      },
+      {
+        number: '02',
+        name: 'Decide',
+        when: 'Within 3 days',
+        body: 'Every leak ranked by what it costs you each month, plus the ones not worth fixing. You see the math before anything is built.',
+        deliverable: 'A one-page plan you can read in five minutes.',
+      },
+      {
+        number: '03',
+        name: 'Fix',
+        when: 'Week 2',
+        body: 'We set up the fix that pays best, using tools you already have where we can, and test it with you on a real call.',
+        deliverable: 'The fix running, a plain-language how-to, and a check-in at 30 days.',
+      },
+    ],
+  },
+
+  guarantee: {
+    eyebrow: 'Our guarantee',
+    heading: "If it's not there, we'll say so.",
+    body: 'We check the numbers at the Decide step, before any fix is built. If nothing should pay back the fee within 12 months, we stop there. You keep the written answer, and you never pay the second half.',
+    line: "We don't invent work. We find money.",
+  },
+
+  pricing: {
+    eyebrow: 'Price',
+    heading: 'One price. Everything included.',
+    fixed: 'fixed',
+    includedHeading: 'Included',
+    included: [
+      'One to two days of ride-along on your real jobs',
+      'A one-page written plan, every leak ranked by dollars',
+      'One fix set up, tested and running',
+      'A plain-language how-to for you and anyone who helps you',
+      "A 30-day check-in to make sure it's paying",
+    ],
+    termsHeading: 'Terms',
+    terms: [
+      'Half to book. Half only once your plan shows a fix worth building.',
+      'If a tool has a monthly cost, you see the number before we set anything up.',
+      'Keep going within 60 days and the whole fee credits toward your next fix.',
+    ],
+    /** Only if true. e.g. 'The first 10 businesses get this price. After that it is $3,000.' */
+    foundingRate: '',
+    /** Only if true. e.g. 'Ken does every ride-along himself, so we take 4 businesses a month.' */
+    capacity: '',
+    /** Optional. e.g. 'Send us a pro who books, and you get $250 toward your next fix.' */
+    referral: '',
+  },
+
+  /** Hidden until the first real, permitted testimonial exists. */
+  testimonials: [] as { quote: string; name: string; trade: string; town: string }[],
+  testimonialsEyebrow: 'Founding clients',
+  testimonialsHeading: 'From the first ride-alongs.',
+
+  about: {
+    eyebrow: 'Who rides along',
+    heading: 'Big-operation experience, one truck at a time.',
+    /** Path under public/, e.g. 'ride-along/ken.jpg'. Empty = no photo block. */
+    photo: '',
+    photoAlt: 'Ken West on a ride-along with a trades business owner',
+    paragraphs: [
+      'Every ride-along is led by Ken West, founder of prince + marshall. He has spent his career making complicated operations run smoothly, including designing the buy-online-pickup-in-store and ship-to-store fulfillment experiences for The Home Depot\'s digital operation. Now we bring the same thinking to one truck and one phone. Ken does every ride-along himself. There is no hand-off to a junior team.',
+      'AI helps us move faster; people review and answer for everything we deliver. Your data never goes into an AI tool without your written approval.',
+    ],
+    location: 'Based in Metro Atlanta.',
+  },
+
+  faq: {
+    eyebrow: 'Questions',
+    heading: 'Straight answers.',
+    items: [
+      { q: 'Is this worth it for a one-person shop?', a: "That's who it's built for. When you're the only one on the phone, every missed call is a lost job." },
+      { q: "I don't have time for this.", a: "You don't stop working. We ride along while you do your jobs." },
+      { q: 'Do I need to know anything about AI?', a: "No. You keep doing the work you're good at. We handle the rest." },
+      { q: 'What counts as a fix?', a: 'One part of your business set up to run without you, such as a missed-call text-back, quote follow-ups, invoice reminders, review requests or online booking. Custom software, website rebuilds and hardware are not included.' },
+      { q: 'I already use a scheduling or invoicing app.', a: 'Good. We usually make what you already pay for work harder before adding anything.' },
+      { q: "Can't I set this up myself?", a: 'Some of it, yes. What we bring is knowing which fix is worth your money, setting it up right the first time, and checking at 30 days that it pays.' },
+      { q: 'What do you need from me?', a: 'A look at your texts, call log, quotes and invoices. You decide what we see.' },
+      { q: "Will you come into my customers' homes?", a: "Only with your okay and your customer's. On site, we follow your lead." },
+      { q: 'What if you find nothing?', a: 'We stop at the Decide step. You keep the written answer, and you never pay the second half.' },
+      { q: 'Will a robot answer my phone?', a: 'Only if you want one and the math says it pays. Most fixes are simpler, like a text that goes out the moment you miss a call.' },
+      { q: 'Who owns what you set up?', a: 'You do. Every account is in your name.' },
+      { q: 'I run a crew.', a: 'The Crew Ride-Along covers 2 to 10 people over about three weeks, for $5,000. Same promise, more ground.' },
+    ],
+  },
+
+  final: {
+    heading: 'The next call is coming. Be the one who answers.',
+    formHeading: 'Rather send a note?',
+    formHeadingNoPhone: 'Book your ride-along.',
+    formIntro: 'Name, number and trade. Ken gets back to you himself.',
+    name: 'Your name',
+    phone: 'Mobile number',
+    trade: 'Your trade',
+    tradeOptions: ['HVAC', 'Plumbing', 'Pest control', 'Other'],
+    message: 'Anything we should know? (optional)',
+    submit: 'Send',
+    sending: 'Sending…',
+    success: 'Got it. Ken will get back to you within one business day.',
+    error: 'Something went wrong. Please email',
+    required: 'Required',
+    topic: 'Ride-Along',
+  },
+
+  sticky: 'Text RIDE',
+  stickyNoPhone: 'Book a ride-along',
+
+  footerLink: { label: 'The Ride-Along, for trades', href: 'ride-along/' },
+  footerHome: { label: 'Back to prince + marshall', href: '../' },
+}

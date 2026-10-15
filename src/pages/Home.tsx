@@ -13,6 +13,7 @@ import Faq from '../sections/Faq'
 import StructuredData from '../components/StructuredData'
 import Contact from '../sections/Contact'
 import Footer from '../sections/Footer'
+import { rideAlong } from '../data/content'
 import MenuOverlay from '../components/MenuOverlay'
 import MenuLabel from '../components/MenuLabel'
 import ScrollProgress from '../components/ScrollProgress'
@@ -106,7 +107,7 @@ export default function Home() {
         <Studio />
         <Faq />
         <Contact />
-        <Footer />
+        <Footer link={rideAlong.footerLink} />
       </main>
     </>
   )

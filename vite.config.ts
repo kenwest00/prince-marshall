@@ -6,6 +6,14 @@ import { defineConfig } from "vite"
 export default defineConfig({
   base: './',
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        rideAlong: path.resolve(__dirname, 'ride-along/index.html'),
+      },
+    },
+  },
   server: {
     port: 3000,
   },
