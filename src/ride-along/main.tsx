@@ -8,6 +8,10 @@ import '@fontsource-variable/space-grotesk'
 import '../index.css'
 import RideAlong from '../pages/RideAlong'
 
+import { installPageLinks } from '../lib/pageTransition'
+
+installPageLinks()
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RideAlong />

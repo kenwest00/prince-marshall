@@ -39,6 +39,11 @@ export default function Home() {
     }
     startScroll()
     refreshScroll()
+    // Arriving from another page with a section in the URL (e.g. /#studio)
+    const hash = window.location.hash
+    if (hash.length > 1 && document.querySelector(hash)) {
+      requestAnimationFrame(() => scrollToTarget(hash, true))
+    }
   }, [loaded])
 
   // Route in-page anchors through lenis

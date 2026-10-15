@@ -17,10 +17,19 @@ const money = (n: number) => `$${n.toLocaleString('en-US')}`
 function Header() {
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between gap-4 border-b border-[#0a0a0a] bg-white px-5 py-3 md:px-10">
-      <a href="../" className="flex items-center gap-3" aria-label={r.header.home}>
-        <LogoTile size={40} />
-        <span className="type-label hidden sm:inline">prince + marshall</span>
-      </a>
+      <div className="flex items-center gap-4 md:gap-6">
+        <a href="../" data-page-link className="flex items-center gap-3" aria-label={r.header.home}>
+          <LogoTile size={40} />
+          <span className="type-label hidden sm:inline">prince + marshall</span>
+        </a>
+        <a
+          href={r.header.studioHref}
+          data-page-link
+          className="type-label inline-flex min-h-[44px] items-center text-[#0a0a0a]/70 underline-offset-4 hover:text-[#0a0a0a] hover:underline"
+        >
+          {r.header.studio}
+        </a>
+      </div>
       <a
         href={hasPhone ? smsHref : '#note'}
         className="type-label inline-flex min-h-[44px] items-center text-right underline underline-offset-4 hover:no-underline"

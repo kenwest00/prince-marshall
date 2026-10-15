@@ -50,6 +50,21 @@
   }
 }
 
+.pm-leave {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0a0a0a;
+  transform: translateY(100%);
+  animation: pm-leave 0.5s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes pm-leave {
+  to {
+    transform: translateY(0);
+  }
+}
+
 @layer utilities {
   .font-display {
     font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;

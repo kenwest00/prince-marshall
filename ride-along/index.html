@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>try{if(sessionStorage.getItem('pm-arrive')){sessionStorage.removeItem('pm-arrive');document.documentElement.classList.add('pm-arriving')}}catch(e){}</script>
+    <style>html.pm-arriving body::after{content:'';position:fixed;inset:0;z-index:100;background:#0a0a0a;pointer-events:none;animation:pm-arrive .6s .1s cubic-bezier(.76,0,.24,1) forwards}@keyframes pm-arrive{to{transform:translateY(-100%)}}@media (prefers-reduced-motion:reduce){html.pm-arriving body::after{display:none}}</style>
     <meta name="description" content="For HVAC, plumbing and pest control pros. We ride along for a day, find where jobs and money slip away, and set up the fix that wins them back. $2,500, fixed." />
     <meta name="theme-color" content="#ffffff" />
     <link rel="canonical" href="https://princeandmarshall.com/ride-along/" />

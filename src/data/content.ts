@@ -155,6 +155,8 @@ export interface Environment {
   title: string
   different: string
   tools: string
+  /** Optional pointer to a related page. */
+  link?: { lead: string; label: string; href: string }
 }
 
 export const environments = {
@@ -183,6 +185,7 @@ export const environments = {
       title: 'Facilities & field operations',
       different: 'Work happens on foot, in gloves, with uneven connectivity and constant interruptions.',
       tools: 'Mobile-first capture, offline sync, scan-and-log workflows, compliance records.',
+      link: { lead: 'Run a trades business on your own?', label: 'See the Ride-Along', href: 'ride-along/' },
     },
   ] as Environment[],
 }
@@ -339,6 +342,8 @@ export const menu = {
     { number: '06', label: 'Studio', href: '#studio' },
     { number: '07', label: 'Contact', href: '#contact' },
   ],
+  /** A separate page, so it sits apart from the numbered in-page list. */
+  offer: { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
 }
 
 /* ---------------------------------------------------------------------------
@@ -357,7 +362,7 @@ export const rideAlong = {
   smsKeyword: 'RIDE',
   price: 2500,
 
-  header: { home: 'prince + marshall home' },
+  header: { home: 'prince + marshall home', studio: 'Studio', studioHref: '../#studio' },
 
   hero: {
     label: 'The Ride-Along, from prince + marshall',

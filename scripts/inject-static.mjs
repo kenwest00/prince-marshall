@@ -57,7 +57,7 @@ const html = `
     <h2>${esc(c.environments.heading)}</h2>
     <p>${esc(c.environments.intro)}</p>
     ${c.environments.items
-      .map((i) => `<h3>${esc(i.title)}</h3><p>${esc(i.different)}</p><p>Typical tools: ${esc(i.tools)}</p>`)
+      .map((i) => `<h3>${esc(i.title)}</h3><p>${esc(i.different)}</p><p>Typical tools: ${esc(i.tools)}</p>${i.link ? `<p>${esc(i.link.lead)} <a href="${esc(i.link.href)}">${esc(i.link.label)}</a></p>` : ''}`)
       .join('')}
   </section>
   <section id="${c.trust.id}">

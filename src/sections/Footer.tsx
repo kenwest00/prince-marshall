@@ -14,7 +14,7 @@ export default function Footer({ link }: FooterProps = {}) {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="type-label">{footer.left}</p>
         {link && (
-          <a href={link.href} className="type-label inline-flex min-h-[44px] items-center underline underline-offset-4 hover:no-underline">
+          <a href={link.href} data-page-link className="type-label inline-flex min-h-[44px] items-center underline underline-offset-4 hover:no-underline">
             {link.label}
           </a>
         )}

@@ -23,6 +23,18 @@ export default function Environments() {
               <span className="block uppercase tracking-wide text-[#0a0a0a]/70">Typical tools</span>
               {item.tools}
             </p>
+            {item.link && (
+              <p className="mt-6 border-t border-[#0a0a0a]/20 pt-4 font-semibold leading-snug">
+                {item.link.lead}{' '}
+                <a
+                  href={item.link.href}
+                  data-page-link
+                  className="font-extrabold underline underline-offset-4 hover:no-underline"
+                >
+                  {item.link.label} <span aria-hidden="true">→</span>
+                </a>
+              </p>
+            )}
           </li>
         ))}
       </ul>
