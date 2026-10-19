@@ -421,7 +421,8 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
         cx.fillStyle = RING_COLORS[3]
         cx.beginPath(); cx.arc(q.x, q.y, 3.5, 0, Math.PI * 2); cx.fill()
         cx.fillStyle = '#fff'
-        cx.fillText(`${e.year} ${e.label}`.toUpperCase(), q.x + 7, q.y + 3)
+        const pt = `${e.year} ${e.label}`.toUpperCase()
+        cx.fillText(pt, Math.min(W - cx.measureText(pt).width - 6, Math.max(6, q.x + 7)), q.y + 3)
       })
       cx.globalAlpha = 1
     }
@@ -436,7 +437,8 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
         cx.strokeStyle = RING_COLORS[r.k]
         cx.lineWidth = 3
         cx.beginPath(); cx.moveTo(q.x - 7, q.y); cx.lineTo(q.x + 7, q.y); cx.moveTo(q.x, q.y - 7); cx.lineTo(q.x, q.y + 7); cx.stroke()
-        const text = `0${r.k + 1}  ${(copy.tags[r.k] ?? '').toUpperCase()}`
+        // phones: the record panel under the scene carries the full text
+        const text = isPhone ? `0${r.k + 1}  ${['OBJECT', 'PLACE', 'STATE', 'ORIGIN', 'VALUE'][r.k]}` : `0${r.k + 1}  ${(copy.tags[r.k] ?? '').toUpperCase()}`
         cx.font = '700 11px Archivo, Arial, sans-serif'
         const tw = cx.measureText(text).width + 16
         let tx = q.x + 12

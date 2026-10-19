@@ -18,10 +18,12 @@ const RED = '#ff5a4e'
  * frames on phones and under reduced motion. The calls to action live inside
  * the scene; the record bar and the record card are real HTML.
  */
-export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
+/** phoneTop: height of any fixed header above the scene on phones (homepage: 73px). */
+export default function KuraSceneBlock({ pinVh = 400, phoneTop = 0 }: { pinVh?: number; phoneTop?: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const isDesktop = useMediaQuery('(min-width: 768px)')
-  const pin = isDesktop && !reducedMotion
+  // Scroll-driven everywhere; timed stills only under reduced motion.
+  const pin = !reducedMotion
   const target = useRef(0)
   const [stage, setStage] = useState(0)
   // Phones: start the still frames only once the scene is actually on screen.
@@ -167,6 +169,99 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
       <p className="type-label mt-3 text-white/70">{kura.beforeHint} ↓</p>
     </div>
   )
+
+  if (pin && !isDesktop) {
+    // Phones: one pinned screen. Painting on top, and a panel under it that
+    // starts as the ledger's open questions and becomes the record, filling in
+    // one row per stage, so the before and the after share the same place.
+    const before = stage === 0
+    return (
+      <div ref={ref} className="relative" style={{ height: `${pinVh + 50}vh` }}>
+        <div className="sticky flex flex-col overflow-hidden" style={{ top: phoneTop, height: `calc(100svh - ${phoneTop}px)` }}>
+          <p className={`type-label truncate px-5 ${phoneTop ? 'pt-4' : 'pr-28 pt-7'}`} style={{ color: before ? RED : undefined }}>
+            {before ? `${kura.beforeLabel} · ${kura.before.name}` : `${kura.afterLabel} · 0${stage} · ${kura.steps[stage - 1]?.name}`}
+          </p>
+          <ol className="mt-3 grid grid-cols-6 gap-1 px-5" aria-label="Stages">
+            {cells.map((s, i) => (
+              <li key={s.name}>
+                <button
+                  type="button"
+                  onClick={() => jumpTo(i)}
+                  aria-label={i === 0 ? kura.beforeLabel : `${s.num} ${s.name}`}
+                  aria-current={stage === i ? 'step' : undefined}
+                  className="flex h-8 w-full items-center"
+                >
+                  <span
+                    className="block h-[3px] w-full transition-colors duration-300"
+                    style={{ background: i <= stage ? s.color : 'rgba(255,255,255,0.2)' }}
+                  />
+                </button>
+              </li>
+            ))}
+          </ol>
+          <div className="relative min-h-0 flex-1">
+            <KuraRecordScene target={target} copy={kura.scene} onStage={setStage} label={kura.sceneLabel} />
+          </div>
+          <div className="relative h-[clamp(250px,40svh,330px)] shrink-0 border-t border-white/40">
+            {/* Before: what the ledger can't tell you */}
+            <div
+              className={`absolute inset-0 px-5 pt-4 transition-all duration-500 ${before ? 'opacity-100' : 'pointer-events-none -translate-y-3 opacity-0'}`}
+              aria-hidden={!before}
+            >
+              <p className="font-display text-[1.3rem] leading-[1.05] tracking-[-0.03em]">{kura.beforeStatement}</p>
+              <ol className="mt-3 grid gap-1.5">
+                {kura.scene.problems.map((pr, i) => (
+                  <li key={pr.text} className="flex items-start gap-2.5 text-[13px] font-semibold leading-snug text-white/85">
+                    <span className="mt-px inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-[#0a0a0a]" style={{ background: RED }} aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    {pr.text}
+                  </li>
+                ))}
+              </ol>
+              <p className="type-label mt-3 text-white/70">{kura.beforeHint} ↓</p>
+            </div>
+            {/* After: the record fills in, one row per stage */}
+            <div
+              className={`absolute inset-0 flex flex-col px-5 pt-3 transition-all duration-500 ${before ? 'pointer-events-none translate-y-3 opacity-0' : 'opacity-100'}`}
+              aria-hidden={before}
+            >
+              <dl className="grid gap-0">
+                {kura.card.map((row, i) => {
+                  const done = stage >= i + 1
+                  const active = stage === i + 1
+                  return (
+                    <div
+                      key={row.label}
+                      className={`grid grid-cols-[5.75rem_1fr] gap-3 border-b border-white/15 py-1.5 transition-colors duration-300 ${active ? 'bg-white/[0.07]' : ''}`}
+                      style={{ boxShadow: active ? `inset 3px 0 0 ${RING_COLORS[i]}` : undefined }}
+                    >
+                      <dt className={`type-label flex items-start gap-1.5 pl-2 pt-0.5 ${done ? 'text-white/80' : 'text-white/35'}`}>
+                        <span className="mt-[3px] inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: done ? RING_COLORS[i] : 'rgba(255,255,255,0.25)' }} aria-hidden="true" />
+                        {kura.steps[i]?.short}
+                      </dt>
+                      <dd className={`text-[13px] font-semibold leading-tight transition-opacity duration-500 ${done ? 'text-white opacity-100' : 'opacity-30'}`}>
+                        {done ? row.value : '—'}
+                      </dd>
+                    </div>
+                  )
+                })}
+              </dl>
+              <div className="mt-auto flex items-center justify-between gap-3 pb-4 pt-2">
+                {stage === 5 ? (
+                  ctas
+                ) : (
+                  <p className="type-label text-white/60">
+                    {kura.exampleLabel} · {stage} / 5 ↓
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (pin) {
     return (

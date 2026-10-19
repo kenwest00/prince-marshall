@@ -27,7 +27,7 @@ export default function Kura() {
         </div>
       </div>
 
-      <KuraSceneBlock pinVh={450} />
+      <KuraSceneBlock pinVh={450} phoneTop={73} />
 
       <div ref={afterRef} className="px-5 pb-24 pt-16 md:px-10 md:pb-36 md:pt-24">
         <div className="md:ml-[264px]">
