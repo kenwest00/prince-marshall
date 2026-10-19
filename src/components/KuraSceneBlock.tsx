@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { contact, kura } from '../data/content'
 import KuraRecordScene from './KuraRecordScene'
 import PillButton from './PillButton'
@@ -8,8 +8,10 @@ import { openContact } from '../lib/contactEvents'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
 import { useMediaQuery, useScrollProgress, useStills } from '../lib/scene'
 
-const STAGE_AT = [0.2, 0.37, 0.55, 0.73, 0.93]
-const STILLS = [0.03, 0.2, 0.37, 0.55, 0.73, 0.93]
+/** stage 0 = before KURA (the ledger), 1-5 = the five parts of the record */
+const STAGE_AT = [0.04, 0.22, 0.38, 0.55, 0.73, 0.93]
+const STILLS = [0.04, 0.22, 0.38, 0.55, 0.73, 0.93]
+const RED = '#ff5a4e'
 
 /**
  * KURA "from notebook to record": pinned scroll scene on desktop, timed still
@@ -22,17 +24,35 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
   const pin = isDesktop && !reducedMotion
   const target = useRef(0)
   const [stage, setStage] = useState(0)
+  // Phones: start the still frames only once the scene is actually on screen.
+  const [seen, setSeen] = useState(false)
+  useEffect(() => {
+    if (pin || seen) return
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setSeen(true)
+          io.disconnect()
+        }
+      },
+      { threshold: 0.35 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [pin, seen])
 
   useScrollProgress(ref, pin, (v) => {
     target.current = v
   })
   useStills(
-    !pin,
+    !pin && seen,
     STILLS,
     (v) => {
       target.current = v
     },
-    1500,
+    2000,
   )
 
   const jumpTo = (i: number) => {
@@ -73,9 +93,10 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
     </div>
   )
 
+  const cells = [{ ...kura.before, color: RED, num: '00' }, ...kura.steps.map((s, i) => ({ ...s, color: RING_COLORS[i], num: `0${i + 1}` }))]
   const bar = (
-    <ol className="grid grid-cols-5 border-t border-white/40">
-      {kura.steps.map((s, i) => {
+    <ol className="grid grid-cols-6 border-t border-white/40">
+      {cells.map((s, i) => {
         const on = stage === i
         return (
           <li key={s.name} className={`min-w-0 border-r border-white/15 last:border-r-0 ${on ? 'bg-white text-[#0a0a0a]' : ''}`}>
@@ -85,10 +106,17 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
               aria-current={on ? 'step' : undefined}
               className="relative grid w-full gap-1 px-2.5 py-3 text-left md:px-4 md:py-4"
             >
-              <span className="absolute inset-x-0 -top-px h-[3px]" style={{ background: on ? RING_COLORS[i] : 'transparent' }} aria-hidden="true" />
+              <span className="absolute inset-x-0 -top-px h-[3px]" style={{ background: on ? s.color : 'transparent' }} aria-hidden="true" />
               <span className={`type-label flex items-center gap-1.5 ${on ? 'text-[#0a0a0a]/75' : 'text-white/70'}`}>
-                <span className="inline-block h-2 w-2 rounded-full" style={{ background: RING_COLORS[i] }} aria-hidden="true" />
-                0{i + 1}
+                <span className="inline-block h-2 w-2 rounded-full" style={{ background: s.color }} aria-hidden="true" />
+                {i === 0 ? (
+                  <>
+                    <span className="hidden truncate md:inline">{kura.beforeLabel}</span>
+                    <span className="md:hidden">{s.num}</span>
+                  </>
+                ) : (
+                  s.num
+                )}
               </span>
               <span className="font-display text-sm leading-none tracking-[-0.02em] md:hidden">{s.short}</span>
               <span className="hidden font-display text-xl leading-none tracking-[-0.02em] md:block lg:text-2xl">{s.name}</span>
@@ -119,10 +147,24 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
 
   const readout = (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-      <span className="type-label">
-        Record 0{stage + 1} / 05 · {kura.steps[stage]?.name}
-      </span>
+      {stage === 0 ? (
+        <span className="type-label inline-flex items-center gap-2" style={{ color: RED }}>
+          <span className="inline-block h-2 w-2 rounded-full" style={{ background: RED }} aria-hidden="true" />
+          {kura.beforeLabel} · {kura.before.name}
+        </span>
+      ) : (
+        <span className="type-label">
+          {kura.afterLabel} · Record 0{stage} / 05 · {kura.steps[stage - 1]?.name}
+        </span>
+      )}
       <span className="type-label text-white/70">{kura.exampleLabel}</span>
+    </div>
+  )
+
+  const statement = (
+    <div className="max-w-xl">
+      <p className="font-display text-[clamp(1.4rem,2.6vw,2.4rem)] leading-[1.02] tracking-[-0.03em]">{kura.beforeStatement}</p>
+      <p className="type-label mt-3 text-white/70">{kura.beforeHint} ↓</p>
     </div>
   )
 
@@ -137,8 +179,14 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
               {ctas}
             </div>
             <div
-              className={`absolute bottom-5 right-5 w-[min(380px,90%)] transition-all duration-500 md:right-10 ${stage === 4 ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'}`}
-              aria-hidden={stage !== 4}
+              className={`absolute bottom-6 left-5 transition-all duration-500 md:left-10 ${stage === 0 ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'}`}
+              aria-hidden={stage !== 0}
+            >
+              {statement}
+            </div>
+            <div
+              className={`absolute bottom-5 right-5 w-[min(380px,90%)] transition-all duration-500 md:right-10 ${stage === 5 ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'}`}
+              aria-hidden={stage !== 5}
             >
               {card}
             </div>
@@ -151,6 +199,19 @@ export default function KuraSceneBlock({ pinVh = 400 }: { pinVh?: number }) {
 
   return (
     <div ref={ref}>
+      <div className="px-5 pb-6">
+        {statement}
+        <ol className="mt-5 grid gap-2">
+          {kura.scene.problems.map((pr, i) => (
+            <li key={pr.text} className="flex items-start gap-3 text-sm font-semibold leading-snug text-white/85">
+              <span className="mt-px inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-[#0a0a0a]" style={{ background: RED }} aria-hidden="true">
+                {i + 1}
+              </span>
+              {pr.text}
+            </li>
+          ))}
+        </ol>
+      </div>
       <div className="relative aspect-[4/5] max-h-[75svh] w-full">
         <KuraRecordScene target={target} copy={kura.scene} onStage={setStage} label={kura.sceneLabel} />
         <div className="absolute inset-x-0 top-0 px-5 pt-4">{readout}</div>

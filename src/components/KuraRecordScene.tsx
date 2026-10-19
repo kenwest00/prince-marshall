@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import paintingUrl from '../assets/mona-lisa-128.png'
 import { camera, lerp, seeded, ss, useCanvasLoop, type V3 } from '../lib/scene'
 import { reducedMotion } from '../lib/motion'
 import { RING_COLORS } from '../lib/palette'
 
 /**
- * KURA: from notebook to record. A handwritten ledger entry breaks into points
- * that gather into a public sculpture; then each part of its record arrives as
- * its own orbit: what you hold, where it is (city map), condition (scan),
- * provenance (dated nodes) and worth. Example data only, labelled as such.
+ * KURA: from notebook to record. A handwritten ledger entry breaks into
+ * particles that assemble, in the painting's own colours, into a 3D Mona Lisa
+ * (Leonardo da Vinci, public domain); then each part of its record arrives as
+ * its own orbit: what you hold, where it is (floor plan), condition (surface
+ * scan), provenance (dated nodes) and worth. Example data only, labelled as such.
  */
 
 export interface KuraSceneCopy {
   notebook: string[]
   /** index of the entry that becomes the record */
   entry: number
+  problems: { line: number; word: string; text: string }[]
   tags: string[]
   mapLabel: string
   conditionMark: string
@@ -28,64 +31,73 @@ interface Props {
   className?: string
 }
 
-const KURA_BOUNDS = [0, 0.28, 0.46, 0.64, 0.82, 1.0001]
+/** stage 0 = before KURA (the ledger); stages 1-5 = the five parts of the record */
+const KURA_BOUNDS = [0, 0.14, 0.3, 0.47, 0.64, 0.82, 1.0001]
+const RED = '#ff5a4e'
 
-const prof: [number, number][] = [[-0.72, 0.2], [-0.5, 0.34], [-0.15, 0.48], [0.2, 0.4], [0.5, 0.22], [0.72, 0.27], [0.92, 0.18], [1.05, 0.06]]
-const R = (y: number) => {
-  for (let i = 0; i < prof.length - 1; i++) {
-    const [y0, r0] = prof[i]
-    const [y1, r1] = prof[i + 1]
-    if (y <= y1) {
-      const k = (1 - Math.cos(((y - y0) / (y1 - y0)) * Math.PI)) / 2
-      return r0 + (r1 - r0) * k
-    }
-  }
-  return prof[prof.length - 1][1]
-}
-const Y0 = -0.72
-const Y1 = 1.05
-const PL = 0.42 // plinth half-width
-const surf = (u: number, v: number): V3 => {
-  const y = Y0 + (Y1 - Y0) * u
-  const a = v * Math.PI * 2 + y * 0.6 // gentle twist
-  const r = R(y)
-  return [Math.cos(a) * r, y, Math.sin(a) * r]
-}
-const plinthFaces: { v: V3[]; n: V3 }[] = [
-  { v: [[-PL, -0.72, PL], [PL, -0.72, PL], [PL, -1, PL], [-PL, -1, PL]], n: [0, 0, 1] },
-  { v: [[PL, -0.72, -PL], [-PL, -0.72, -PL], [-PL, -1, -PL], [PL, -1, -PL]], n: [0, 0, -1] },
-  { v: [[PL, -0.72, PL], [PL, -0.72, -PL], [PL, -1, -PL], [PL, -1, PL]], n: [1, 0, 0] },
-  { v: [[-PL, -0.72, -PL], [-PL, -0.72, PL], [-PL, -1, PL], [-PL, -1, -PL]], n: [-1, 0, 0] },
-  { v: [[-PL, -0.72, -PL], [PL, -0.72, -PL], [PL, -0.72, PL], [-PL, -0.72, PL]], n: [0, 1, 0] },
+/* the painting: 53 × 77 cm panel, normalised so its height spans y -1..1 */
+const PW = 0.69
+const PH = 1
+const GY = -1.3 // floor
+const rooms: [V3, V3][] = [
+  [[-2.4, GY, -2], [2.4, GY, -2]], [[2.4, GY, -2], [2.4, GY, 2]], [[2.4, GY, 2], [-2.4, GY, 2]], [[-2.4, GY, 2], [-2.4, GY, -2]],
+  [[-1, GY, -2], [-1, GY, 0.7]], [[1, GY, -2], [1, GY, 0.7]], [[-2.4, GY, 0.7], [-1.6, GY, 0.7]], [[-0.3, GY, 0.7], [2.4, GY, 0.7]],
 ]
-const streets: [V3, V3][] = [
-  [[-2.6, -1, -1.9], [2.6, -1, -1.9]], [[-2.6, -1, 1.5], [2.6, -1, 1.5]], [[-2.6, -1, 2.3], [2.6, -1, 2.3]],
-  [[-2.1, -1, -2.6], [-2.1, -1, 2.6]], [[1.7, -1, -2.6], [1.7, -1, 2.6]], [[2.4, -1, -2.6], [2.4, -1, 2.6]],
-  [[-2.6, -1, -0.4], [-2.1, -1, -0.6]], [[-2.6, -1, 2.6], [0.4, -1, -2.6]],
-]
+interface Particle { t: V3; s: V3; d: number; c: string[] }
 
 export default function KuraRecordScene({ target, copy, onStage, label, className = '' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isPhone = typeof window !== 'undefined' && window.innerWidth < 700
-  const LAT = 22
-  const LON = isPhone ? 24 : 32
-  const N = isPhone ? 420 : 700
+  const cols = isPhone ? 40 : 64
+  const rows = Math.round(cols * (77 / 53))
+  const partsRef = useRef<Particle[] | null>(null)
 
-  const pts = useMemo(() => {
-    const rng = seeded(214)
-    const rnd = rng.range
-    return Array.from({ length: N }, (_, i) => {
-        let t: V3
-        if (i % 5 === 0) {
-          const f = plinthFaces[Math.floor(rnd(0, 5))]
-          const a = rnd(0, 1), b = rnd(0, 1)
-          const [p0, p1, , p3] = f.v
-          t = [p0[0] + (p1[0] - p0[0]) * a + (p3[0] - p0[0]) * b, p0[1] + (p1[1] - p0[1]) * a + (p3[1] - p0[1]) * b, p0[2] + (p1[2] - p0[2]) * a + (p3[2] - p0[2]) * b]
-        } else t = surf(rng.next(), rng.next())
-        const ang = rnd(0, Math.PI * 2), rr = rnd(1.3, 2.8)
-        return { t, s: [Math.cos(ang) * rr * 1.3, rnd(-1.3, 1.3), Math.sin(ang) * rr] as V3, d: rnd(0, 0.3) }
-      })
-  }, [N])
+  useEffect(() => {
+    let alive = true
+    const img = new Image()
+    img.onload = () => {
+      if (!alive) return
+      const c = document.createElement('canvas')
+      c.width = cols
+      c.height = rows
+      const x = c.getContext('2d', { willReadFrequently: true })
+      if (!x) return
+      x.drawImage(img, 0, 0, cols, rows)
+      const d = x.getImageData(0, 0, cols, rows).data
+      const rng = seeded(214)
+      const list: Particle[] = []
+      for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+          const o = (j * cols + i) * 4
+          const r = d[o], g = d[o + 1], b = d[o + 2]
+          const lum = (0.3 * r + 0.59 * g + 0.11 * b) / 255
+          const ang = rng.range(0, Math.PI * 2)
+          const rr = rng.range(1.1, 2.9)
+          // four colour stops from washed-out (scattered) to true colour (assembled)
+          const c = [0, 1, 2, 3].map((k) => {
+            const m = 0.5 * (1 - k / 3)
+            return `rgb(${Math.round(r + (235 - r) * m)},${Math.round(g + (232 - g) * m)},${Math.round(b + (225 - b) * m)})`
+          })
+          list.push({
+            t: [-PW + ((i + 0.5) / cols) * 2 * PW, PH - ((j + 0.5) / rows) * 2 * PH, (lum - 0.5) * 0.1],
+            s: [Math.cos(ang) * rr * 1.35, rng.range(-1.4, 1.4), Math.sin(ang) * rr * 0.9],
+            d: rng.range(0, 0.32),
+            c,
+          })
+        }
+      }
+      // shuffle so the ledger's particles land all over the painting
+      for (let k = list.length - 1; k > 0; k--) {
+        const m = Math.floor(rng.next() * (k + 1))
+        ;[list[k], list[m]] = [list[m], list[k]]
+      }
+      partsRef.current = list
+    }
+    img.src = paintingUrl
+    return () => {
+      alive = false
+    }
+  }, [cols, rows])
 
   // pixel offsets of the chosen ledger entry, sampled once at 20px
   const textPts = useMemo(() => {
@@ -126,30 +138,32 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
       stageRef.current = stage
       onStageRef.current?.(stage)
     }
-    const cur = stage
+    const cur = stage - 1
 
     cx.fillStyle = '#0a0a0a'
     cx.fillRect(0, 0, W, H)
 
-    const book = 1 - ss(0.06, 0.2, p)
-    const gather = ss(0.08, 0.24, p)
-    const wire = ss(0.14, 0.3, p)
-    const solid = ss(0.46, 0.6, p)
-    const S = Math.min(W, H) * (isPhone ? 0.3 : 0.32)
+    const book = 1 - ss(0.12, 0.24, p)
+    const gather = ss(0.13, 0.28, p)
+    const wire = ss(0.18, 0.32, p)
+    const solid = ss(0.47, 0.6, p)
+    const marks = book * (1 - ss(0.095, 0.125, p))
+    const S = Math.min(W, H) * (isPhone ? 0.33 : 0.36)
     const cX = W / 2
-    const cY = H / 2 + S * 0.08
-    const yaw = t * 0.16 + p * 1.5 + px * 0.7
-    const pitch = 0.3 + py * 0.25
+    const cY = H / 2 - S * 0.02
+    const yaw = -0.5 + p * 0.8 + Math.sin(t * 0.3) * 0.07 + px * 0.5
+    const pitch = 0.14 + py * 0.2
     const wx = Math.min(1.9, Math.max(1, (W / H) * 0.75))
-    const { proj, projFixed, rotN } = camera(yaw, pitch, cX, cY, S)
+    const { proj, projFixed } = camera(yaw, pitch, cX, cY, S)
 
     /* --- the notebook page --- */
-    const pageW = Math.min(W * 0.78, 620)
-    const fs = Math.min(20, pageW / 30)
+    const pageW = Math.min(W * 0.8, 560)
+    const fs = Math.min(19, pageW / 30)
     const lh = fs * 1.9
-    const pageH = lh * 10
-    const pX = (W - pageW) / 2
-    const pY = (H - pageH) / 2
+    const pageH = lh * 8.2
+    const roomRight = W - pageW > 480
+    const pX = roomRight ? Math.max(24, (W - pageW) / 2 - 150) : (W - pageW) / 2
+    const pY = roomRight ? Math.max(90, H * 0.4 - pageH / 2) : (H - pageH) / 2
     const entryY = pY + lh * (copy.entry + 2)
     if (book > 0.01) {
       cx.save()
@@ -158,18 +172,18 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
       cx.lineWidth = 0.75
       cx.strokeRect(pX, pY, pageW, pageH)
       cx.beginPath()
-      for (let i = 1; i < 10; i++) { cx.moveTo(pX, pY + i * lh + lh * 0.5); cx.lineTo(pX + pageW, pY + i * lh + lh * 0.5) }
+      for (let i = 1; i < 8; i++) { cx.moveTo(pX, pY + i * lh + lh * 0.5); cx.lineTo(pX + pageW, pY + i * lh + lh * 0.5) }
       cx.stroke()
       cx.strokeStyle = 'rgba(255,255,255,0.3)'
       cx.beginPath(); cx.moveTo(pX + fs * 2.2, pY); cx.lineTo(pX + fs * 2.2, pY + pageH); cx.stroke()
       cx.font = `italic 500 ${fs}px Archivo, Arial, sans-serif`
       cx.textBaseline = 'middle'
-      const breaking = ss(0.05, 0.12, p)
+      const breaking = ss(0.11, 0.17, p)
       copy.notebook.forEach((line, i) => {
         const y = pY + lh * (i + 2)
         const isEntry = i === copy.entry
         const jitter = Math.sin(i * 7.3) * 0.6
-        cx.fillStyle = isEntry ? `rgba(255,255,255,${1 - breaking})` : `rgba(255,255,255,${0.75 - 0.65 * ss(0.02, 0.1, p)})`
+        cx.fillStyle = isEntry ? `rgba(255,255,255,${1 - breaking})` : `rgba(255,255,255,${0.75 - 0.65 * ss(0.1, 0.15, p)})`
         cx.fillText(line, pX + fs * 2.8, y + jitter)
         if (isEntry) {
           cx.strokeStyle = `rgba(200,255,46,${0.9 * (1 - breaking)})`
@@ -183,36 +197,85 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
       cx.restore()
     }
 
-    /* --- city map (Where it is) --- */
-    const where = ss(0.28, 0.36, p)
+    /* --- red-pen marks: what the ledger cannot tell you --- */
+    if (marks > 0.01) {
+      cx.save()
+      cx.globalAlpha = marks
+      cx.textBaseline = 'middle'
+      const tagFont = '700 11px Archivo, Arial, sans-serif'
+      copy.problems.forEach((pr, n) => {
+        let cxm: number, cym: number, rw: number, rh: number, ly: number
+        if (pr.line < 0) {
+          cxm = pX + pageW / 2; cym = pY + pageH / 2; rw = pageW / 2 + 8; rh = pageH / 2 + 8; ly = pY + lh * 0.9
+        } else {
+          cx.font = `italic 500 ${fs}px Archivo, Arial, sans-serif`
+          const line = copy.notebook[pr.line] ?? ''
+          const at = Math.max(0, line.lastIndexOf(pr.word))
+          const x0 = pX + fs * 2.8 + cx.measureText(line.slice(0, at)).width
+          const ww = cx.measureText(pr.word).width
+          cxm = x0 + ww / 2; cym = pY + lh * (pr.line + 2); rw = ww / 2 + fs * 0.5; rh = fs * 0.75; ly = cym
+        }
+        // hand-drawn loop: two slightly offset strokes
+        cx.strokeStyle = RED
+        cx.lineWidth = 1.5
+        for (let k = 0; k < 2; k++) {
+          cx.beginPath()
+          if (pr.line < 0) cx.rect(cxm - rw + k * 2, cym - rh - k, rw * 2 - k * 3, rh * 2 + k * 2)
+          else cx.ellipse(cxm + k * 1.5, cym + k, rw + k * 2, rh - k, -0.04 + k * 0.05, 0, Math.PI * 2)
+          cx.stroke()
+        }
+        if (roomRight) {
+          cx.font = tagFont
+          const label = pr.text.toUpperCase()
+          const tw = cx.measureText(label).width + 14
+          const tx = pX + pageW + 22
+          const ty = pr.line < 0 ? pY - 10 : ly - 10
+          cx.beginPath(); cx.moveTo(pr.line < 0 ? pX + pageW + 8 : cxm + rw, pr.line < 0 ? pY + 2 : cym); cx.lineTo(tx, ty + 10); cx.stroke()
+          cx.fillStyle = RED
+          cx.fillRect(tx, ty, tw, 20)
+          cx.fillStyle = '#0a0a0a'
+          cx.fillText(label, tx + 7, ty + 10.5)
+        } else {
+          // narrow screens: numbered badge; the list itself is HTML under the scene
+          const bx = pr.line < 0 ? pX + pageW : cxm + rw
+          const by = pr.line < 0 ? pY : cym - rh
+          cx.fillStyle = RED
+          cx.beginPath(); cx.arc(bx, by, 8, 0, Math.PI * 2); cx.fill()
+          cx.fillStyle = '#0a0a0a'
+          cx.font = '800 10px Archivo, Arial, sans-serif'
+          cx.textAlign = 'center'
+          cx.fillText(String(n + 1), bx, by + 0.5)
+          cx.textAlign = 'start'
+        }
+      })
+      cx.restore()
+    }
+
+    /* --- gallery floor plan (Where it is) --- */
+    const where = ss(0.3, 0.38, p)
     if (where > 0.01) {
       cx.save()
       cx.globalAlpha = where
-      cx.strokeStyle = 'rgba(255,255,255,0.16)'
+      cx.strokeStyle = 'rgba(255,255,255,0.22)'
       cx.lineWidth = 0.75
       cx.beginPath()
-      for (const [a, b] of streets) { const A2 = projFixed(a), B2 = projFixed(b); cx.moveTo(A2.x, A2.y); cx.lineTo(B2.x, B2.y) }
+      for (const [a, b] of rooms) { const A2 = projFixed(a), B2 = projFixed(b); cx.moveTo(A2.x, A2.y); cx.lineTo(B2.x, B2.y) }
       cx.stroke()
-      const park: V3[] = [[-1.3, -1, -1.2], [1.2, -1, -1.2], [1.2, -1, 1.1], [-1.3, -1, 1.1]]
-      cx.strokeStyle = 'rgba(255,255,255,0.45)'
-      cx.setLineDash([3, 4])
-      cx.beginPath(); park.map((v) => projFixed(v)).forEach((q, i) => (i ? cx.lineTo(q.x, q.y) : cx.moveTo(q.x, q.y))); cx.closePath(); cx.stroke()
-      cx.setLineDash([])
-      const pin: V3[] = [[-0.55, -1, -0.55], [0.55, -1, -0.55], [0.55, -1, 0.55], [-0.55, -1, 0.55]]
+      const pin: V3[] = [[-PW, GY, -0.12], [PW, GY, -0.12], [PW, GY, 0.12], [-PW, GY, 0.12]]
       cx.strokeStyle = RING_COLORS[1]
       cx.lineWidth = 1.5
       cx.beginPath(); pin.map((v) => projFixed(v)).forEach((q, i) => (i ? cx.lineTo(q.x, q.y) : cx.moveTo(q.x, q.y))); cx.closePath(); cx.stroke()
       cx.font = '700 10px Archivo, Arial, sans-serif'
       cx.fillStyle = 'rgba(255,255,255,0.7)'
-      const lab = projFixed([1.2, -1, 1.1])
+      const lab = projFixed([2.4, GY, 2])
       const lw = cx.measureText(copy.mapLabel).width
-      cx.fillText(copy.mapLabel, Math.min(W - lw - 12, Math.max(12, lab.x - lw)), lab.y + 16)
+      cx.fillText(copy.mapLabel, Math.min(W - lw - 12, Math.max(12, lab.x - lw)), Math.min(H - 10, lab.y + 16))
       cx.restore()
     }
 
     /* --- record orbits --- */
     const rings = [0, 1, 2, 3, 4].map((k) => {
-      const on = ss(KURA_BOUNDS[k] + 0.02, KURA_BOUNDS[k] + 0.1, p) * (k === 0 ? ss(0.16, 0.26, p) : 1)
+      const on = ss(KURA_BOUNDS[k + 1] + 0.02, KURA_BOUNDS[k + 1] + 0.1, p) * (k === 0 ? ss(0.2, 0.28, p) : 1)
       const rr = 1.12 + k * 0.17
       const ty = 0.15 * (k - 2) + 0.1
       const q: { x: number; y: number; z: number }[] = []
@@ -243,100 +306,105 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
     }
     ringPass(false)
 
-    /* --- points: from the ledger entry and the field into the work --- */
-    const ptA = 1 - solid * 0.88
-    cx.fillStyle = '#f4f3f0'
-    const tx0 = pX + fs * 2.8
-    const tScale = fs / 20
-    pts.forEach((o, i) => {
-      const k = ss(o.d, o.d + 0.6, gather)
-      const tgt = proj(o.t)
-      let x: number, y: number, a: number
-      if (i < textPts.length) {
-        const [ox, oy] = textPts[i]
-        const sx = tx0 + ox * tScale
-        const sy = entryY + oy * tScale
-        x = lerp(sx, tgt.x, k)
-        y = lerp(sy, tgt.y, k)
-        a = ss(0.06, 0.1, p)
-      } else {
-        const q = proj([lerp(o.s[0], o.t[0], k), lerp(o.s[1], o.t[1], k), lerp(o.s[2], o.t[2], k)])
-        x = q.x
-        y = q.y
-        a = ss(0.1, 0.2, p)
-      }
-      const depth = (tgt.z + 1.5) / 3
-      const sz = 0.8 + 1.4 * depth
-      cx.globalAlpha = ptA * a * (0.3 + 0.7 * depth)
-      cx.fillRect(x - sz / 2, y - sz / 2, sz, sz)
-    })
-    cx.globalAlpha = 1
-
-    /* --- solid work and plinth --- */
-    if (solid > 0.01) {
-      type Q = { q: { x: number; y: number; z: number }[]; z: number; l: number }
-      const quads: Q[] = []
-      for (let i = 0; i < LAT; i++) {
-        for (let j = 0; j < LON; j++) {
-          const u0 = i / LAT, u1 = (i + 1) / LAT, v0 = j / LON, v1 = (j + 1) / LON
-          const q = [proj(surf(u0, v0)), proj(surf(u0, v1)), proj(surf(u1, v1)), proj(surf(u1, v0))]
-          const ym = Y0 + (Y1 - Y0) * ((u0 + u1) / 2)
-          const ang = (v0 + v1) * Math.PI + ym * 0.6
-          const n = rotN([Math.cos(ang), 0.15, Math.sin(ang)])
-          quads.push({ q, z: (q[0].z + q[1].z + q[2].z + q[3].z) / 4, l: Math.max(0, -n[0] * 0.5 + n[1] * 0.5 + n[2] * 0.7) })
+    /* --- wireframe: panel edges, registration grid, real dimensions --- */
+    const corners: V3[] = [[-PW, PH, 0], [PW, PH, 0], [PW, -PH, 0], [-PW, -PH, 0]]
+    const back: V3[] = corners.map((v) => [v[0], v[1], -0.06])
+    if (wire > 0.01) {
+      const a = 0.6 * wire * (1 - solid * 0.6)
+      cx.lineWidth = 1
+      cx.strokeStyle = `rgba(255,255,255,${a})`
+      const edges: [V3, V3][] = [0, 1, 2, 3].flatMap((i) => [[corners[i], corners[(i + 1) % 4]], [back[i], back[(i + 1) % 4]], [corners[i], back[i]]] as [V3, V3][])
+      cx.beginPath()
+      edges.forEach(([A, B], i) => {
+        const k = Math.min(1, Math.max(0, wire * 1.6 - i * 0.04))
+        if (k <= 0) return
+        const A2 = proj(A), B2 = proj(B)
+        cx.moveTo(A2.x, A2.y); cx.lineTo(lerp(A2.x, B2.x, k), lerp(A2.y, B2.y, k))
+      })
+      cx.stroke()
+      // registration grid
+      cx.lineWidth = 0.75
+      cx.strokeStyle = `rgba(255,255,255,${a * 0.45 * (1 - solid)})`
+      cx.beginPath()
+      for (let i = 1; i < 3; i++) { const x = -PW + (i / 3) * 2 * PW; const A2 = proj([x, PH, 0.01]), B2 = proj([x, -PH, 0.01]); cx.moveTo(A2.x, A2.y); cx.lineTo(B2.x, B2.y) }
+      for (let j = 1; j < 4; j++) { const y = PH - (j / 4) * 2 * PH; const A2 = proj([-PW, y, 0.01]), B2 = proj([PW, y, 0.01]); cx.moveTo(A2.x, A2.y); cx.lineTo(B2.x, B2.y) }
+      cx.stroke()
+      // dimensions: 53 cm × 77 cm
+      const dimA = ss(0.2, 0.3, p) * (1 - ss(0.44, 0.5, p))
+      if (dimA > 0.01) {
+        const dim = (A: V3, B: V3, text: string) => {
+          const A2 = proj(A), B2 = proj(B)
+          cx.strokeStyle = `rgba(255,255,255,${dimA * 0.8})`
+          cx.lineWidth = 0.75
+          cx.beginPath(); cx.moveTo(A2.x, A2.y); cx.lineTo(B2.x, B2.y); cx.stroke()
+          cx.font = '700 11px Archivo, Arial, sans-serif'
+          const tw = cx.measureText(text).width + 10
+          const mx = (A2.x + B2.x) / 2, my = (A2.y + B2.y) / 2
+          cx.fillStyle = `rgba(10,10,10,${dimA})`; cx.fillRect(mx - tw / 2, my - 9, tw, 18)
+          cx.fillStyle = `rgba(255,255,255,${dimA})`; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(text, mx, my + 0.5); cx.textAlign = 'start'
         }
-      }
-      for (const f of plinthFaces) {
-        const q = f.v.map((v) => proj(v))
-        const n = rotN(f.n)
-        quads.push({ q, z: q.reduce((s, v) => s + v.z, 0) / 4 - 0.05, l: Math.max(0, -n[0] * 0.5 + n[1] * 0.5 + n[2] * 0.7) * 0.7 })
-      }
-      quads.sort((a, b) => a.z - b.z)
-      for (const f of quads) {
-        const l = Math.round(64 + 150 * f.l)
-        cx.fillStyle = `rgba(${l},${Math.round(l * 0.97)},${Math.round(l * 0.9)},${solid})`
-        cx.beginPath(); f.q.forEach((v, i) => (i ? cx.lineTo(v.x, v.y) : cx.moveTo(v.x, v.y))); cx.closePath(); cx.fill()
+        dim([-PW, -PH - 0.16, 0], [PW, -PH - 0.16, 0], '53 CM')
+        dim([PW + 0.16, -PH, 0], [PW + 0.16, PH, 0], '77 CM')
       }
     }
 
-    /* --- wireframe --- */
-    if (wire > 0.01) {
-      cx.lineWidth = 0.75
-      cx.strokeStyle = `rgba(255,255,255,${0.55 * wire * (1 - solid * 0.75)})`
-      cx.beginPath()
-      for (let j = 0; j < LON; j += 3) {
-        for (let i = 0; i <= LAT * wire; i++) { const q = proj(surf(i / LAT, j / LON)); if (i) cx.lineTo(q.x, q.y); else cx.moveTo(q.x, q.y) }
+    /* --- particles: from the ledger entry and the field into the painting --- */
+    const parts = partsRef.current
+    if (parts) {
+      const tx0 = pX + fs * 2.8
+      const tScale = fs / 20
+      const cell = (S * (2 * PW)) / cols
+      for (let i = 0; i < parts.length; i++) {
+        const o = parts[i]
+        const k = ss(o.d, o.d + 0.6, gather)
+        let x: number, y: number, a: number
+        if (i < textPts.length) {
+          const tgt = proj(o.t)
+          const [ox, oy] = textPts[i]
+          x = lerp(tx0 + ox * tScale, tgt.x, k)
+          y = lerp(entryY + oy * tScale, tgt.y, k)
+          a = ss(0.11, 0.15, p)
+        } else {
+          const q = proj([lerp(o.s[0], o.t[0], k), lerp(o.s[1], o.t[1], k), lerp(o.s[2], o.t[2], k)])
+          x = q.x
+          y = q.y
+          a = ss(0.13, 0.24, p) * (0.35 + 0.65 * k)
+        }
+        if (a < 0.01) continue
+        const sz = lerp(isPhone ? 1.8 : 2.2, cell * 1.3, Math.max(solid, k * 0.6) * k)
+        cx.globalAlpha = a
+        cx.fillStyle = o.c[Math.min(3, Math.round(k * (1.5 + solid * 1.5)))]
+        cx.fillRect(x - sz / 2, y - sz / 2, sz, sz)
       }
-      for (let i = 0; i <= LAT; i += 3) {
-        if (i / LAT > wire) break
-        for (let j = 0; j <= LON; j++) { const q = proj(surf(i / LAT, j / LON)); if (j) cx.lineTo(q.x, q.y); else cx.moveTo(q.x, q.y) }
-      }
-      cx.stroke()
-      cx.beginPath()
-      for (const f of plinthFaces) { const q = f.v.map((v) => proj(v)); q.forEach((v, i) => (i ? cx.lineTo(v.x, v.y) : cx.moveTo(v.x, v.y))); cx.closePath() }
-      cx.stroke()
+      cx.globalAlpha = 1
+    }
+
+    /* --- frame, once it is solid --- */
+    if (solid > 0.01) {
+      const f = corners.map((v) => proj([v[0] * 1.06, v[1] * 1.04, 0.02]))
+      cx.strokeStyle = `rgba(255,255,255,${0.5 * solid})`
+      cx.lineWidth = 1.5
+      cx.beginPath(); f.forEach((q, i) => (i ? cx.lineTo(q.x, q.y) : cx.moveTo(q.x, q.y))); cx.closePath(); cx.stroke()
     }
 
     /* --- condition pass --- */
-    const cond = ss(0.46, 0.5, p) * (1 - ss(0.62, 0.66, p))
+    const cond = ss(0.47, 0.51, p) * (1 - ss(0.62, 0.66, p))
     if (cond > 0.01) {
-      const sy = Y0 + (Y1 - Y0) * ((t * 0.35) % 1)
-      const r = R(sy) + 0.06
+      const sy = PH - 2 * PH * ((t * 0.3) % 1)
       cx.globalAlpha = cond
       cx.strokeStyle = RING_COLORS[2]
       cx.lineWidth = 1.5
-      cx.beginPath()
-      for (let j = 0; j <= 48; j++) { const a = (j / 48) * Math.PI * 2; const q = proj([Math.cos(a) * r, sy, Math.sin(a) * r]); if (j) cx.lineTo(q.x, q.y); else cx.moveTo(q.x, q.y) }
-      cx.stroke()
-      const corners: V3[] = [[PL, -0.72, PL], [-PL, -0.72, PL], [PL, -0.72, -PL], [-PL, -0.72, -PL]]
-      const m = corners.map((v) => proj(v)).sort((a, b) => b.z - a.z)[0]
+      const L1 = proj([-PW * 1.08, sy, 0.05]), L2 = proj([PW * 1.08, sy, 0.05])
+      cx.beginPath(); cx.moveTo(L1.x, L1.y); cx.lineTo(L2.x, L2.y); cx.stroke()
+      const m = proj([-PW * 0.62, PH * 0.78, 0.05])
       cx.fillStyle = RING_COLORS[2]
       cx.beginPath(); cx.arc(m.x, m.y, 4, 0, Math.PI * 2); cx.fill()
       cx.lineWidth = 0.75
-      cx.beginPath(); cx.moveTo(m.x, m.y); cx.lineTo(m.x + 60, m.y + 30); cx.stroke()
+      cx.beginPath(); cx.moveTo(m.x, m.y); cx.lineTo(m.x - 50, m.y - 30); cx.stroke()
       cx.font = '700 10px Archivo, Arial, sans-serif'
       cx.fillStyle = '#fff'
-      cx.fillText(copy.conditionMark, Math.min(W - 140, m.x + 64), m.y + 34)
+      const cw = cx.measureText(copy.conditionMark).width
+      cx.fillText(copy.conditionMark, Math.max(10, m.x - 54 - cw), m.y - 34)
       cx.globalAlpha = 1
     }
 

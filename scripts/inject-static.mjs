@@ -55,7 +55,10 @@ const html = `
     <h2>${esc(c.kura.heading)}</h2>
     <p>${esc(c.kura.sceneIntro)}</p>
     <p>${esc(c.kura.intro)}</p>
-    <h3>${esc(c.kura.exampleLabel)}</h3>
+    <h3>${esc(c.kura.beforeLabel)}: ${esc(c.kura.before.name)}</h3>
+    <p>${esc(c.kura.beforeStatement)}</p>
+    ${li(c.kura.scene.problems.map((pr) => esc(pr.text)))}
+    <h3>${esc(c.kura.afterLabel)}: ${esc(c.kura.exampleLabel)}</h3>
     ${li(c.kura.card.map((r) => `<strong>${esc(r.label)}:</strong> ${esc(r.value)}`))}
     ${li(c.kura.outcomes.map((o) => `<strong>${esc(o.title)}:</strong> ${esc(o.body)}`))}
     ${li(c.kura.pillars.map((p) => `<strong>${esc(p.title)}:</strong> ${esc(p.body)}`))}
@@ -184,7 +187,10 @@ const kuraHtml = `
     <p><a href="#contact">${esc(kc.cta)}</a></p>
   </section>
   <section id="record">
-    <h2>${esc(kc.exampleLabel)}</h2>
+    <h2>${esc(kc.beforeLabel)}: ${esc(kc.before.name)}</h2>
+    <p>${esc(kc.beforeStatement)}</p>
+    ${li(kc.scene.problems.map((pr) => esc(pr.text)))}
+    <h2>${esc(kc.afterLabel)}: ${esc(kc.exampleLabel)}</h2>
     ${li(kc.card.map((r) => `<strong>${esc(r.label)}:</strong> ${esc(r.value)}`))}
   </section>
   <section><h2>${esc(k.replaces.heading)}</h2>${li(k.replaces.items.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>

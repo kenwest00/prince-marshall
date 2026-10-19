@@ -91,7 +91,7 @@ export default function KuraPage() {
 
         {/* Scene */}
         <section id="record" aria-label={kura.sceneLabel} className="bg-[#0a0a0a] text-white">
-          <KuraSceneBlock pinVh={350} />
+          <KuraSceneBlock pinVh={400} />
         </section>
 
         {/* What it replaces */}
