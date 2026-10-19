@@ -63,6 +63,8 @@ export interface Client {
   name: string
   /** Sector shown in the client index readout. */
   sector?: string
+  /** Original sector pictogram drawn in the client index (never the client's logo). */
+  icon?: 'laptop' | 'chip' | 'home' | 'tower' | 'capitol' | 'skyline' | 'envelope'
   /** Optional path under public/, e.g. './clients/apple.svg'. Without it the name is typeset as a wordmark. */
   logo?: string
 }
@@ -73,13 +75,13 @@ export const clients = {
   heading: 'Organizations we have worked with.',
   hint: 'Scroll to move through the index',
   items: [
-    { name: 'Apple', sector: 'Technology' },
-    { name: 'IBM', sector: 'Technology' },
-    { name: 'The Home Depot', sector: 'Retail' },
-    { name: 'AT&T', sector: 'Telecommunications' },
-    { name: 'State of Connecticut', sector: 'State government' },
-    { name: 'Downtown ATL', sector: 'Civic · Downtown Atlanta' },
-    { name: 'Japan Post', sector: 'Postal and logistics' },
+    { name: 'Apple', icon: 'laptop', sector: 'Technology' },
+    { name: 'IBM', icon: 'chip', sector: 'Technology' },
+    { name: 'The Home Depot', icon: 'home', sector: 'Retail' },
+    { name: 'AT&T', icon: 'tower', sector: 'Telecommunications' },
+    { name: 'State of Connecticut', icon: 'capitol', sector: 'State government' },
+    { name: 'Downtown ATL', icon: 'skyline', sector: 'Civic · Downtown Atlanta' },
+    { name: 'Japan Post', icon: 'envelope', sector: 'Postal and logistics' },
   ] as Client[],
 }
 

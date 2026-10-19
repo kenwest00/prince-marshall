@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { clients } from '../data/content'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
 import { SIGNAL } from '../lib/palette'
+import { renderIcon } from '../lib/clientIcons'
 import { clamp01, lerp, seeded, ss, useCanvasLoop, useMediaQuery, useScrollProgress } from '../lib/scene'
 
 /**
@@ -49,94 +50,59 @@ function Scramble({ text, className = '' }: { text: string; className?: string }
 interface Targets {
   w: number
   h: number
+  /** icon size, top-left corner and tile step */
+  z: number
+  ox: number
+  oy: number
+  g: number
   pts: [number, number][][]
-  size: number
+  solids: HTMLCanvasElement[]
 }
 
-/** Sample each name as filled text into tile positions that fit the canvas. */
-function sample(w: number, h: number): Targets {
-  const c = document.createElement('canvas')
-  c.width = w
-  c.height = h
-  const x = c.getContext('2d', { willReadFrequently: true })
-  if (!x) return { w, h, pts: names.map(() => []), size: 3 }
-  const base = Math.min(h * 0.34, w * 0.2)
-  const step = Math.max(6, Math.round(Math.min(w, h * 1.6) / 95))
-  const pts = names.map((name) => {
-    x.clearRect(0, 0, w, h)
-    x.fillStyle = '#000'
-    x.textAlign = 'center'
-    x.textBaseline = 'middle'
-    let fs = base
-    x.font = `800 ${fs}px Archivo, 'Helvetica Neue', Arial, sans-serif`
-    let lines = [name]
-    const fit = (ls: string[]) => Math.max(...ls.map((l) => x.measureText(l).width))
-    if (fit(lines) > w * 0.88) {
-      const words = name.split(' ')
-      if (words.length > 1) {
-        const mid = Math.ceil(words.length / 2)
-        lines = [words.slice(0, mid).join(' '), words.slice(mid).join(' ')]
-      }
-      const wid = fit(lines)
-      if (wid > w * 0.88) fs = (fs * w * 0.88) / wid
-      fs = Math.min(fs, (h * 0.8) / (lines.length * 1.0))
-      x.font = `800 ${fs}px Archivo, 'Helvetica Neue', Arial, sans-serif`
-    }
-    lines.forEach((l, i) => x.fillText(l, w / 2, h / 2 + (i - (lines.length - 1) / 2) * fs * 0.95))
-    const d = x.getImageData(0, 0, w, h).data
+/** Render each pictogram once (crisp, for the solid state) and sample it into tiles. */
+function build(w: number, h: number): Targets {
+  const z = Math.round(Math.min(h * 0.56, w < 700 ? w * 0.62 : w * 0.5))
+  const ox = (w - z) / 2
+  const oy = Math.max(8, h * (w < 700 ? 0.45 : 0.4) - z / 2)
+  const g = Math.max(5, z / 30)
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  const solids: HTMLCanvasElement[] = []
+  const pts = clients.items.map((c, n) => {
+    solids.push(renderIcon(c.icon ?? 'laptop', Math.round(z * dpr)))
+    const probe = renderIcon(c.icon ?? 'laptop', z)
+    const d = probe.getContext('2d')?.getImageData(0, 0, z, z).data
     const out: [number, number][] = []
-    for (let yy = 0; yy < h; yy += step) for (let xx = 0; xx < w; xx += step) if (d[(yy * w + xx) * 4 + 3] > 128) out.push([xx, yy])
-    // shuffle so each name's tiles come from everywhere in the last one
-    const rng = seeded(name.length * 97 + 7)
+    if (d)
+      for (let y = g / 2; y < z; y += g)
+        for (let x = g / 2; x < z; x += g) if (d[(Math.floor(y) * z + Math.floor(x)) * 4 + 3] > 110) out.push([ox + x, oy + y])
+    const rng = seeded(n * 131 + 17)
     for (let i = out.length - 1; i > 0; i--) {
       const j = Math.floor(rng.next() * (i + 1))
       ;[out[i], out[j]] = [out[j], out[i]]
     }
     return out
   })
-  return { w, h, pts, size: step * 0.78 }
+  return { w, h, z, ox, oy, g, pts, solids }
 }
 
 function Field({ target, onIndex, label }: { target: MutableRefObject<number>; onIndex: (i: number) => void; label: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const tg = useRef<Targets | null>(null)
-  const fontsReady = useRef(false)
   const P = useRef(-1)
   const idx = useRef(-1)
-  const ptr = useRef({ x: -9999, y: -9999 })
   const cb = useRef(onIndex)
   useEffect(() => {
     cb.current = onIndex
   })
-  useEffect(() => {
-    document.fonts?.ready.then(() => {
-      fontsReady.current = true
-      tg.current = null
-    })
-    const el = canvasRef.current?.parentElement
-    if (!el) return
-    const move = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect()
-      ptr.current = { x: e.clientX - r.left, y: e.clientY - r.top }
-    }
-    const leave = () => (ptr.current = { x: -9999, y: -9999 })
-    el.addEventListener('pointermove', move)
-    el.addEventListener('pointerleave', leave)
-    return () => {
-      el.removeEventListener('pointermove', move)
-      el.removeEventListener('pointerleave', leave)
-    }
-  }, [])
-
-  // per-tile scatter direction and colour, fixed
+  // per-tile scatter direction, stagger and colour, fixed
   const seedsRef = useRef<{ a: number; r: number; d: number; sig: boolean }[]>([])
 
-  useCanvasLoop(canvasRef, ({ ctx, w, h, t }) => {
+  useCanvasLoop(canvasRef, ({ ctx, w, h, t, px, py }) => {
     if (!tg.current || tg.current.w !== w || tg.current.h !== h) {
-      tg.current = sample(w, h)
+      tg.current = build(w, h)
       const max = Math.max(...tg.current.pts.map((p) => p.length), 1)
       const rng = seeded(4242)
-      seedsRef.current = Array.from({ length: max }, () => ({ a: rng.range(0, Math.PI * 2), r: rng.range(0.25, 0.7), d: rng.range(0, 0.25), sig: rng.next() < 0.06 }))
+      seedsRef.current = Array.from({ length: max }, () => ({ a: rng.range(0, Math.PI * 2), r: rng.range(0.2, 0.6), d: rng.range(0, 0.18), sig: rng.next() < 0.08 }))
     }
     const T = tg.current
     const seeds = seedsRef.current
@@ -154,45 +120,46 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
     ctx.fillStyle = '#0a0a0a'
     ctx.fillRect(0, 0, w, h)
 
-    const A = T.pts[k]
-    const B = T.pts[k + 1]
-    const R = Math.min(w, h) * 0.16
-    const px = ptr.current.x
-    const py = ptr.current.y
-    const sz = T.size
-    for (let i = 0; i < seeds.length; i++) {
-      const s = seeds[i]
-      // hold, then a staggered break-and-reform in the middle of each segment
-      const e = ss(0.3 + s.d, 0.55 + s.d, local)
-      const a = A.length ? A[i % A.length] : [w / 2, h / 2]
-      const b = B.length ? B[i % B.length] : [w / 2, h / 2]
-      const burst = Math.sin(Math.PI * e)
-      let x = lerp(a[0], b[0], e) + Math.cos(s.a + t * 0.2) * s.r * w * 0.5 * burst
-      let y = lerp(a[1], b[1], e) + Math.sin(s.a + t * 0.2) * s.r * h * 0.6 * burst
-      // idle shimmer
-      x += Math.sin(t * 1.3 + i) * 0.6
-      y += Math.cos(t * 1.1 + i * 0.7) * 0.6
-      // pointer scatter
-      const dx = x - px
-      const dy = y - py
-      const d2 = dx * dx + dy * dy
-      if (d2 < R * R && d2 > 0.01) {
-        const dd = Math.sqrt(d2)
-        const push = ((R - dd) / R) ** 2 * R * 0.55
-        x += (dx / dd) * push
-        y += (dy / dd) * push
+    // gentle parallax with the pointer
+    const sx = px * 26
+    const sy = py * 18
+    // solid at either end of each segment, tiles in between
+    const solidA = 1 - ss(0.1, 0.24, local)
+    const solidB = ss(0.8, 0.94, local)
+    const tiles = 1 - Math.max(solidA, solidB)
+
+    if (tiles > 0.01) {
+      const A = T.pts[k]
+      const B = T.pts[k + 1]
+      const cxm = w / 2
+      const cym = T.oy + T.z / 2
+      for (let i = 0; i < seeds.length; i++) {
+        const s = seeds[i]
+        const e = ss(0.22 + s.d, 0.62 + s.d, local)
+        const a = A.length ? A[i % A.length] : [cxm, cym]
+        const b = B.length ? B[i % B.length] : [cxm, cym]
+        const burst = Math.sin(Math.PI * e)
+        const x = lerp(a[0], b[0], e) + Math.cos(s.a + t * 0.25) * s.r * w * 0.45 * burst + sx
+        const y = lerp(a[1], b[1], e) + Math.sin(s.a + t * 0.25) * s.r * h * 0.45 * burst + sy
+        // extra tiles (when one icon has fewer than the other) only exist mid-flight
+        const extra = lerp(i >= A.length ? 1 : 0, i >= B.length ? 1 : 0, e)
+        const alpha = tiles * (1 - extra * (1 - burst))
+        if (alpha < 0.02) continue
+        const sz = T.g * (0.84 - burst * 0.4)
+        ctx.globalAlpha = alpha * (1 - burst * 0.35)
+        ctx.fillStyle = s.sig ? SIGNAL : '#ffffff'
+        ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz)
       }
-      // duplicates (when this name has fewer tiles) fade out while the name holds
-      const dupA = i >= A.length ? 1 : 0
-      const dupB = i >= B.length ? 1 : 0
-      const alpha = 1 - lerp(dupA, dupB, e) * (1 - burst * 0.6)
-      if (alpha < 0.02) continue
-      ctx.globalAlpha = alpha * (0.55 + 0.45 * (1 - burst))
-      ctx.fillStyle = s.sig ? SIGNAL : '#ffffff'
-      const z = sz * (1 - burst * 0.45)
-      ctx.fillRect(x - z / 2, y - z / 2, z, z)
+      ctx.globalAlpha = 1
     }
-    ctx.globalAlpha = 1
+    const drawSolid = (n: number, a: number) => {
+      if (a < 0.01) return
+      ctx.globalAlpha = a
+      ctx.drawImage(T.solids[n], T.ox + sx, T.oy + sy, T.z, T.z)
+      ctx.globalAlpha = 1
+    }
+    drawSolid(k, solidA)
+    drawSolid(k + 1, solidB)
   })
 
   return <canvas ref={canvasRef} role="img" aria-label={label} className="block h-full w-full" />
@@ -264,9 +231,21 @@ export default function Clients() {
             </div>
           </div>
           <div className="relative min-h-0 flex-1">
-            <Field target={target} onIndex={setActive} label={`Client names forming from tiles: ${names.join(', ')}`} />
+            <Field target={target} onIndex={setActive} label={`Sector icons assembling from tiles for each client: ${names.join(', ')}`} />
+            <div className="pointer-events-none absolute inset-x-0 bottom-[6%] grid px-5 text-center md:px-10" aria-hidden="true">
+              {names.map((n, i) => (
+                <p
+                  key={n}
+                  className={`font-display col-start-1 row-start-1 text-[clamp(1.9rem,6.5vw,5.75rem)] leading-[0.95] tracking-[-0.035em] transition-all duration-500 ${
+                    i === active ? 'translate-y-0 opacity-100 blur-0' : 'translate-y-3 opacity-0 blur-[6px]'
+                  }`}
+                >
+                  {n}
+                </p>
+              ))}
+            </div>
             {/* progress rail */}
-            <div className="pointer-events-none absolute inset-y-6 right-5 w-px bg-white/20 md:right-10" aria-hidden="true">
+            <div className="pointer-events-none absolute inset-y-6 right-5 hidden w-px md:block bg-white/20 md:right-10" aria-hidden="true">
               <div className="absolute left-[-2px] h-6 w-[5px] transition-[top] duration-300" style={{ top: `calc(${(active / (N - 1)) * 100}% - 12px)`, background: SIGNAL }} />
             </div>
           </div>
