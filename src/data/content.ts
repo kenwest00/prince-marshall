@@ -61,6 +61,8 @@ export const statement = {
 
 export interface Client {
   name: string
+  /** Sector shown in the client index readout. */
+  sector?: string
   /** Optional path under public/, e.g. './clients/apple.svg'. Without it the name is typeset as a wordmark. */
   logo?: string
 }
@@ -69,14 +71,15 @@ export const clients = {
   id: 'clients',
   eyebrow: 'Clients',
   heading: 'Organizations we have worked with.',
+  hint: 'Scroll to move through the index',
   items: [
-    { name: 'Apple' },
-    { name: 'IBM' },
-    { name: 'The Home Depot' },
-    { name: 'AT&T' },
-    { name: 'State of Connecticut' },
-    { name: 'Downtown ATL' },
-    { name: 'Japan Post' },
+    { name: 'Apple', sector: 'Technology' },
+    { name: 'IBM', sector: 'Technology' },
+    { name: 'The Home Depot', sector: 'Retail' },
+    { name: 'AT&T', sector: 'Telecommunications' },
+    { name: 'State of Connecticut', sector: 'State government' },
+    { name: 'Downtown ATL', sector: 'Civic · Downtown Atlanta' },
+    { name: 'Japan Post', sector: 'Postal and logistics' },
   ] as Client[],
 }
 
