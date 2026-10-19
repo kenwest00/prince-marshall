@@ -75,6 +75,7 @@ export const clients = {
     { name: 'The Home Depot' },
     { name: 'AT&T' },
     { name: 'State of Connecticut' },
+    { name: 'Downtown ATL' },
     { name: 'Japan Post' },
   ] as Client[],
 }
