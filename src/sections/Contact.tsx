@@ -4,6 +4,7 @@ import RollText from '../components/RollText'
 import SectionHead from '../components/SectionHead'
 import { scrollToTarget, useFadeItems } from '../lib/motion'
 import { CONTACT_TOPIC_EVENT } from '../lib/contactEvents'
+import { getSource } from '../lib/source'
 /**
  * Inquiries are POSTed as JSON to FormSubmit (free, no account), which emails
  * them to site.email. Set VITE_FORM_ENDPOINT at build time to use another
@@ -18,11 +19,11 @@ type Status = 'idle' | 'sending' | 'sent' | 'mailto' | 'error'
 const fieldClass =
   'mt-2 block w-full min-h-[44px] border border-[#0a0a0a] bg-white px-3 py-2.5 text-base font-semibold text-[#0a0a0a] placeholder:text-[#0a0a0a]/70 rounded-none'
 
-export default function Contact() {
+export default function Contact({ defaultTopic }: { defaultTopic?: string } = {}) {
   const f = contact.form
   const [status, setStatus] = useState<Status>('idle')
   const sideRef = useFadeItems<HTMLDivElement>()
-  const [topic, setTopic] = useState(f.topicOptions[0])
+  const [topic, setTopic] = useState(defaultTopic && f.topicOptions.includes(defaultTopic) ? defaultTopic : f.topicOptions[0])
   const messageRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -68,7 +69,8 @@ export default function Contact() {
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
             ...data,
-            _subject: `${data.topic}: ${data.organization || data.name}`,
+            source: getSource(),
+            _subject: `${data.topic}: ${data.organization || data.name} (${getSource()})`,
             _captcha: 'false',
             _template: 'table',
           }),

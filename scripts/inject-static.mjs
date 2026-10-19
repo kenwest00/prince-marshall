@@ -34,7 +34,12 @@ const html = `
   <section id="home">
     <h1>${esc(c.site.name)} — ${c.hero.stackedLines.map((l) => esc(l.text)).join(' ')}</h1>
     <p>${esc(c.hero.statement)}</p>
-    <p><a href="#contact">${esc(c.hero.primaryCta)}</a></p>
+    <p><a href="#contact">${esc(c.hero.primaryCta)}</a> <a href="${esc(c.hero.secondaryHref)}">${esc(c.hero.secondaryCta)}</a></p>
+    <ol>${c.hero.stages.map((s) => `<li><strong>${esc(s.name)}:</strong> ${esc(s.line)}</li>`).join('')}</ol>
+  </section>
+  <section id="${c.audiences.id}">
+    <h2>${esc(c.audiences.label)}</h2>
+    ${li(c.audiences.items.map((a) => `<a href="${esc(a.href)}">${esc(a.label)}</a>: ${esc(a.line)}`))}
   </section>
   <section id="statement"><h2>${c.statement.lines.map((l) => esc(l.text)).join(' ')}</h2></section>
   <section id="${c.clients.id}"><h2>${esc(c.clients.heading)}</h2>${li(c.clients.items.map((i) => esc(i.name)))}</section>
@@ -46,12 +51,17 @@ const html = `
       .join('')}</ol>
   </section>
   <section id="${c.kura.id}">
-    <h2>${esc(c.kura.name)} — ${esc(c.kura.tagline)}</h2>
-    <p>${esc(c.kura.status)}</p>
+    <p>${esc(c.kura.flagEyebrow)} · ${esc(c.kura.status)}</p>
+    <h2>${esc(c.kura.heading)}</h2>
+    <p>${esc(c.kura.sceneIntro)}</p>
     <p>${esc(c.kura.intro)}</p>
+    <h3>${esc(c.kura.exampleLabel)}</h3>
+    ${li(c.kura.card.map((r) => `<strong>${esc(r.label)}:</strong> ${esc(r.value)}`))}
+    ${li(c.kura.outcomes.map((o) => `<strong>${esc(o.title)}:</strong> ${esc(o.body)}`))}
     ${li(c.kura.pillars.map((p) => `<strong>${esc(p.title)}:</strong> ${esc(p.body)}`))}
     <h3>${esc(c.kura.rulesHeading)}</h3>
     ${li(c.kura.rules.map(esc))}
+    <p>${esc(c.kura.closing)} <a href="${esc(c.kura.pageLink.href)}">${esc(c.kura.pageLink.label)}</a></p>
   </section>
   <section id="${c.environments.id}">
     <h2>${esc(c.environments.heading)}</h2>
@@ -68,6 +78,14 @@ const html = `
   <section id="${c.studio.id}">
     <h2>${esc(c.studio.heading)}</h2>
     ${c.studio.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
+  </section>
+  <section id="${c.partners.id}">
+    <h2>${esc(c.partners.heading)}</h2>
+    <p>${esc(c.partners.intro)}</p>
+    <h3>${esc(c.partners.whoHeading)}</h3>
+    ${li(c.partners.who.map((w) => `<strong>${esc(w.title)}:</strong> ${esc(w.body)}`))}
+    <h3>${esc(c.partners.getHeading)}</h3>
+    ${li([...c.partners.get, c.partners.referral].filter(Boolean).map(esc))}
   </section>
   <section id="${c.faq.id}">
     <h2>${esc(c.faq.heading)}</h2>
@@ -152,3 +170,58 @@ ridePage = ridePage
   .replace('<!-- structured-data -->', rideLd)
 writeFileSync(rideIndex, ridePage)
 console.log('Injected static content and JSON-LD into dist/ride-along/index.html')
+
+/* ---------------- /kura/ ---------------- */
+const k = c.kuraPage
+const kc = c.kura
+const kuraHtml = `
+<header><p><a href="../">${esc(c.site.name)}</a></p></header>
+<main>
+  <section>
+    <p>${esc(k.label)}</p>
+    <h1>${esc(k.h1)}</h1>
+    <p>${esc(k.sub)}</p>
+    <p><a href="#contact">${esc(kc.cta)}</a></p>
+  </section>
+  <section id="record">
+    <h2>${esc(kc.exampleLabel)}</h2>
+    ${li(kc.card.map((r) => `<strong>${esc(r.label)}:</strong> ${esc(r.value)}`))}
+  </section>
+  <section><h2>${esc(k.replaces.heading)}</h2>${li(k.replaces.items.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>
+  <section><h2>${esc(k.outcomesHeading)}</h2>${li(kc.outcomes.map((o) => `<strong>${esc(o.title)}:</strong> ${esc(o.body)}`))}</section>
+  <section><h2>${esc(k.anatomyHeading)}</h2><ol>${kc.pillars.map((p) => `<li><h3>${esc(p.title)}</h3><p>${esc(p.body)}</p></li>`).join('')}</ol></section>
+  <section><h2>${esc(k.whoHeading)}</h2>${li(k.who.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>
+  ${kc.starterEnabled ? `<section><h2>${esc(k.starter.heading)}</h2><p>${esc(k.starter.body)}</p></section>` : ''}
+  <section>
+    <h2>${esc(k.buyingHeading)}</h2>
+    <p>${esc(k.pricing || k.pricingFallback)}</p>
+    <dl>${k.buying.filter((b) => b.value).map((b) => `<dt>${esc(b.label)}</dt><dd>${esc(b.value)}</dd>`).join('')}</dl>
+  </section>
+  <section><h2>${esc(k.faqHeading)}</h2>${k.faq.map((i) => `<h3>${esc(i.q)}</h3><p>${esc(i.a)}</p>`).join('')}</section>
+  <section id="contact"><h2>${esc(k.finalHeading)}</h2><p><a href="mailto:${esc(c.site.email)}">${esc(c.site.email)}</a></p></section>
+</main>
+<footer><p>${esc(c.footer.left)}</p><p><a href="../">${esc(k.footerHome.label)}</a></p></footer>`
+
+const kuraLd = [
+  ld({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'KURA',
+    url: k.url,
+    description: k.description,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    publisher: { '@type': 'Organization', name: c.site.name, url: c.site.url, email: c.site.email },
+  }),
+  ...(k.faq.length
+    ? [ld({ '@context': 'https://schema.org', '@type': 'FAQPage', url: k.url, mainEntity: k.faq.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) })]
+    : []),
+].join('\n    ')
+
+const kuraIndex = join(root, 'dist/kura/index.html')
+let kuraFile = readFileSync(kuraIndex, 'utf8')
+if (!kuraFile.includes('<div id="root"></div>')) throw new Error('#root placeholder not found in dist/kura/index.html')
+if (!kuraFile.includes('<!-- structured-data -->')) throw new Error('structured-data marker not found in dist/kura/index.html')
+kuraFile = kuraFile.replace('<div id="root"></div>', `<div id="root">${kuraHtml}</div>`).replace('<!-- structured-data -->', kuraLd)
+writeFileSync(kuraIndex, kuraFile)
+console.log('Injected static content and JSON-LD into dist/kura/index.html')

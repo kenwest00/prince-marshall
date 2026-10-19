@@ -102,7 +102,7 @@ export default function MenuOverlay({ open, onClose, onNavigate }: MenuOverlayPr
                 )}
                 {!item.number && <span className="w-8 shrink-0 md:w-12" />}
                 <span className="menu-item-mask block overflow-hidden">
-                  <span className="block font-display text-[clamp(2.2rem,min(7vw,6.5vh),5.5rem)] leading-[0.95] tracking-[-0.03em]">
+                  <span className="block font-display text-[clamp(2rem,min(7vw,5.8vh),5.5rem)] leading-[0.95] tracking-[-0.03em]">
                     <RollText text={item.label} />
                   </span>
                 </span>
@@ -111,25 +111,30 @@ export default function MenuOverlay({ open, onClose, onNavigate }: MenuOverlayPr
           ))}
         </ul>
 
-        <a
-          href={menu.offer.href}
-          data-page-link
-          className="group mt-4 flex items-center gap-4 py-3 md:mt-6 md:gap-8"
-        >
-          <span className="flex w-8 shrink-0 md:w-12" aria-hidden="true">
-            <span className="signal-dot" />
-          </span>
-          <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="menu-item-mask block overflow-hidden">
-              <span className="block font-display text-[clamp(1.75rem,4.2vw,3.25rem)] leading-[0.95] tracking-[-0.03em]">
-                <RollText text={menu.offer.label} />
+        <div className="mt-3 md:mt-5">
+          {menu.offers.map((offer) => (
+            <a
+              key={offer.href}
+              href={offer.href}
+              data-page-link
+              className="group flex items-center gap-4 py-1.5 md:gap-8 md:py-2"
+            >
+              <span className="flex w-8 shrink-0 md:w-12" aria-hidden="true">
+                <span className="signal-dot" />
               </span>
-            </span>
-            <span className="type-label text-[#0a0a0a]/70 transition-colors group-hover:text-[#0a0a0a]">
-              {menu.offer.note} <span aria-hidden="true">→</span>
-            </span>
-          </span>
-        </a>
+              <span className="flex flex-wrap items-baseline gap-x-4 gap-y-0.5">
+                <span className="menu-item-mask block overflow-hidden">
+                  <span className="block font-display text-[clamp(1.5rem,min(3.6vw,4.6vh),3rem)] leading-[0.95] tracking-[-0.03em]">
+                    <RollText text={offer.label} />
+                  </span>
+                </span>
+                <span className="type-label text-[#0a0a0a]/70 transition-colors group-hover:text-[#0a0a0a]">
+                  {offer.note} <span aria-hidden="true">→</span>
+                </span>
+              </span>
+            </a>
+          ))}
+        </div>
       </nav>
 
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-6 md:px-10">

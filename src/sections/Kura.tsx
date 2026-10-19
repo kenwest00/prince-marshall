@@ -1,95 +1,71 @@
-import { contact, kura } from '../data/content'
+import { kura } from '../data/content'
 import { useFadeItems, useWordReveal } from '../lib/motion'
-import PillButton from '../components/PillButton'
-import RollText from '../components/RollText'
-import { RING_COLORS } from '../lib/palette'
-import KuraField from '../components/KuraField'
-import { useState } from 'react'
-import { openContact } from '../lib/contactEvents'
+import KuraSceneBlock from '../components/KuraSceneBlock'
 
-/** Generative portrait of a collection: one object, five orbits of record. */
-function KuraVisual({ active, onActive }: { active: number | null; onActive: (i: number | null) => void }) {
-  return (
-    <figure className="fade-item border border-[#0a0a0a] bg-[#0a0a0a]" aria-label={kura.visualLabel}>
-      <KuraField labels={kura.ringLabels} active={active} onActive={onActive} />
-      <figcaption className="type-label border-t border-white/25 px-4 py-3 text-white/80">{kura.visualLabel}</figcaption>
-    </figure>
-  )
-}
-
+/** KURA, the flagship: from notebook to record. Black band, KURA's own colours. */
 export default function Kura() {
-  const nameRef = useWordReveal<HTMLHeadingElement>()
-  const contentRef = useFadeItems<HTMLDivElement>()
-  const [active, setActive] = useState<number | null>(null)
+  const headRef = useWordReveal<HTMLHeadingElement>()
+  const afterRef = useFadeItems<HTMLDivElement>()
 
   return (
-    <section id={kura.id} aria-labelledby="kura-heading" className="hairline-t bg-[#f4f3f0] px-5 py-24 md:px-10 md:py-36">
-      <div className="grid grid-cols-1 gap-6 pb-10 md:grid-cols-[200px_1fr] md:gap-16 md:pb-16">
-        <p className="type-label text-[#0a0a0a]/70">{kura.eyebrow}</p>
+    <section id={kura.id} aria-labelledby="kura-heading" className="bg-[#0a0a0a] text-white">
+      <div className="grid grid-cols-1 gap-6 px-5 pb-10 pt-24 md:grid-cols-[200px_1fr] md:gap-16 md:px-10 md:pb-14 md:pt-36">
+        <p className="type-label text-[#c8ff2e]">{kura.flagEyebrow}</p>
         <div>
+          <p className="type-label inline-flex items-center gap-2 border border-white/50 px-3 py-1.5">
+            <span className="signal-dot signal-dot--on-dark" aria-hidden="true" />
+            {kura.status}
+          </p>
           <h2
-            ref={nameRef}
+            ref={headRef}
             id="kura-heading"
-            className="font-display text-[clamp(4rem,14vw,13rem)] leading-[0.88] tracking-[-0.04em]"
+            className="mt-6 font-display text-[clamp(2.75rem,8vw,7.5rem)] leading-[0.92] tracking-[-0.04em]"
           >
-            {kura.name}
+            {kura.heading}
           </h2>
-          <p className="mt-6 text-2xl font-bold leading-tight tracking-tight md:text-4xl">{kura.tagline}</p>
-          <p className="type-label mt-4 inline-flex items-center gap-2 bg-[#0a0a0a] px-3 py-1.5 text-white"><span className="signal-dot signal-dot--on-dark" aria-hidden="true" />{kura.status}</p>
+          <p className="mt-6 max-w-3xl text-lg font-semibold leading-snug text-white/85 md:text-xl">{kura.sceneIntro}</p>
         </div>
       </div>
 
-      <div ref={contentRef} className="md:ml-[264px]">
-        <p className="fade-item max-w-3xl text-lg font-semibold leading-snug md:text-xl">{kura.intro}</p>
+      <KuraSceneBlock pinVh={400} />
 
-        <div className="mt-12">
-          <KuraVisual active={active} onActive={setActive} />
-        </div>
-
-        <div className="mt-12 grid grid-cols-1 gap-10 xl:grid-cols-[1.1fr_1fr] xl:gap-14">
-          <ul className="space-y-0">
-            {kura.pillars.map((p, i) => (
-              <li
-                key={p.title}
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-                className={`fade-item grid grid-cols-[2.5rem_1fr] gap-4 border-t border-[#0a0a0a]/25 py-5 transition-colors last:border-b ${active === i ? 'bg-[#0a0a0a] px-4 text-white' : ''}`}
-                style={active === i ? { boxShadow: `inset 5px 0 0 ${RING_COLORS[i]}` } : undefined}
-              >
-                <span className={`type-label pt-1 ${active === i ? 'text-white/80' : 'text-[#0a0a0a]/70'}`}>{String(i + 1).padStart(2, '0')}</span>
-                <div>
-                  <h3 className="text-xl font-extrabold leading-tight tracking-tight">{p.title}</h3>
-                  <p className={`mt-1 font-semibold leading-snug ${active === i ? 'text-white/85' : 'text-[#0a0a0a]/80'}`}>{p.body}</p>
-                </div>
+      <div ref={afterRef} className="px-5 pb-24 pt-16 md:px-10 md:pb-36 md:pt-24">
+        <div className="md:ml-[264px]">
+          <ul className="grid grid-cols-1 border-t border-white/40 md:grid-cols-2">
+            {kura.outcomes.map((o) => (
+              <li key={o.title} className="fade-item border-b border-white/20 py-6 md:pr-10 md:[&:nth-child(odd)]:border-r md:[&:nth-child(even)]:pl-10">
+                <h3 className="font-display text-2xl leading-none tracking-[-0.02em] md:text-3xl">{o.title}</h3>
+                <p className="mt-3 max-w-xl font-semibold leading-snug text-white/80">{o.body}</p>
               </li>
             ))}
           </ul>
 
-          <div className="space-y-10">
-            <div className="fade-item">
-              <h3 className="font-display text-2xl leading-none tracking-[-0.02em] md:text-3xl">{kura.rulesHeading}</h3>
-              <ul className="mt-5 space-y-3">
+          {kura.screenshot && (
+            <figure className="fade-item mt-14 border border-white/40">
+              <img src={kura.screenshot} alt={kura.screenshotAlt} loading="lazy" className="block w-full" />
+            </figure>
+          )}
+
+          <div className="fade-item mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div>
+              <h3 className="type-label text-white/70">{kura.rulesHeading}</h3>
+              <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
                 {kura.rules.map((rule) => (
-                  <li key={rule} className="flex gap-3 font-semibold leading-snug">
-                    <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 bg-[#0a0a0a]" />
+                  <li key={rule} className="flex gap-3 font-semibold leading-snug text-white/85">
+                    <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 bg-[#c8ff2e]" />
                     {rule}
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-        </div>
 
-        <div className="fade-item mt-14">
-          <PillButton
-            href="#contact"
-            onClick={(e) => {
-              e?.preventDefault()
-              openContact(contact.form.topicOptions[1])
-            }}
-          >
-            <RollText text={kura.cta} />
-          </PillButton>
+          <div className="fade-item mt-14 flex flex-wrap items-baseline justify-between gap-4 border-t border-white/40 pt-6">
+            <p className="text-lg font-bold">{kura.closing}</p>
+            <a href={kura.pageLink.href} data-page-link className="type-label inline-flex min-h-[44px] items-center underline underline-offset-4 hover:no-underline">
+              {kura.pageLink.label} <span aria-hidden="true" className="ml-1">→</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

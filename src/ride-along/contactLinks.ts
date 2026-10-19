@@ -1,3 +1,4 @@
+import { getSource } from '../lib/source'
 import { rideAlong } from '../data/content'
 
 const digits = rideAlong.phone.replace(/\D/g, '')
@@ -11,13 +12,8 @@ export const prettyPhone = (() => {
   return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : digits
 })()
 
-/** Event / chamber tag from ?src=…, sanitised. Defaults to "web". */
-export const source = (() => {
-  if (typeof window === 'undefined') return 'web'
-  const raw = new URLSearchParams(window.location.search).get('src') ?? ''
-  const clean = raw.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 40)
-  return clean || 'web'
-})()
+/** Event / chamber tag from ?src=…, kept for the visit. Defaults to "web". */
+export const source = getSource()
 
 /** `?&body=` works on both iOS and Android. */
 export const smsHref = `sms:${digits}?&body=${encodeURIComponent(`${rideAlong.smsKeyword} ${source}`)}`

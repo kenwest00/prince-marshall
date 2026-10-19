@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { reducedMotion } from '../lib/motion'
-import { site } from '../data/content'
+import { hero, site } from '../data/content'
+import TileScene from '../components/TileScene'
 
 interface PreloaderProps {
   /** Fired the moment the curtain starts lifting — hero intro begins. */
@@ -15,6 +16,7 @@ interface PreloaderProps {
 export default function Preloader({ onDone }: PreloaderProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
   const counterRef = useRef<HTMLSpanElement>(null)
+  const tileTarget = useRef(0)
   const [gone, setGone] = useState(() => {
     try {
       return sessionStorage.getItem('pm-intro-seen') === '1'
@@ -40,7 +42,8 @@ export default function Preloader({ onDone }: PreloaderProps) {
     if (!overlay || !counter) return
 
     if (reducedMotion) {
-      counter.textContent = '100%'
+      tileTarget.current = 1
+      counter.textContent = 'Ready'
       gsap.to(overlay, {
         autoAlpha: 0,
         duration: 0.3,
@@ -56,13 +59,15 @@ export default function Preloader({ onDone }: PreloaderProps) {
       .timeline({ onComplete: () => setGone(true) })
       .to(obj, {
         v: 100,
-        duration: 0.7,
-        ease: 'power3.out',
+        duration: 1.6,
+        ease: 'power2.inOut',
         onUpdate: () => {
-          counter.textContent = `${Math.round(obj.v)}%`
+          tileTarget.current = obj.v / 100
+          const i = Math.min(4, Math.floor(obj.v / 20))
+          counter.textContent = `0${i + 1} ${hero.stages[i].name}`
         },
       })
-      .to({}, { duration: 0.1 })
+      .to({}, { duration: 0.25 })
       .add(() => doneRef.current())
       .to(overlay, { yPercent: -100, duration: 0.6, ease: 'power4.inOut' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,15 +81,18 @@ export default function Preloader({ onDone }: PreloaderProps) {
         <span className="type-label">{site.label}</span>
         <span className="type-label">Loading</span>
       </div>
-      <div className="flex items-end justify-between gap-6">
+      <div className="pointer-events-none absolute inset-x-0 top-[10%] bottom-[28%]">
+        <TileScene target={tileTarget} annotate={false} scale={0.3} label="" />
+      </div>
+      <div className="relative flex items-end justify-between gap-6">
         <p className="font-display text-[clamp(3rem,11vw,11rem)] leading-[0.92] tracking-[-0.035em]">
           {site.name}
         </p>
         <span
           ref={counterRef}
-          className="type-label shrink-0 text-[clamp(1.5rem,3vw,2.5rem)] font-extrabold tabular-nums"
+          className="type-label shrink-0 text-[clamp(1rem,2vw,1.6rem)] font-extrabold tabular-nums"
         >
-          0%
+          01 Observe
         </span>
       </div>
     </div>

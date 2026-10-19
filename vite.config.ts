@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         rideAlong: path.resolve(__dirname, 'ride-along/index.html'),
+        kura: path.resolve(__dirname, 'kura/index.html'),
       },
     },
   },

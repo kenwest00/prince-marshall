@@ -26,7 +26,29 @@ export const hero = {
   statement:
     'We study how people actually work — in galleries, clinics, service centers and the field — then design and build the software they rely on. Research first, craft always.',
   primaryCta: 'Start a conversation',
-  secondaryCta: 'See our method',
+  secondaryCta: 'See KURA',
+  secondaryHref: '#kura',
+  skip: 'Skip',
+  sceneLabel: 'The p+m tile being built from survey points through the five Method stages',
+  stages: [
+    { name: 'Observe', line: 'Survey points across the real environment.' },
+    { name: 'Define', line: 'A measured wireframe, 1200 × 1200 × 280.' },
+    { name: 'Design', line: 'Surfaces take shape. The signal mark is placed.' },
+    { name: 'Build', line: 'Solid: ink body, lime plus.' },
+    { name: 'Sustain', line: 'Standing on its own ground, with a pulse.' },
+  ],
+}
+
+/** Four doors from the first screen. `page: true` links leave the homepage. */
+export const audiences = {
+  id: 'audiences',
+  label: 'Where would you like to start?',
+  items: [
+    { label: 'Building a tool', line: 'Research, design and build for your team.', href: '#method', page: false, dot: false },
+    { label: 'Managing a collection', line: 'KURA replaces the notebook with one trustworthy record.', href: 'kura/', page: true, dot: true },
+    { label: 'Running a trades business', line: 'The Ride-Along, from prince + marshall.', href: 'ride-along/', page: true, dot: false },
+    { label: 'Partnering with us', line: 'Consultants, registrars, appraisers, insurers, integrators.', href: '#partners', page: false, dot: false },
+  ],
 }
 
 export const statement = {
@@ -149,6 +171,166 @@ export const kura = {
   cta: 'Request a walkthrough',
   visualLabel: 'One object, five orbits of record — explore the rings',
   ringLabels: ['What you hold', 'Where it is', 'Condition', 'Provenance', 'Worth'],
+
+  /* --- Release 1: "From notebook to record" --- */
+  flagEyebrow: 'Flagship · KURA',
+  heading: 'From notebook to record.',
+  sceneIntro:
+    'KURA replaces the ledger, the spreadsheet and the memory of whoever has been there longest with one trustworthy record of every work you hold. Scroll to watch one entry become a record.',
+  sceneLabel: 'A handwritten ledger entry becomes a public sculpture with five orbits of record: what you hold, where it is, condition, provenance and worth',
+  exampleLabel: 'Example record',
+  steps: [
+    { name: 'What you hold', short: 'Object', line: 'The entry becomes a catalogued work.' },
+    { name: 'Where it is', short: 'Place', line: 'On the map, down to the entrance.' },
+    { name: 'Condition', short: 'State', line: 'Every inspection, dated.' },
+    { name: 'Provenance', short: 'Origin', line: 'Every custodian, in order.' },
+    { name: 'Worth', short: 'Value', line: 'Insured value and when it was reviewed.' },
+  ],
+  scene: {
+    notebook: [
+      'No. 211 · watercolour, harbour · Annex store · good',
+      'No. 212 · oak bench (memorial) · Elm St. · weathered',
+      'No. 213 · mural study · framed · Hall B',
+      'No. 214 · bronze figure · River Park, N. lawn · fair',
+      'No. 215 · ceramic tiles (set of 9) · library',
+      'No. 216 · steel arch · transit plaza · ?',
+    ],
+    entry: 3,
+    tags: [
+      'PA-031 · Bronze sculpture · H 2.4 m',
+      'River Park · North lawn · map grid 14-C',
+      'Inspected 12 Sep 2026 · treatment recommended',
+      '4 events · 1996 → 2023',
+      'Insured $120,000 · appraised Mar 2026',
+    ],
+    mapLabel: 'RIVER PARK (EXAMPLE)',
+    conditionMark: 'BASE · PATINA LOSS',
+    provenance: [
+      { year: '1996', label: 'Commissioned' },
+      { year: '2011', label: 'Relocated' },
+      { year: '2019', label: 'Accessioned' },
+      { year: '2023', label: 'Conserved' },
+    ],
+  },
+  /** Shown as a DOM card at the Worth stage. */
+  card: [
+    { label: 'What you hold', value: 'PA-031 · Bronze sculpture, H 2.4 m' },
+    { label: 'Where it is', value: 'River Park, north lawn · map grid 14-C' },
+    { label: 'Condition', value: 'Patina loss at base · inspected 12 Sep 2026' },
+    { label: 'Provenance', value: 'Commissioned 1996 · relocated 2011 · accessioned 2019 · conserved 2023' },
+    { label: 'Worth', value: 'Insured $120,000 · appraised Mar 2026' },
+  ],
+  starter: 'Start with 25 records',
+  /** [confirm offer] Ken must confirm before this renders anywhere. */
+  starterEnabled: false,
+  /** Restate capabilities already published in `pillars` and `rules` above. */
+  outcomes: [
+    { title: 'Audit-ready', body: 'Inventory audits and a movement log show what you hold and where it was on any date.' },
+    { title: 'Insurable', body: 'Valuations are never overwritten, and insurance schedules of values come straight from the record.' },
+    { title: 'Loan- and conservation-ready', body: 'Loan and exhibition tracking, condition reports and treatment history sit on the same record.' },
+    { title: 'Survives turnover', body: 'Every change is logged with who, what, when and why, so the record stays when people leave.' },
+  ],
+  /** Path under public/, e.g. 'kura/record.png'. Empty = block hidden. */
+  screenshot: '',
+  screenshotAlt: 'A KURA record screen',
+  closing: 'For museums, municipalities, universities and private collections.',
+  pageLink: { label: 'Everything about KURA', href: 'kura/' },
+}
+
+/** The /kura/ page. Empty or disabled fields render nothing. */
+export const kuraPage = {
+  url: 'https://princeandmarshall.com/kura/',
+  title: 'KURA: collection management for museums and public art | prince + marshall',
+  description:
+    'KURA replaces notebooks and spreadsheets with one trustworthy record of every work: what you hold, where it is, condition, provenance and worth.',
+  label: 'KURA, from prince + marshall',
+  h1: 'From notebook to record.',
+  sub: 'One trustworthy record of what you hold, where it is, its condition, where it came from and what it is worth. Built for museums, municipalities, universities and private collections.',
+  seeHow: 'See how it works',
+  replaces: {
+    eyebrow: 'Where collections start',
+    heading: 'If your collection lives in a notebook, you are not alone.',
+    items: [
+      { title: 'The notebook', body: 'one copy, one handwriting, one leak away from gone.' },
+      { title: 'The spreadsheet', body: 'a column for everything except the history.' },
+      { title: 'Memory', body: 'accurate until the person who knows retires.' },
+    ],
+  },
+  outcomesEyebrow: 'What a record gives you',
+  outcomesHeading: 'Answers you can hand to anyone who asks.',
+  anatomyEyebrow: 'Anatomy of a record',
+  anatomyHeading: 'Five parts. One record.',
+  whoEyebrow: 'Who it is for',
+  whoHeading: 'Built for the people who answer for a collection.',
+  who: [
+    { title: 'Museums and historical societies', body: 'catalogue, location and condition for every object, on and off view.' },
+    { title: 'Municipal public-art programs', body: 'works in parks, plazas and buildings, with location and maintenance history.' },
+    { title: 'Universities', body: 'collections spread across departments, buildings and decades.' },
+    { title: 'Private collections and estates', body: 'insurance, loans and succession with nothing left to memory.' },
+  ],
+  starter: {
+    heading: 'Start with 25 records.',
+    body: 'Send us 25 entries from your notebook or spreadsheet. We will show them back to you as KURA records, free, so you can judge it with your own collection.',
+  },
+  /** [confirm] e.g. 'Priced by collection size, from $___ a month, onboarding included.' */
+  pricing: '',
+  pricingFallback: 'Ask for a quote. We price KURA around your collection and your team.',
+  pricingEyebrow: 'Pricing',
+  buyingEyebrow: 'For procurement',
+  buyingHeading: 'Buying KURA.',
+  buyingNote: 'More detail for procurement and IT reviewers is available on request.',
+  /** Rows with an empty value do not render. Fill the [confirm] rows when verified. */
+  buying: [
+    { label: 'Data ownership', value: 'Your data leaves as easily as it arrives: open exports, no lock-in.' },
+    { label: 'Audit trail', value: 'Every change is logged: who, what, when, and why. Records are archived with a reason, never hard-deleted.' },
+    { label: 'Access', value: 'Sensitive fields are visible only to the roles that need them.' },
+    { label: 'Hosting', value: '' },
+    { label: 'Security', value: '' },
+    { label: 'Accessibility', value: '' },
+    { label: 'Insurance', value: '' },
+    { label: 'How to buy', value: '' },
+    { label: 'Registrations and certifications', value: '' },
+  ],
+  faqEyebrow: 'Questions',
+  faqHeading: 'Straight answers.',
+  /** Only confirmed answers. Add the [confirm] questions from the build prompt once verified. */
+  faq: [
+    {
+      q: 'How do I get started with KURA?',
+      a: 'Request a walkthrough. We show you KURA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
+    },
+    {
+      q: 'Who owns our data?',
+      a: 'You do. Your data leaves as easily as it arrives: open exports, no lock-in.',
+    },
+  ],
+  finalHeading: 'Every collection deserves a record.',
+  footerHome: { label: 'Back to prince + marshall', href: '../' },
+}
+
+export const partners = {
+  id: 'partners',
+  eyebrow: 'Partners',
+  heading: 'Work with us.',
+  intro:
+    'We are a senior studio, and we partner by design. If you serve collections, cities or field teams, there is probably a way we make each other’s work better.',
+  whoHeading: 'Who we partner with',
+  who: [
+    { title: 'Collection consultants and registrars', body: 'you bring the collection, we bring the record.' },
+    { title: 'Appraisers and art insurers', body: 'valuations and review dates live in the KURA record.' },
+    { title: 'Conservators', body: 'condition history, dated and attached to the work.' },
+    { title: 'Public-art administrators', body: 'inventory, location and maintenance for works in public space.' },
+    { title: 'Systems integrators and studios', body: 'research and design capacity for your enterprise clients.' },
+    { title: 'Chambers and associations', body: 'practical help for your members, starting with the Ride-Along.' },
+  ],
+  getHeading: 'What partners get',
+  get: [
+    'Co-delivery on research, design and build.',
+    'Open exports from KURA, so collection data moves cleanly between your tools and ours.',
+  ],
+  /** [only if true] e.g. 'Referral terms for introductions that become work.' */
+  referral: '',
+  cta: 'Talk partnerships',
 }
 
 export interface Environment {
@@ -301,7 +483,7 @@ export const contact = {
     email: 'Work email',
     organization: 'Organization',
     topic: 'Reason for contact',
-    topicOptions: ['A project or engagement', 'KURA walkthrough', 'Something else'],
+    topicOptions: ['A project or engagement', 'KURA walkthrough', 'KURA starter import', 'Partnership', 'Ride-Along', 'Something else'],
     kuraPrefill: 'I would like a walkthrough of KURA. ',
     environment: 'Environment',
     environmentOptions: [
@@ -343,7 +525,10 @@ export const menu = {
     { number: '07', label: 'Contact', href: '#contact' },
   ],
   /** A separate page, so it sits apart from the numbered in-page list. */
-  offer: { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
+  offers: [
+    { label: 'KURA', note: 'Collection management platform', href: 'kura/' },
+    { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
+  ],
 }
 
 /* ---------------------------------------------------------------------------

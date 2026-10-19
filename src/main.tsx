@@ -8,9 +8,11 @@ import '@fontsource-variable/space-grotesk'
 import './index.css'
 import App from './App.tsx'
 
+import { installGrain } from './lib/grain'
 import { installPageLinks } from './lib/pageTransition'
 
 installPageLinks()
+installGrain()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

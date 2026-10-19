@@ -6,6 +6,8 @@ import Statement from '../sections/Statement'
 import Clients from '../sections/Clients'
 import Method from '../sections/Method'
 import Kura from '../sections/Kura'
+import Audiences from '../sections/Audiences'
+import Partners from '../sections/Partners'
 import Environments from '../sections/Environments'
 import Trust from '../sections/Trust'
 import Studio from '../sections/Studio'
@@ -89,7 +91,11 @@ export default function Home() {
 
       {/* Menu button — top right of viewport, label rolls Menu ⇄ Close */}
       <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
-        <PillButton onClick={() => setMenuOpen((v) => !v)} ariaLabel={menuOpen ? 'Close menu' : 'Open menu'}>
+        <PillButton
+          onClick={() => setMenuOpen((v) => !v)}
+          ariaLabel={menuOpen ? 'Close menu' : 'Open menu'}
+          className="shadow-[0_0_0_1px_rgba(255,255,255,0.6)]"
+        >
           <MenuLabel open={menuOpen} />
         </PillButton>
       </div>
@@ -103,6 +109,7 @@ export default function Home() {
       {/* Main content, offset by the fixed left column */}
       <main id="main" className="md:ml-[320px]">
         <Hero active={loaded} />
+        <Audiences />
         <Statement />
         <Clients />
         <Method />
@@ -110,6 +117,7 @@ export default function Home() {
         <Environments />
         <Trust />
         <Studio />
+        <Partners />
         <Faq />
         <Contact />
         <Footer link={rideAlong.footerLink} />
