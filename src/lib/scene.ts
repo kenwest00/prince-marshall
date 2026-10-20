@@ -211,15 +211,23 @@ export function camera(yaw: number, pitch: number, cx: number, cy: number, scale
 }
 
 /**
- * Scroll-linked segment bar: each child of `listRef` grows as the fractional
+ * Scroll-linked segment bar. Each child of `listRef` grows as the fractional
  * position returned by `getF` (0 = first segment) nears it and shrinks as it
- * moves on, so every scroll step visibly changes the bar. Writes styles
- * directly (no re-render); still under reduced motion.
+ * moves on; an element marked [data-fill] inside each child is scaled to
+ * `fillOf(i, f)` (0..1), so a segment fills as you work through it. Writes
+ * styles directly (no re-render).
  */
-export function useSegmentFlex(listRef: RefObject<HTMLElement | null>, getF: () => number, grow = 3.5) {
+export function useSegmentFlex(
+  listRef: RefObject<HTMLElement | null>,
+  getF: () => number,
+  grow = 3.5,
+  fillOf: (i: number, f: number) => number = (i, f) => clamp01(f - i),
+) {
   const fn = useRef(getF)
+  const fillFn = useRef(fillOf)
   useEffect(() => {
     fn.current = getF
+    fillFn.current = fillOf
   })
   useEffect(() => {
     const el = listRef.current
@@ -233,9 +241,13 @@ export function useSegmentFlex(listRef: RefObject<HTMLElement | null>, getF: () 
       if (Math.abs(cur - last) > 0.0005) {
         last = cur
         const kids = el.children
+        const g = Math.min(cur, kids.length - 1)
         for (let i = 0; i < kids.length; i++) {
-          const w = Math.max(0, 1 - Math.abs(cur - i))
-          ;(kids[i] as HTMLElement).style.flexGrow = String(1 + grow * w * w * (3 - 2 * w))
+          const kid = kids[i] as HTMLElement
+          const w = Math.max(0, 1 - Math.abs(g - i))
+          kid.style.flexGrow = String(1 + grow * w * w * (3 - 2 * w))
+          const fill = kid.querySelector<HTMLElement>('[data-fill]')
+          if (fill) fill.style.transform = `scaleX(${clamp01(fillFn.current(i, cur)).toFixed(4)})`
         }
       }
       raf = requestAnimationFrame(tick)

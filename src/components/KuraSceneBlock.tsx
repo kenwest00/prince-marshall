@@ -6,7 +6,7 @@ import RollText from './RollText'
 import { RING_COLORS } from '../lib/palette'
 import { openContact } from '../lib/contactEvents'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
-import { useMediaQuery, useScrollProgress, useSegmentFlex, useStills } from '../lib/scene'
+import { clamp01, useMediaQuery, useScrollProgress, useSegmentFlex, useStills } from '../lib/scene'
 
 /** stage 0 = before KURA (the ledger), 1-5 = the five parts of the record */
 const STAGE_AT = [0.04, 0.22, 0.38, 0.55, 0.73, 0.93]
@@ -61,9 +61,11 @@ export default function KuraSceneBlock({ pinVh = 400, phoneTop = 0 }: { pinVh?: 
   const segRef = useRef<HTMLOListElement>(null)
   useSegmentFlex(segRef, () => {
     const p = target.current
+    const last = STAGE_AT.length - 1
     if (p <= STAGE_AT[0]) return 0
-    for (let i = 0; i < STAGE_AT.length - 1; i++) if (p < STAGE_AT[i + 1]) return i + (p - STAGE_AT[i]) / (STAGE_AT[i + 1] - STAGE_AT[i])
-    return STAGE_AT.length - 1
+    for (let i = 0; i < last; i++) if (p < STAGE_AT[i + 1]) return i + (p - STAGE_AT[i]) / (STAGE_AT[i + 1] - STAGE_AT[i])
+    // past the last stop: keep filling the last segment to the end of the scene
+    return last + clamp01((p - STAGE_AT[last]) / (1 - STAGE_AT[last]))
   })
 
   const jumpTo = (i: number) => {
@@ -200,10 +202,9 @@ export default function KuraSceneBlock({ pinVh = 400, phoneTop = 0 }: { pinVh?: 
                   aria-current={stage === i ? 'step' : undefined}
                   className="flex h-8 w-full items-center"
                 >
-                  <span
-                    className="block h-[3px] w-full transition-colors duration-300"
-                    style={{ background: i <= stage ? s.color : 'rgba(255,255,255,0.2)' }}
-                  />
+                  <span className="relative block h-[3px] w-full overflow-hidden bg-white/20">
+                    <span data-fill className="absolute inset-0 origin-left scale-x-0" style={{ background: s.color }} />
+                  </span>
                 </button>
               </li>
             ))}

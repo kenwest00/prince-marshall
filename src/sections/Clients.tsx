@@ -258,7 +258,7 @@ export default function Clients() {
     target.current = v
   })
   const segRef = useRef<HTMLOListElement>(null)
-  useSegmentFlex(segRef, () => target.current * (N - 1), 4)
+  useSegmentFlex(segRef, () => target.current * (N - 1), 4, (i, f) => (f * N) / (N - 1) - i)
 
   const jump = (i: number) => {
     const el = ref.current
@@ -306,7 +306,9 @@ export default function Clients() {
           <ol ref={segRef} className="flex gap-1 px-5 pt-3 md:px-10" aria-hidden="true">
             {names.map((n, i) => (
               <li key={n} className="min-w-0 basis-0" style={{ flexGrow: 1 }}>
-                <span className="block h-[3px] w-full transition-colors duration-300" style={{ background: i === active ? SIGNAL : i < active ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.2)' }} />
+                <span className="relative block h-[3px] w-full overflow-hidden bg-white/20">
+                  <span data-fill className="absolute inset-0 origin-left scale-x-0 transition-colors duration-300" style={{ background: i < active ? 'rgba(255,255,255,0.8)' : SIGNAL }} />
+                </span>
               </li>
             ))}
           </ol>
