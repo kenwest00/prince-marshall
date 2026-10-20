@@ -41,7 +41,7 @@ function knockLogo(x: CanvasRenderingContext2D, img: HTMLImageElement, s: number
 /**
  * Client index tiles: a solid square in the p+m tile language, set like a
  * periodic-table element. Index number top left, the client's logo (one
- * colour) or a monogram in the centre, sector tag bottom left, one lime square
+ * colour) or a monogram in the centre, sector tag bottom left, a lime plus
  * top right. Everything is knocked out of the tile.
  */
 const FONT = "Archivo, 'Helvetica Neue', Arial, sans-serif"
@@ -89,9 +89,12 @@ export function renderTile(client: Client, index: number, size: number, logo?: H
   if (!logo) x.fillText(mono, s / 2 - fs * 0.015, s * 0.52)
   x.restore()
 
-  // the lime square
+  // the lime plus, as in the p+m mark
   const q = s * 0.1
+  const bar = q * 0.3
+  const px0 = s - pad - q
   x.fillStyle = SIGNAL
-  x.fillRect(s - pad - q, pad, q, q)
+  x.fillRect(px0, pad + (q - bar) / 2, q, bar)
+  x.fillRect(px0 + (q - bar) / 2, pad, bar, q)
   return c
 }
