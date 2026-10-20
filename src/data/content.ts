@@ -67,8 +67,8 @@ export interface Client {
   mono?: string
   /** Short sector tag on the tile. */
   tag?: string
-  /** Optional path under public/, e.g. './clients/apple.svg'. Without it the name is typeset as a wordmark. */
-  logo?: string
+  /** Client logo (one-colour, recoloured in VectorCraft) in src/assets/clients. Without it the tile shows the monogram. */
+  logo?: 'apple' | 'ibm' | 'atandt' | 'homedepot'
 }
 
 export const clients = {
@@ -77,10 +77,10 @@ export const clients = {
   heading: 'Organizations we have worked with.',
   hint: 'Scroll to move through the index',
   items: [
-    { name: 'Apple', mono: 'A', tag: 'TECH', sector: 'Technology' },
-    { name: 'IBM', mono: 'IBM', tag: 'TECH', sector: 'Technology' },
-    { name: 'The Home Depot', mono: 'HD', tag: 'RETAIL', sector: 'Retail' },
-    { name: 'AT&T', mono: 'AT&T', tag: 'TELECOM', sector: 'Telecommunications' },
+    { name: 'Apple', logo: 'apple', mono: 'A', tag: 'TECH', sector: 'Technology' },
+    { name: 'IBM', logo: 'ibm', mono: 'IBM', tag: 'TECH', sector: 'Technology' },
+    { name: 'The Home Depot', logo: 'homedepot', mono: 'HD', tag: 'RETAIL', sector: 'Retail' },
+    { name: 'AT&T', logo: 'atandt', mono: 'AT&T', tag: 'TELECOM', sector: 'Telecommunications' },
     { name: 'State of Connecticut', mono: 'CT', tag: 'STATE GOV', sector: 'State government' },
     { name: 'Downtown ATL', mono: 'ATL', tag: 'CIVIC', sector: 'Civic · Downtown Atlanta' },
     { name: 'Japan Post', mono: 'JP', tag: 'POSTAL', sector: 'Postal and logistics' },

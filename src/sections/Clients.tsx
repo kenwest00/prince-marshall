@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { clients } from '../data/content'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
 import { SIGNAL } from '../lib/palette'
-import { renderTile } from '../lib/clientIcons'
+import { LOGO_URLS, renderTile } from '../lib/clientIcons'
 import { clamp01, lerp, seeded, ss, useCanvasLoop, useMediaQuery, useScrollProgress } from '../lib/scene'
 
 /**
@@ -61,7 +61,7 @@ interface Targets {
 }
 
 /** Render each pictogram once (crisp, for the solid state) and sample it into tiles. */
-function build(w: number, h: number): Targets {
+function build(w: number, h: number, logos: Partial<Record<string, HTMLImageElement>>): Targets {
   const z = Math.round(Math.min(h * 0.54, w < 700 ? w * 0.6 : w * 0.5))
   const ox = (w - z) / 2
   const oy = Math.max(8, h * (w < 700 ? 0.45 : 0.4) - z / 2)
@@ -69,8 +69,9 @@ function build(w: number, h: number): Targets {
   const dpr = Math.min(window.devicePixelRatio || 1, 2)
   const solids: HTMLCanvasElement[] = []
   const pts = clients.items.map((c, n) => {
-    solids.push(renderTile(c, n, Math.round(z * dpr)))
-    const probe = renderTile(c, n, z)
+    const img = c.logo ? logos[c.logo] : undefined
+    solids.push(renderTile(c, n, Math.round(z * dpr), img))
+    const probe = renderTile(c, n, z, img)
     const d = probe.getContext('2d')?.getImageData(0, 0, z, z).data
     const out: [number, number, number][] = []
     if (d)
@@ -98,17 +99,31 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
   useEffect(() => {
     cb.current = onIndex
   })
+  const logos = useRef<Partial<Record<string, HTMLImageElement>>>({})
   useEffect(() => {
+    let alive = true
     document.fonts?.ready.then(() => {
-      tg.current = null
+      if (alive) tg.current = null
     })
+    for (const [key, url] of Object.entries(LOGO_URLS)) {
+      const img = new Image()
+      img.onload = () => {
+        if (!alive) return
+        logos.current[key] = img
+        tg.current = null
+      }
+      img.src = url
+    }
+    return () => {
+      alive = false
+    }
   }, [])
   // per-tile scatter direction, stagger and colour, fixed
   const seedsRef = useRef<{ a: number; r: number; d: number; sig: boolean }[]>([])
 
   useCanvasLoop(canvasRef, ({ ctx, w, h, t, px, py }) => {
     if (!tg.current || tg.current.w !== w || tg.current.h !== h) {
-      tg.current = build(w, h)
+      tg.current = build(w, h, logos.current)
       const max = Math.max(...tg.current.pts.map((p) => p.length), 1)
       const rng = seeded(4242)
       seedsRef.current = Array.from({ length: max }, () => ({ a: rng.range(0, Math.PI * 2), r: rng.range(0.2, 0.6), d: rng.range(0, 0.18), sig: rng.next() < 0.08 }))
