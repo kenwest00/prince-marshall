@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { hero, site } from '../data/content'
+import { hero, method, site } from '../data/content'
 import PillButton from '../components/PillButton'
 import RollText from '../components/RollText'
 import TileScene from '../components/TileScene'
@@ -36,7 +36,27 @@ export default function Hero({ active }: HeroProps) {
   useScrollProgress(rootRef, pin, (v) => {
     target.current = v
   })
-  useStills(!pin, STAGE_AT, (v) => {
+  // Phones: the stills autoplay once the scene is on screen, until someone taps a step.
+  const sceneRef = useRef<HTMLDivElement>(null)
+  const [seen, setSeen] = useState(false)
+  const [manual, setManual] = useState(false)
+  useEffect(() => {
+    if (pin || seen) return
+    const el = sceneRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setSeen(true)
+          io.disconnect()
+        }
+      },
+      { threshold: 0.4 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [pin, seen])
+  useStills(!pin && seen && !manual, STAGE_AT, (v) => {
     target.current = v
   })
 
@@ -86,6 +106,12 @@ export default function Hero({ active }: HeroProps) {
   }, [active])
 
   const jumpTo = (i: number) => {
+    if (!pin) {
+      // phones: the step buttons drive the animation directly
+      setManual(true)
+      target.current = STAGE_AT[i]
+      return
+    }
     const el = rootRef.current
     if (!el) return
     const span = el.offsetHeight - window.innerHeight
@@ -188,14 +214,25 @@ export default function Hero({ active }: HeroProps) {
   return (
     <section id="home" ref={rootRef} className="relative" aria-label="prince + marshall">
       {text}
-      <div className="hairline-t">
+      <div ref={sceneRef} className="hairline-t">
         <div className="relative aspect-square max-h-[70svh] w-full">
           <TileScene target={target} onStage={setStage} label={hero.sceneLabel} scale={0.3} />
           <span className="type-label absolute left-5 top-4">
-            Stage 0{stage + 1} / 05 · {hero.stages[stage]?.name}
+            How we work · Step 0{stage + 1} / 05
           </span>
         </div>
+        <p className="type-label px-5 pb-2 text-[#0a0a0a]/60">Tap a step to see how we work</p>
         {stageBar}
+        {/* the teachable moment: what happens in this step and what you get */}
+        <div className="px-5 pb-12 pt-6" aria-live="polite">
+          <p className="type-label text-[#0a0a0a]/60">Step 0{stage + 1} · {method.steps[stage]?.name}</p>
+          <p className="mt-2 font-display text-[1.6rem] leading-[1.02] tracking-[-0.03em]">{hero.stages[stage]?.line}</p>
+          <p className="mt-3 text-base font-semibold leading-snug text-[#0a0a0a]/80">{method.steps[stage]?.body}</p>
+          <p className="mt-4 flex items-baseline gap-2 border-t border-[#0a0a0a]/20 pt-3 text-sm font-bold">
+            <span className="type-label text-[#0a0a0a]/60">You get</span>
+            {method.steps[stage]?.deliverable}
+          </p>
+        </div>
       </div>
     </section>
   )
