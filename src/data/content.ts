@@ -31,11 +31,11 @@ export const hero = {
   skip: 'Skip',
   sceneLabel: 'The p+m tile being built from survey points through the five Method stages',
   stages: [
-    { name: 'Observe', line: 'Survey points across the real environment.' },
-    { name: 'Define', line: 'A measured wireframe, 1200 × 1200 × 280.' },
-    { name: 'Design', line: 'Surfaces take shape. The signal mark is placed.' },
-    { name: 'Build', line: 'Solid: ink body, lime plus.' },
-    { name: 'Sustain', line: 'Standing on its own ground, with a pulse.' },
+    { name: 'Observe', line: 'We watch how your team really works today.' },
+    { name: 'Define', line: 'We agree on the problem and what success looks like.' },
+    { name: 'Design', line: 'We sketch the solution and test it with your people.' },
+    { name: 'Build', line: 'We build it in small pieces you can try as we go.' },
+    { name: 'Sustain', line: 'We train your team and keep improving it after launch.' },
   ],
 }
 
