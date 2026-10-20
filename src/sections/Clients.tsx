@@ -51,23 +51,25 @@ interface Targets {
   /** canvas size in device pixels */
   W: number
   H: number
-  /** particle block size in device pixels */
+  /** particle patch size and tile size, device pixels */
   S: number
-  /** centre of the tile, device pixels */
-  cx: number
-  cy: number
-  /** per client: packed particle targets [x, y, colour] in device pixels */
+  z: number
+  /** tile's top-left corner, device pixels */
+  ox: number
+  oy: number
+  /** per client: particle patches as tile-local [x, y] pairs */
   pts: Int32Array[]
+  /** per client: the full-resolution tile, blended over the background; 0 = empty */
+  tiles: Uint32Array[]
 }
 
 const BG = 0xff0a0a0a // #0a0a0a as little-endian ABGR
-const WHITE = 0xffffffff
 const LIME = 0xff2effc8 // #c8ff2e
 
 /**
- * Sample each tile at the particle grid. Every opaque cell becomes one
- * particle, so the assembled particles are the tile: no solid image is
- * faded in over them.
+ * Cut each full-resolution tile into small patches; every patch that holds
+ * any of the tile is one particle. Assembled, the patches are the tile pixel
+ * for pixel, so it lands sharp without anything fading in over it.
  */
 function build(W: number, H: number, cssW: number, logos: Partial<Record<string, HTMLImageElement>>): Targets {
   const dpr = W / Math.max(1, cssW)
@@ -77,31 +79,43 @@ function build(W: number, H: number, cssW: number, logos: Partial<Record<string,
   const S = Math.max(2, Math.round(z / 230))
   const ox = Math.round((W - z) / 2)
   const oy = Math.round(Math.max(8 * dpr, H * (cssW < 700 ? 0.45 : 0.4) - z / 2))
+  const tiles: Uint32Array[] = []
   const pts = clients.items.map((c, n) => {
     const img = c.logo ? logos[c.logo] : undefined
-    const tile = renderTile(c, n, z, img)
-    const d = tile.getContext('2d')?.getImageData(0, 0, z, z).data
-    const out: number[] = []
+    const d = renderTile(c, n, z, img).getContext('2d')?.getImageData(0, 0, z, z).data
+    const tile = new Uint32Array(z * z)
     if (d)
-      for (let y = 0; y + S <= z; y += S)
-        for (let x = 0; x + S <= z; x += S) {
-          const o = ((y + (S >> 1)) * z + x + (S >> 1)) * 4
-          if (d[o + 3] > 128) out.push(ox + x, oy + y, d[o + 2] < 150 ? 1 : 0)
-        }
-    // shuffle (in triples) so each tile's particles come from all over the last one
+      for (let i = 0; i < z * z; i++) {
+        const al = d[i * 4 + 3] / 255
+        if (al < 0.02) continue
+        // blend over the page background so antialiased edges stay smooth
+        const r = Math.round(d[i * 4] * al + 10 * (1 - al))
+        const g = Math.round(d[i * 4 + 1] * al + 10 * (1 - al))
+        const bl = Math.round(d[i * 4 + 2] * al + 10 * (1 - al))
+        tile[i] = (0xff000000 | (bl << 16) | (g << 8) | r) >>> 0
+      }
+    tiles.push(tile)
+    const out: number[] = []
+    for (let y = 0; y < z; y += S)
+      for (let x = 0; x < z; x += S) {
+        let any = false
+        for (let yy = y; yy < Math.min(z, y + S) && !any; yy++) for (let xx = x; xx < Math.min(z, x + S); xx++) if (tile[yy * z + xx]) { any = true; break }
+        if (any) out.push(x, y)
+      }
+    // shuffle (in pairs) so each tile's particles come from all over the last one
     const rng = seeded(n * 131 + 17)
-    const m = out.length / 3
+    const m = out.length / 2
     for (let i = m - 1; i > 0; i--) {
       const j = Math.floor(rng.next() * (i + 1))
-      for (let k = 0; k < 3; k++) {
-        const t = out[i * 3 + k]
-        out[i * 3 + k] = out[j * 3 + k]
-        out[j * 3 + k] = t
-      }
+      const tx = out[i * 2], ty = out[i * 2 + 1]
+      out[i * 2] = out[j * 2]
+      out[i * 2 + 1] = out[j * 2 + 1]
+      out[j * 2] = tx
+      out[j * 2 + 1] = ty
     }
     return Int32Array.from(out)
   })
-  return { W, H, S, cx: ox + z / 2, cy: oy + z / 2, pts }
+  return { W, H, S, z, ox, oy, pts, tiles }
 }
 
 function Field({ target, onIndex, label }: { target: MutableRefObject<number>; onIndex: (i: number) => void; label: string }) {
@@ -142,7 +156,7 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
     if (!W || !H) return
     if (!tg.current || tg.current.W !== W || tg.current.H !== H) {
       tg.current = build(W, H, w, logos.current)
-      const max = Math.max(...tg.current.pts.map((p) => p.length / 3), 1)
+      const max = Math.max(...tg.current.pts.map((p) => p.length / 2), 1)
       const rng = seeded(4242)
       const sd = new Float32Array(max * 4)
       for (let i = 0; i < max; i++) {
@@ -174,33 +188,59 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
     pix.fill(BG)
     const A = T.pts[k]
     const B = T.pts[k + 1]
-    const nA = A.length / 3
-    const nB = B.length / 3
+    const tA = T.tiles[k]
+    const tB = T.tiles[k + 1]
+    const nA = A.length / 2
+    const nB = B.length / 2
     const n = Math.max(nA, nB)
-    const S = T.S
+    const { S, z, ox, oy } = T
     // gentle parallax with the pointer
-    const sx = px * 26 * (W / w)
-    const sy = py * 18 * (W / w)
+    const sx = Math.round(px * 26 * (W / w))
+    const sy = Math.round(py * 18 * (W / w))
     const ampX = W * 0.42
     const ampY = H * 0.42
     const drift = t * 0.25
     for (let i = 0; i < n; i++) {
-      const a3 = (i % nA) * 3
-      const b3 = (i % nB) * 3
+      const a2 = (i % nA) * 2
+      const b2 = (i % nB) * 2
       const s4 = i * 4
       // hold, then a staggered break-and-reform in the middle of each segment
       const e = ss(0.2 + sd[s4 + 2], 0.6 + sd[s4 + 2], local)
+      const fromB = e >= 0.5
+      const tx = fromB ? B[b2] : A[a2]
+      const ty = fromB ? B[b2 + 1] : A[a2 + 1]
+      const tile = fromB ? tB : tA
+      if (e <= 0 || e >= 1) {
+        // landed: copy the patch exactly
+        const dx = ox + tx + sx
+        const dy = oy + ty + sy
+        for (let r = 0; r < S && ty + r < z; r++) {
+          const yy = dy + r
+          if (yy < 0 || yy >= H) continue
+          const so = (ty + r) * z + tx
+          const dO = yy * W + dx
+          for (let c = 0; c < S && tx + c < z; c++) {
+            const v = tile[so + c]
+            if (v && dx + c >= 0 && dx + c < W) pix[dO + c] = v
+          }
+        }
+        continue
+      }
+      // in flight: a single bright point carrying the patch's colour
       const burst = Math.sin(Math.PI * e)
       const ang = sd[s4] + drift
-      const x = Math.round(lerp(A[a3], B[b3], e) + Math.cos(ang) * sd[s4 + 1] * ampX * burst + sx)
-      const y = Math.round(lerp(A[a3 + 1], B[b3 + 1], e) + Math.sin(ang) * sd[s4 + 1] * ampY * burst + sy)
-      if (x < 0 || y < 0 || x + S > W || y + S > H) continue
-      const lime = (e < 0.5 ? A[a3 + 2] : B[b3 + 2]) === 1 || (sd[s4 + 3] === 1 && burst > 0.15)
-      const col = lime ? LIME : WHITE
-      // particles shrink to single pixels in flight, grow back to fill the tile as they land
-      const sz = burst > 0.5 ? 1 : S
-      let o = y * W + x
-      for (let r = 0; r < sz; r++, o += W) for (let c = 0; c < sz; c++) pix[o + c] = col
+      const x = Math.round(ox + lerp(A[a2], B[b2], e) + Math.cos(ang) * sd[s4 + 1] * ampX * burst + sx + S / 2)
+      const y = Math.round(oy + lerp(A[a2 + 1], B[b2 + 1], e) + Math.sin(ang) * sd[s4 + 1] * ampY * burst + sy + S / 2)
+      if (x < 0 || y < 0 || x + 1 >= W || y + 1 >= H) continue
+      let col = tile[Math.min(z - 1, ty + (S >> 1)) * z + Math.min(z - 1, tx + (S >> 1))] || tile[ty * z + tx] || 0xffffffff
+      if (sd[s4 + 3] === 1 && burst > 0.15) col = LIME
+      const o = y * W + x
+      pix[o] = col
+      if (burst < 0.6) {
+        pix[o + 1] = col
+        pix[o + W] = col
+        pix[o + W + 1] = col
+      }
     }
     ctx.putImageData(B0.img, 0, 0)
   })
