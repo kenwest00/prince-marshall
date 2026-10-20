@@ -169,7 +169,7 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
         const extra = lerp(i >= A.length ? 1 : 0, i >= B.length ? 1 : 0, e)
         const alpha = tiles * (1 - extra * (1 - burst))
         if (alpha < 0.02) continue
-        const sz = T.g * (0.84 - burst * 0.4)
+        const sz = Math.max(1, T.g * (0.84 - burst * 0.4) * 0.25)
         ctx.globalAlpha = alpha * (1 - burst * 0.35)
         ctx.fillStyle = (e < 0.5 ? a[2] : b[2]) || (s.sig && burst > 0.15) ? SIGNAL : '#ffffff'
         ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz)
