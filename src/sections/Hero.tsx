@@ -94,26 +94,6 @@ export default function Hero({ active }: HeroProps) {
 
   const allLines = hero.stackedLines.map((l) => ({ text: l.text, right: l.align === 'right' }))
 
-  // KÜRA, our product, introduced on the first screen
-  const productPanel = (
-        <a
-      href={hero.product.href}
-      data-page-link
-      className="group flex max-w-xl items-stretch bg-[#0a0a0a] text-white transition-transform duration-300 hover:-translate-y-0.5"
-    >
-      <span className="flex items-center px-5 py-4 font-display text-[clamp(2.6rem,4.2vw,3.75rem)] leading-none tracking-[-0.04em] md:px-6">
-        {hero.product.name}
-      </span>
-      <span className="flex flex-1 flex-col justify-center gap-1.5 border-l border-white/25 px-4 py-4 md:px-5">
-        <span className="type-label text-[#c8ff2e]">{hero.product.eyebrow}</span>
-        <span className="text-sm font-semibold leading-snug text-white/90 md:text-[15px]">{hero.product.line}</span>
-        <span className="type-label mt-0.5 underline underline-offset-4 group-hover:no-underline">
-          {hero.product.cta} <span aria-hidden="true">→</span>
-        </span>
-      </span>
-    </a>
-  )
-
   const text = (
     <div ref={textRef} className="relative z-10 flex min-h-[100svh] flex-col px-5 pt-24 md:px-10 md:pt-28 will-change-transform">
       <div ref={metaRef} className="flex items-start justify-between gap-10">
@@ -124,7 +104,6 @@ export default function Hero({ active }: HeroProps) {
             </span>
           ))}
         </p>
-        <div className="hidden w-[min(34rem,48%)] md:block">{productPanel}</div>
       </div>
       <div className="flex-1" />
       <div className="pb-16 md:pb-10">
@@ -159,7 +138,6 @@ export default function Hero({ active }: HeroProps) {
             <RollText text={hero.primaryCta} />
           </PillButton>
         </div>
-        <div className="mt-8 md:hidden">{productPanel}</div>
       </div>
     </div>
   )
