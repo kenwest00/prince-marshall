@@ -3,7 +3,7 @@ import { rideAlong, site } from '../data/content'
 import { source } from './contactLinks'
 
 const FORM_ENDPOINT =
-  (import.meta.env.VITE_FORM_ENDPOINT as string | undefined) || `https://formsubmit.co/ajax/${site.email}`
+  (import.meta.env.VITE_FORM_ENDPOINT as string | undefined) || `https://formsubmit.co/ajax/${site.formTo}`
 
 const field =
   'mt-2 block w-full min-h-[48px] rounded-none border border-[#0a0a0a] bg-white px-3 py-2.5 text-base font-semibold text-[#0a0a0a] placeholder:text-[#0a0a0a]/70'

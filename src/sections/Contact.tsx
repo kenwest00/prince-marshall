@@ -12,7 +12,7 @@ import { getSource } from '../lib/source'
  */
 const FORM_ENDPOINT =
   (import.meta.env.VITE_FORM_ENDPOINT as string | undefined) ||
-  `https://formsubmit.co/ajax/${site.email}`
+  `https://formsubmit.co/ajax/${site.formTo}`
 
 type Status = 'idle' | 'sending' | 'sent' | 'mailto' | 'error'
 
