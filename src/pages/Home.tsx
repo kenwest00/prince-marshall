@@ -110,10 +110,10 @@ export default function Home() {
       <main id="main" className="md:ml-[320px]">
         <Hero active={loaded} />
         <Audiences />
+        <Kura />
         <Statement />
         <Clients />
         <Method />
-        <Kura />
         <Environments />
         <Trust />
         <Studio />

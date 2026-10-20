@@ -9,20 +9,35 @@ export default function Kura() {
 
   return (
     <section id={kura.id} aria-labelledby="kura-heading" className="bg-[#0a0a0a] text-white">
-      <div className="grid grid-cols-1 gap-6 px-5 pb-10 pt-24 md:grid-cols-[200px_1fr] md:gap-16 md:px-10 md:pb-14 md:pt-36">
+      {/* Name it and say what it is, before anything else */}
+      <div className="px-5 pt-20 md:px-10 md:pt-28">
         <p className="type-label text-[#c8ff2e]">{kura.flagEyebrow}</p>
+        <h2 id="kura-heading" className="mt-4 font-display text-[clamp(6rem,24vw,22rem)] leading-[0.8] tracking-[-0.055em]">
+          {kura.name}
+        </h2>
+        <div className="mt-8 grid grid-cols-1 gap-4 border-t border-white/40 pt-6 md:grid-cols-[1fr_1.2fr] md:gap-16">
+          <p className="font-display text-[clamp(1.75rem,3.6vw,3.25rem)] leading-[0.98] tracking-[-0.03em]">{kura.definition}</p>
+          <div>
+            <p className="max-w-2xl text-lg font-semibold leading-snug text-white/85 md:text-xl">{kura.definitionBody}</p>
+            <a href={kura.pageLink.href} data-page-link className="type-label mt-5 inline-flex min-h-[44px] items-center underline underline-offset-4 hover:no-underline">
+              {kura.pageLink.label} <span aria-hidden="true" className="ml-1">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 px-5 pb-10 pt-16 md:grid-cols-[200px_1fr] md:gap-16 md:px-10 md:pb-14 md:pt-24">
+        <p className="type-label text-white/60">How it works</p>
         <div>
           <p className="type-label inline-flex items-center gap-2 border border-white/50 px-3 py-1.5">
             <span className="signal-dot signal-dot--on-dark" aria-hidden="true" />
             {kura.status}
           </p>
-          <h2
+          <h3
             ref={headRef}
-            id="kura-heading"
             className="mt-6 font-display text-[clamp(2.75rem,8vw,7.5rem)] leading-[0.92] tracking-[-0.04em]"
           >
             {kura.heading}
-          </h2>
+          </h3>
           <p className="mt-6 max-w-3xl text-lg font-semibold leading-snug text-white/85 md:text-xl">{kura.sceneIntro}</p>
         </div>
       </div>

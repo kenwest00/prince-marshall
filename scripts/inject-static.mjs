@@ -212,7 +212,8 @@ const kuraLd = [
   ld({
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'KURA',
+    name: 'KÜRA',
+    alternateName: 'KURA',
     url: k.url,
     description: k.description,
     applicationCategory: 'BusinessApplication',

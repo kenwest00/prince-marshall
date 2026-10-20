@@ -147,7 +147,7 @@ export default function KuraPage() {
                 href="#contact"
                 onClick={(e) => {
                   e?.preventDefault()
-                  openContact('KURA starter import')
+                  openContact('KÜRA starter import')
                 }}
               >
                 <RollText text={kura.starter} />

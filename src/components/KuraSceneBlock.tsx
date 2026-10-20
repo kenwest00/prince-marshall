@@ -96,7 +96,7 @@ export default function KuraSceneBlock({ pinVh = 400, phoneTop = 0 }: { pinVh?: 
           href="#contact"
           onClick={(e) => {
             e.preventDefault()
-            openContact('KURA starter import')
+            openContact('KÜRA starter import')
           }}
           className="type-label inline-flex min-h-[44px] items-center text-white underline underline-offset-4 hover:no-underline"
         >

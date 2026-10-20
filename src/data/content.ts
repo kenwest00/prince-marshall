@@ -26,8 +26,15 @@ export const hero = {
   statement:
     'We study how people actually work — in galleries, clinics, service centers and the field — then design and build the software they rely on. Research first, craft always.',
   primaryCta: 'Start a conversation',
-  secondaryCta: 'See KURA',
+  secondaryCta: 'See KÜRA',
   secondaryHref: '#kura',
+  product: {
+    eyebrow: 'Our product',
+    name: 'KÜRA',
+    line: 'Collection management software for art. Know what you hold, where it is, its condition, where it came from and what it is worth.',
+    cta: 'See KÜRA',
+    href: 'kura/',
+  },
   skip: 'Skip',
   sceneLabel: 'The p+m tile being built from survey points through the five Method stages',
   stages: [
@@ -45,7 +52,7 @@ export const audiences = {
   label: 'Where would you like to start?',
   items: [
     { label: 'Building a tool', line: 'Research, design and build for your team.', href: '#method', page: false, dot: false },
-    { label: 'Managing a collection', line: 'KURA replaces the notebook with one trustworthy record.', href: 'kura/', page: true, dot: true },
+    { label: 'Managing a collection', line: 'KÜRA replaces the notebook with one trustworthy record.', href: 'kura/', page: true, dot: true },
     { label: 'Running a trades business', line: 'The Ride-Along, from prince + marshall.', href: 'ride-along/', page: true, dot: false },
     { label: 'Partnering with us', line: 'Consultants, registrars, appraisers, insurers, integrators.', href: '#partners', page: false, dot: false },
   ],
@@ -143,11 +150,11 @@ export interface Pillar {
 export const kura = {
   id: 'kura',
   eyebrow: 'Featured product',
-  name: 'KURA',
+  name: 'KÜRA',
   tagline: 'Full transparency into an art collection.',
   status: 'Collection management platform',
   intro:
-    'KURA is a collection management platform for museums, municipalities, universities and private collections that need one trustworthy record of what they hold, where it is, what condition it is in, where it came from and what it is worth.',
+    'KÜRA is a collection management platform for museums, municipalities, universities and private collections that need one trustworthy record of what they hold, where it is, what condition it is in, where it came from and what it is worth.',
   pillars: [
     {
       title: 'What you hold',
@@ -182,14 +189,17 @@ export const kura = {
   ringLabels: ['What you hold', 'Where it is', 'Condition', 'Provenance', 'Worth'],
 
   /* --- Release 1: "From notebook to record" --- */
-  flagEyebrow: 'Flagship · KURA',
+  flagEyebrow: 'Flagship · KÜRA',
+  definition: 'Collection management software for art.',
+  definitionBody:
+    'For museums, cities, universities and private collectors: one trustworthy record of every work, from what it is and where it hangs to its condition, provenance and value.',
   heading: 'From notebook to record.',
   sceneIntro:
-    'Most collections still live in a ledger, a spreadsheet and the memory of whoever has been there longest. That is the problem KURA solves. Scroll to watch one entry become a trustworthy record.',
-  beforeLabel: 'Before KURA',
-  afterLabel: 'With KURA',
+    'Most collections still live in a ledger, a spreadsheet and the memory of whoever has been there longest. That is the problem KÜRA solves. Scroll to watch one entry become a trustworthy record.',
+  beforeLabel: 'Before KÜRA',
+  afterLabel: 'With KÜRA',
   before: { name: 'The ledger', short: 'Before', line: 'One notebook. One copy. Open questions.' },
-  beforeStatement: 'Before KURA, the record is a notebook: one copy, no history, and questions nobody can answer.',
+  beforeStatement: 'Before KÜRA, the record is a notebook: one copy, no history, and questions nobody can answer.',
   beforeHint: 'Keep scrolling. One entry becomes a record.',
   sceneLabel: 'A handwritten ledger entry breaks into particles that assemble into a portrait after Leonardo da Vinci’s Mona Lisa, then gathers five orbits of record: what you hold, where it is, condition, provenance and worth',
   exampleLabel: 'Example record',
@@ -210,7 +220,7 @@ export const kura = {
       'No. 216 · steel arch · transit plaza · ?',
     ],
     entry: 3,
-    /** Red-pen marks on the ledger: the gaps KURA closes. line -1 = the page itself. */
+    /** Red-pen marks on the ledger: the gaps KÜRA closes. line -1 = the page itself. */
     problems: [
       { line: -1, word: '', text: 'One copy. No backup.' },
       { line: 1, word: 'weathered', text: 'Condition since when? Checked by whom?' },
@@ -254,18 +264,18 @@ export const kura = {
   ],
   /** Path under public/, e.g. 'kura/record.png'. Empty = block hidden. */
   screenshot: '',
-  screenshotAlt: 'A KURA record screen',
+  screenshotAlt: 'A KÜRA record screen',
   closing: 'For museums, municipalities, universities and private collections.',
-  pageLink: { label: 'Everything about KURA', href: 'kura/' },
+  pageLink: { label: 'Everything about KÜRA', href: 'kura/' },
 }
 
 /** The /kura/ page. Empty or disabled fields render nothing. */
 export const kuraPage = {
   url: 'https://princeandmarshall.com/kura/',
-  title: 'KURA: collection management for museums and public art | prince + marshall',
+  title: 'KÜRA: collection management for museums and public art | prince + marshall',
   description:
-    'KURA replaces notebooks and spreadsheets with one trustworthy record of every work: what you hold, where it is, condition, provenance and worth.',
-  label: 'KURA, from prince + marshall',
+    'KÜRA replaces notebooks and spreadsheets with one trustworthy record of every work: what you hold, where it is, condition, provenance and worth.',
+  label: 'KÜRA, from prince + marshall',
   h1: 'From notebook to record.',
   sub: 'One trustworthy record of what you hold, where it is, its condition, where it came from and what it is worth. Built for museums, municipalities, universities and private collections.',
   seeHow: 'See how it works',
@@ -292,14 +302,14 @@ export const kuraPage = {
   ],
   starter: {
     heading: 'Start with 25 records.',
-    body: 'Send us 25 entries from your notebook or spreadsheet. We will show them back to you as KURA records, free, so you can judge it with your own collection.',
+    body: 'Send us 25 entries from your notebook or spreadsheet. We will show them back to you as KÜRA records, free, so you can judge it with your own collection.',
   },
   /** [confirm] e.g. 'Priced by collection size, from $___ a month, onboarding included.' */
   pricing: '',
-  pricingFallback: 'Ask for a quote. We price KURA around your collection and your team.',
+  pricingFallback: 'Ask for a quote. We price KÜRA around your collection and your team.',
   pricingEyebrow: 'Pricing',
   buyingEyebrow: 'For procurement',
-  buyingHeading: 'Buying KURA.',
+  buyingHeading: 'Buying KÜRA.',
   buyingNote: 'More detail for procurement and IT reviewers is available on request.',
   /** Rows with an empty value do not render. Fill the [confirm] rows when verified. */
   buying: [
@@ -318,8 +328,8 @@ export const kuraPage = {
   /** Only confirmed answers. Add the [confirm] questions from the build prompt once verified. */
   faq: [
     {
-      q: 'How do I get started with KURA?',
-      a: 'Request a walkthrough. We show you KURA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
+      q: 'How do I get started with KÜRA?',
+      a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
     },
     {
       q: 'Who owns our data?',
@@ -339,7 +349,7 @@ export const partners = {
   whoHeading: 'Who we partner with',
   who: [
     { title: 'Collection consultants and registrars', body: 'you bring the collection, we bring the record.' },
-    { title: 'Appraisers and art insurers', body: 'valuations and review dates live in the KURA record.' },
+    { title: 'Appraisers and art insurers', body: 'valuations and review dates live in the KÜRA record.' },
     { title: 'Conservators', body: 'condition history, dated and attached to the work.' },
     { title: 'Public-art administrators', body: 'inventory, location and maintenance for works in public space.' },
     { title: 'Systems integrators and studios', body: 'research and design capacity for your enterprise clients.' },
@@ -348,7 +358,7 @@ export const partners = {
   getHeading: 'What partners get',
   get: [
     'Co-delivery on research, design and build.',
-    'Open exports from KURA, so collection data moves cleanly between your tools and ours.',
+    'Open exports from KÜRA, so collection data moves cleanly between your tools and ours.',
   ],
   /** [only if true] e.g. 'Referral terms for introductions that become work.' */
   referral: '',
@@ -465,7 +475,7 @@ export const faq = {
     },
     {
       q: 'Who owns the work and the data?',
-      a: 'You own your data and your deliverables. We build with standard exports and clear documentation so you are never locked in. Licenses for our own products, such as KURA, are governed by their own terms.',
+      a: 'You own your data and your deliverables. We build with standard exports and clear documentation so you are never locked in. Licenses for our own products, such as KÜRA, are governed by their own terms.',
     },
     {
       q: 'Can you work within public-sector procurement and accessibility requirements?',
@@ -480,8 +490,8 @@ export const faq = {
       a: 'From a single department to a multi-site organization. We are a small studio by design, so we take on a limited number of engagements at a time.',
     },
     {
-      q: 'How do I get started with KURA?',
-      a: 'Request a walkthrough. We show you KURA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
+      q: 'How do I get started with KÜRA?',
+      a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
     },
   ] as FaqItem[],
 }
@@ -505,8 +515,8 @@ export const contact = {
     email: 'Work email',
     organization: 'Organization',
     topic: 'Reason for contact',
-    topicOptions: ['A project or engagement', 'KURA walkthrough', 'KURA starter import', 'Partnership', 'Ride-Along', 'Something else'],
-    kuraPrefill: 'I would like a walkthrough of KURA. ',
+    topicOptions: ['A project or engagement', 'KÜRA walkthrough', 'KÜRA starter import', 'Partnership', 'Ride-Along', 'Something else'],
+    kuraPrefill: 'I would like a walkthrough of KÜRA. ',
     environment: 'Environment',
     environmentOptions: [
       'Museum or collection',
@@ -540,7 +550,7 @@ export const menu = {
   items: [
     { number: '01', label: 'Home', href: '#home' },
     { number: '02', label: 'Method', href: '#method' },
-    { number: '03', label: 'KURA', href: '#kura' },
+    { number: '03', label: 'KÜRA', href: '#kura' },
     { number: '04', label: 'Environments', href: '#environments' },
     { number: '05', label: 'Trust', href: '#trust' },
     { number: '06', label: 'Studio', href: '#studio' },
@@ -548,7 +558,7 @@ export const menu = {
   ],
   /** A separate page, so it sits apart from the numbered in-page list. */
   offers: [
-    { label: 'KURA', note: 'Collection management platform', href: 'kura/' },
+    { label: 'KÜRA', note: 'Collection management platform', href: 'kura/' },
     { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
   ],
 }
