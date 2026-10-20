@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { clients } from '../data/content'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
 import { SIGNAL } from '../lib/palette'
-import { renderIcon } from '../lib/clientIcons'
+import { renderTile } from '../lib/clientIcons'
 import { clamp01, lerp, seeded, ss, useCanvasLoop, useMediaQuery, useScrollProgress } from '../lib/scene'
 
 /**
@@ -55,26 +55,30 @@ interface Targets {
   ox: number
   oy: number
   g: number
-  pts: [number, number][][]
+  /** x, y, lime (1) or white (0) */
+  pts: [number, number, number][][]
   solids: HTMLCanvasElement[]
 }
 
 /** Render each pictogram once (crisp, for the solid state) and sample it into tiles. */
 function build(w: number, h: number): Targets {
-  const z = Math.round(Math.min(h * 0.56, w < 700 ? w * 0.62 : w * 0.5))
+  const z = Math.round(Math.min(h * 0.54, w < 700 ? w * 0.6 : w * 0.5))
   const ox = (w - z) / 2
   const oy = Math.max(8, h * (w < 700 ? 0.45 : 0.4) - z / 2)
-  const g = Math.max(5, z / 30)
+  const g = Math.max(5, z / 34)
   const dpr = Math.min(window.devicePixelRatio || 1, 2)
   const solids: HTMLCanvasElement[] = []
   const pts = clients.items.map((c, n) => {
-    solids.push(renderIcon(c.icon ?? 'laptop', Math.round(z * dpr)))
-    const probe = renderIcon(c.icon ?? 'laptop', z)
+    solids.push(renderTile(c, n, Math.round(z * dpr)))
+    const probe = renderTile(c, n, z)
     const d = probe.getContext('2d')?.getImageData(0, 0, z, z).data
-    const out: [number, number][] = []
+    const out: [number, number, number][] = []
     if (d)
       for (let y = g / 2; y < z; y += g)
-        for (let x = g / 2; x < z; x += g) if (d[(Math.floor(y) * z + Math.floor(x)) * 4 + 3] > 110) out.push([ox + x, oy + y])
+        for (let x = g / 2; x < z; x += g) {
+          const o = (Math.floor(y) * z + Math.floor(x)) * 4
+          if (d[o + 3] > 110) out.push([ox + x, oy + y, d[o + 2] < 150 ? 1 : 0])
+        }
     const rng = seeded(n * 131 + 17)
     for (let i = out.length - 1; i > 0; i--) {
       const j = Math.floor(rng.next() * (i + 1))
@@ -94,6 +98,11 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
   useEffect(() => {
     cb.current = onIndex
   })
+  useEffect(() => {
+    document.fonts?.ready.then(() => {
+      tg.current = null
+    })
+  }, [])
   // per-tile scatter direction, stagger and colour, fixed
   const seedsRef = useRef<{ a: number; r: number; d: number; sig: boolean }[]>([])
 
@@ -136,8 +145,8 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
       for (let i = 0; i < seeds.length; i++) {
         const s = seeds[i]
         const e = ss(0.22 + s.d, 0.62 + s.d, local)
-        const a = A.length ? A[i % A.length] : [cxm, cym]
-        const b = B.length ? B[i % B.length] : [cxm, cym]
+        const a = A.length ? A[i % A.length] : [cxm, cym, 0]
+        const b = B.length ? B[i % B.length] : [cxm, cym, 0]
         const burst = Math.sin(Math.PI * e)
         const x = lerp(a[0], b[0], e) + Math.cos(s.a + t * 0.25) * s.r * w * 0.45 * burst + sx
         const y = lerp(a[1], b[1], e) + Math.sin(s.a + t * 0.25) * s.r * h * 0.45 * burst + sy
@@ -147,7 +156,7 @@ function Field({ target, onIndex, label }: { target: MutableRefObject<number>; o
         if (alpha < 0.02) continue
         const sz = T.g * (0.84 - burst * 0.4)
         ctx.globalAlpha = alpha * (1 - burst * 0.35)
-        ctx.fillStyle = s.sig ? SIGNAL : '#ffffff'
+        ctx.fillStyle = (e < 0.5 ? a[2] : b[2]) || (s.sig && burst > 0.15) ? SIGNAL : '#ffffff'
         ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz)
       }
       ctx.globalAlpha = 1
@@ -231,7 +240,7 @@ export default function Clients() {
             </div>
           </div>
           <div className="relative min-h-0 flex-1">
-            <Field target={target} onIndex={setActive} label={`Sector icons assembling from tiles for each client: ${names.join(', ')}`} />
+            <Field target={target} onIndex={setActive} label={`Index tiles assembling for each client: ${names.join(', ')}`} />
             <div className="pointer-events-none absolute inset-x-0 bottom-[6%] grid px-5 text-center md:px-10" aria-hidden="true">
               {names.map((n, i) => (
                 <p

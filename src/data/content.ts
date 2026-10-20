@@ -63,8 +63,10 @@ export interface Client {
   name: string
   /** Sector shown in the client index readout. */
   sector?: string
-  /** Original sector pictogram drawn in the client index (never the client's logo). */
-  icon?: 'laptop' | 'chip' | 'home' | 'tower' | 'capitol' | 'skyline' | 'envelope'
+  /** Monogram set on the client's index tile (our type, never the client's logo). */
+  mono?: string
+  /** Short sector tag on the tile. */
+  tag?: string
   /** Optional path under public/, e.g. './clients/apple.svg'. Without it the name is typeset as a wordmark. */
   logo?: string
 }
@@ -75,13 +77,13 @@ export const clients = {
   heading: 'Organizations we have worked with.',
   hint: 'Scroll to move through the index',
   items: [
-    { name: 'Apple', icon: 'laptop', sector: 'Technology' },
-    { name: 'IBM', icon: 'chip', sector: 'Technology' },
-    { name: 'The Home Depot', icon: 'home', sector: 'Retail' },
-    { name: 'AT&T', icon: 'tower', sector: 'Telecommunications' },
-    { name: 'State of Connecticut', icon: 'capitol', sector: 'State government' },
-    { name: 'Downtown ATL', icon: 'skyline', sector: 'Civic · Downtown Atlanta' },
-    { name: 'Japan Post', icon: 'envelope', sector: 'Postal and logistics' },
+    { name: 'Apple', mono: 'A', tag: 'TECH', sector: 'Technology' },
+    { name: 'IBM', mono: 'IBM', tag: 'TECH', sector: 'Technology' },
+    { name: 'The Home Depot', mono: 'HD', tag: 'RETAIL', sector: 'Retail' },
+    { name: 'AT&T', mono: 'AT&T', tag: 'TELECOM', sector: 'Telecommunications' },
+    { name: 'State of Connecticut', mono: 'CT', tag: 'STATE GOV', sector: 'State government' },
+    { name: 'Downtown ATL', mono: 'ATL', tag: 'CIVIC', sector: 'Civic · Downtown Atlanta' },
+    { name: 'Japan Post', mono: 'JP', tag: 'POSTAL', sector: 'Postal and logistics' },
   ] as Client[],
 }
 
