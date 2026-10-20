@@ -169,6 +169,18 @@ export default function TileScene({ target, onStage, annotate = true, scale = 0.
       cx.stroke()
     }
 
+    // the Sustain orb circles the tile: drawn before the tile while it is on
+    // the far side (so the solid block hides it), after it on the near side
+    const orbA = t * 0.9
+    const orb = proj([Math.cos(orbA) * 1.55, 0.2 + Math.sin(orbA * 2) * 0.1, Math.sin(orbA) * 1.55])
+    const drawOrb = () => {
+      const r = 5 * (1 / (1 - orb.z * 0.12))
+      cx.globalAlpha = sus; cx.fillStyle = LIME; cx.strokeStyle = INK; cx.lineWidth = 1
+      cx.beginPath(); cx.arc(orb.x, orb.y, r, 0, Math.PI * 2); cx.fill(); cx.stroke()
+      cx.globalAlpha = 1
+    }
+    if (sus > 0.01 && orb.z < 0) drawOrb()
+
     type Face = { q: { x: number; y: number; z: number }[]; n: V3; kind: 'box' | 'pside' | 'ptop'; z: number }
     const faces: Face[] = boxFaces.map((f) => ({ q: f.v.map((i) => proj(box[i])), n: f.n, kind: 'box' as const, z: 0 }))
     if (surf > 0.01) {
@@ -259,13 +271,7 @@ export default function TileScene({ target, onStage, annotate = true, scale = 0.
       dl([1 + off, -1 - off, -HD], [1 + off, -1 - off, HD], '280', 18)
     }
 
-    if (sus > 0.01) {
-      const a = t * 0.9
-      const o = proj([Math.cos(a) * 1.55, 0.2 + Math.sin(a * 2) * 0.1, Math.sin(a) * 1.55])
-      cx.globalAlpha = sus; cx.fillStyle = LIME; cx.strokeStyle = INK; cx.lineWidth = 1
-      cx.beginPath(); cx.arc(o.x, o.y, 5, 0, Math.PI * 2); cx.fill(); cx.stroke()
-      cx.globalAlpha = 1
-    }
+    if (sus > 0.01 && orb.z >= 0) drawOrb()
   })
 
   return <canvas ref={canvasRef} role="img" aria-label={label} className={`block h-full w-full ${className}`} />
