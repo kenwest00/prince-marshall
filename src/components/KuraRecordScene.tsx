@@ -148,7 +148,7 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
     const wire = ss(0.18, 0.32, p)
     const solid = ss(0.47, 0.6, p)
     const marks = book * (1 - ss(0.095, 0.125, p))
-    const S = Math.min(W, H) * (isPhone ? 0.33 : 0.36)
+    const S = Math.min(W, H) * (isPhone ? 0.31 : 0.32)
     const cX = W / 2
     const cY = H / 2 - S * 0.02
     const yaw = -0.5 + p * 0.8 + Math.sin(t * 0.3) * 0.07 + px * 0.5
@@ -379,12 +379,95 @@ export default function KuraRecordScene({ target, copy, onStage, label, classNam
       cx.globalAlpha = 1
     }
 
-    /* --- frame, once it is solid --- */
+    /* --- frame, once it is solid: a simplified Italian Renaissance cassetta
+       (moulded sight edge, flat frieze, raised outer moulding) in gilt line,
+       with rosettes at the corners and scrolled cartouches mid-side --- */
     if (solid > 0.01) {
-      const f = corners.map((v) => proj([v[0] * 1.06, v[1] * 1.04, 0.02]))
-      cx.strokeStyle = `rgba(255,255,255,${0.5 * solid})`
-      cx.lineWidth = 1.5
-      cx.beginPath(); f.forEach((q, i) => (i ? cx.lineTo(q.x, q.y) : cx.moveTo(q.x, q.y))); cx.closePath(); cx.stroke()
+      const GILT = (a: number) => `rgba(222,192,122,${a * solid})`
+      const rect = (d: number, z: number) => {
+        const q = [proj([-PW - d, PH + d, z]), proj([PW + d, PH + d, z]), proj([PW + d, -PH - d, z]), proj([-PW - d, -PH - d, z])]
+        cx.beginPath(); q.forEach((v, i) => (i ? cx.lineTo(v.x, v.y) : cx.moveTo(v.x, v.y))); cx.closePath(); cx.stroke()
+        return q
+      }
+      const line3 = (pts: V3[]) => {
+        cx.beginPath()
+        pts.forEach((v, i) => { const q = proj(v); if (i) cx.lineTo(q.x, q.y); else cx.moveTo(q.x, q.y) })
+        cx.stroke()
+      }
+      const lw = Math.max(0.6, S / 260)
+      // depth: back edge of the outer moulding and the returns at each corner
+      cx.strokeStyle = GILT(0.35); cx.lineWidth = lw
+      const back = rect(0.24, -0.1)
+      const front = rect(0.24, 0.05)
+      cx.beginPath(); for (let i = 0; i < 4; i++) { cx.moveTo(front[i].x, front[i].y); cx.lineTo(back[i].x, back[i].y) } cx.stroke()
+      // outer moulding (two steps), frieze edges, sight-edge moulding (two steps)
+      cx.strokeStyle = GILT(0.9); cx.lineWidth = lw * 1.6
+      rect(0.21, 0.06)
+      cx.strokeStyle = GILT(0.6); cx.lineWidth = lw
+      rect(0.18, 0.05)
+      rect(0.065, 0.04)
+      cx.strokeStyle = GILT(0.85); cx.lineWidth = lw * 1.3
+      rect(0.035, 0.035)
+      cx.strokeStyle = GILT(0.5); cx.lineWidth = lw
+      rect(0.012, 0.025)
+      // mitre lines across the moulding at the corners
+      cx.strokeStyle = GILT(0.4)
+      for (const [sx, sy] of [[-1, 1], [1, 1], [1, -1], [-1, -1]]) {
+        line3([[sx * (PW + 0.012), sy * (PH + 0.012), 0.03], [sx * (PW + 0.065), sy * (PH + 0.065), 0.04]])
+        line3([[sx * (PW + 0.18), sy * (PH + 0.18), 0.05], [sx * (PW + 0.21), sy * (PH + 0.21), 0.06]])
+      }
+      // ornaments sit on the centre line of the frieze
+      const m = 0.1225
+      const z = 0.045
+      cx.strokeStyle = GILT(0.85); cx.lineWidth = lw
+      // corner rosettes: six petals and a boss
+      for (const [sx, sy] of [[-1, 1], [1, 1], [1, -1], [-1, -1]]) {
+        const ox = sx * (PW + m), oy = sy * (PH + m)
+        const petals: V3[] = []
+        for (let i = 0; i <= 72; i++) {
+          const a = (i / 72) * Math.PI * 2
+          const r = 0.042 * (0.5 + 0.5 * Math.abs(Math.cos(3 * a)))
+          petals.push([ox + Math.cos(a) * r, oy + Math.sin(a) * r, z])
+        }
+        line3(petals)
+        const boss: V3[] = []
+        for (let i = 0; i <= 24; i++) { const a = (i / 24) * Math.PI * 2; boss.push([ox + Math.cos(a) * 0.012, oy + Math.sin(a) * 0.012, z + 0.005]) }
+        line3(boss)
+      }
+      // mid-side cartouches with scrolled ends, oriented along each side
+      const sides: { c: [number, number]; along: [number, number] }[] = [
+        { c: [0, PH + m], along: [1, 0] }, { c: [0, -PH - m], along: [1, 0] },
+        { c: [-PW - m, 0], along: [0, 1] }, { c: [PW + m, 0], along: [0, 1] },
+      ]
+      for (const sd of sides) {
+        const [ax, ay] = sd.along
+        const nx = -ay, ny = ax
+        const P = (u: number, v: number): V3 => [sd.c[0] + ax * u + nx * v, sd.c[1] + ay * u + ny * v, z]
+        const oval: V3[] = []
+        for (let i = 0; i <= 40; i++) { const a = (i / 40) * Math.PI * 2; oval.push(P(Math.cos(a) * 0.05, Math.sin(a) * 0.03)) }
+        line3(oval)
+        const inner: V3[] = []
+        for (let i = 0; i <= 32; i++) { const a = (i / 32) * Math.PI * 2; inner.push(P(Math.cos(a) * 0.028, Math.sin(a) * 0.014)) }
+        line3(inner)
+        // C-scrolls running out from each end of the cartouche
+        for (const dir of [-1, 1]) {
+          const sc: V3[] = []
+          for (let i = 0; i <= 40; i++) {
+            const t2 = i / 40
+            const u = dir * (0.05 + t2 * 0.11)
+            const v = Math.sin(t2 * Math.PI) * 0.022
+            sc.push(P(u, v))
+          }
+          // curl at the tip
+          const tipU = dir * 0.16
+          for (let i = 0; i <= 28; i++) {
+            const a = (i / 28) * Math.PI * 1.6
+            const r = 0.016 * (1 - i / 40)
+            sc.push(P(tipU + dir * Math.sin(a) * r, -0.004 + Math.cos(a) * r - r))
+          }
+          line3(sc)
+        }
+      }
     }
 
     /* --- condition pass --- */
