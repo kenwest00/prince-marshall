@@ -6,7 +6,7 @@ import RollText from './RollText'
 import { RING_COLORS } from '../lib/palette'
 import { openContact } from '../lib/contactEvents'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
-import { useMediaQuery, useScrollProgress, useStills } from '../lib/scene'
+import { useMediaQuery, useScrollProgress, useSegmentFlex, useStills } from '../lib/scene'
 
 /** stage 0 = before KURA (the ledger), 1-5 = the five parts of the record */
 const STAGE_AT = [0.04, 0.22, 0.38, 0.55, 0.73, 0.93]
@@ -56,6 +56,15 @@ export default function KuraSceneBlock({ pinVh = 400, phoneTop = 0 }: { pinVh?: 
     },
     2000,
   )
+
+  // phone stage bar: segments lengthen and shorten with scroll
+  const segRef = useRef<HTMLOListElement>(null)
+  useSegmentFlex(segRef, () => {
+    const p = target.current
+    if (p <= STAGE_AT[0]) return 0
+    for (let i = 0; i < STAGE_AT.length - 1; i++) if (p < STAGE_AT[i + 1]) return i + (p - STAGE_AT[i]) / (STAGE_AT[i + 1] - STAGE_AT[i])
+    return STAGE_AT.length - 1
+  })
 
   const jumpTo = (i: number) => {
     if (!pin) {
@@ -181,9 +190,9 @@ export default function KuraSceneBlock({ pinVh = 400, phoneTop = 0 }: { pinVh?: 
           <p className={`type-label truncate px-5 ${phoneTop ? 'pt-4' : 'pr-28 pt-7'}`} style={{ color: before ? RED : undefined }}>
             {before ? `${kura.beforeLabel} · ${kura.before.name}` : `${kura.afterLabel} · 0${stage} · ${kura.steps[stage - 1]?.name}`}
           </p>
-          <ol className="mt-3 grid grid-cols-6 gap-1 px-5" aria-label="Stages">
+          <ol ref={segRef} className="mt-3 flex gap-1 px-5" aria-label="Stages">
             {cells.map((s, i) => (
-              <li key={s.name}>
+              <li key={s.name} className="min-w-0 basis-0" style={{ flexGrow: 1 }}>
                 <button
                   type="button"
                   onClick={() => jumpTo(i)}

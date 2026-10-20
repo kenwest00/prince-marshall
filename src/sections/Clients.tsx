@@ -3,7 +3,7 @@ import { clients } from '../data/content'
 import { reducedMotion, scrollToTarget } from '../lib/motion'
 import { SIGNAL } from '../lib/palette'
 import { LOGO_URLS, renderTile } from '../lib/clientIcons'
-import { clamp01, lerp, seeded, ss, useCanvasLoop, useMediaQuery, useScrollProgress } from '../lib/scene'
+import { clamp01, lerp, seeded, ss, useCanvasLoop, useMediaQuery, useScrollProgress, useSegmentFlex } from '../lib/scene'
 
 /**
  * Client index. A pinned scroll scene: each client's name is built from small
@@ -257,6 +257,8 @@ export default function Clients() {
   useScrollProgress(ref, !reducedMotion, (v) => {
     target.current = v
   })
+  const segRef = useRef<HTMLOListElement>(null)
+  useSegmentFlex(segRef, () => target.current * (N - 1), 4)
 
   const jump = (i: number) => {
     const el = ref.current
@@ -300,8 +302,16 @@ export default function Clients() {
       </ul>
       <div ref={ref} className="relative" style={{ height: `${N * 38 + 70}vh` }}>
         <div className="sticky flex flex-col overflow-hidden" style={{ top, height: `calc(100svh - ${top}px)` }}>
+          {/* scroll-linked index bar: one segment per client, the current one longest */}
+          <ol ref={segRef} className="flex gap-1 px-5 pt-3 md:px-10" aria-hidden="true">
+            {names.map((n, i) => (
+              <li key={n} className="min-w-0 basis-0" style={{ flexGrow: 1 }}>
+                <span className="block h-[3px] w-full transition-colors duration-300" style={{ background: i === active ? SIGNAL : i < active ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.2)' }} />
+              </li>
+            ))}
+          </ol>
           {/* HUD */}
-          <div className="flex items-start justify-between gap-4 border-t border-white/30 px-5 pt-4 md:justify-start md:gap-16 md:px-10 md:pt-6" aria-hidden="true">
+          <div className="flex items-start justify-between gap-4 px-5 pt-3 md:justify-start md:gap-16 md:px-10 md:pt-6" aria-hidden="true">
             <div className="type-label grid gap-1">
               <span className="text-white/60">Index</span>
               <span className="tabular-nums">

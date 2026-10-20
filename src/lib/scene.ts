@@ -209,3 +209,38 @@ export function camera(yaw: number, pitch: number, cx: number, cy: number, scale
   }
   return { rot, proj, projFixed, rotN }
 }
+
+/**
+ * Scroll-linked segment bar: each child of `listRef` grows as the fractional
+ * position returned by `getF` (0 = first segment) nears it and shrinks as it
+ * moves on, so every scroll step visibly changes the bar. Writes styles
+ * directly (no re-render); still under reduced motion.
+ */
+export function useSegmentFlex(listRef: RefObject<HTMLElement | null>, getF: () => number, grow = 3.5) {
+  const fn = useRef(getF)
+  useEffect(() => {
+    fn.current = getF
+  })
+  useEffect(() => {
+    const el = listRef.current
+    if (!el) return
+    let raf = 0
+    let cur = fn.current()
+    let last = -1
+    const tick = () => {
+      const f = fn.current()
+      cur = reducedMotion ? f : cur + (f - cur) * 0.2
+      if (Math.abs(cur - last) > 0.0005) {
+        last = cur
+        const kids = el.children
+        for (let i = 0; i < kids.length; i++) {
+          const w = Math.max(0, 1 - Math.abs(cur - i))
+          ;(kids[i] as HTMLElement).style.flexGrow = String(1 + grow * w * w * (3 - 2 * w))
+        }
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [listRef, grow])
+}
