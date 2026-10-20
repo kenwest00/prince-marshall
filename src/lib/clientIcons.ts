@@ -4,8 +4,10 @@ import apple from '../assets/clients/apple.svg'
 import ibm from '../assets/clients/ibm.svg'
 import atandt from '../assets/clients/atandt.svg'
 import homedepot from '../assets/clients/homedepot.svg'
+import connecticut from '../assets/clients/connecticut.svg'
+import pepsico from '../assets/clients/pepsico.svg'
 
-export const LOGO_URLS: Record<NonNullable<Client['logo']>, string> = { apple, ibm, atandt, homedepot }
+export const LOGO_URLS: Record<NonNullable<Client['logo']>, string> = { apple, ibm, atandt, homedepot, connecticut, pepsico }
 
 /** Cut the dark parts of a logo out of the tile; light parts stay tile-white. */
 function knockLogo(x: CanvasRenderingContext2D, img: HTMLImageElement, s: number) {

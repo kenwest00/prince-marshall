@@ -68,7 +68,7 @@ export interface Client {
   /** Short sector tag on the tile. */
   tag?: string
   /** Client logo (one-colour, recoloured in VectorCraft) in src/assets/clients. Without it the tile shows the monogram. */
-  logo?: 'apple' | 'ibm' | 'atandt' | 'homedepot'
+  logo?: 'apple' | 'ibm' | 'atandt' | 'homedepot' | 'connecticut' | 'pepsico'
 }
 
 export const clients = {
@@ -81,7 +81,8 @@ export const clients = {
     { name: 'IBM', logo: 'ibm', mono: 'IBM', tag: 'TECH', sector: 'Technology' },
     { name: 'The Home Depot', logo: 'homedepot', mono: 'HD', tag: 'RETAIL', sector: 'Retail' },
     { name: 'AT&T', logo: 'atandt', mono: 'AT&T', tag: 'TELECOM', sector: 'Telecommunications' },
-    { name: 'State of Connecticut', mono: 'CT', tag: 'STATE GOV', sector: 'State government' },
+    { name: 'PepsiCo', logo: 'pepsico', mono: 'PEP', tag: 'CONSUMER', sector: 'Consumer goods' },
+    { name: 'State of Connecticut', logo: 'connecticut', mono: 'CT', tag: 'STATE GOV', sector: 'State government' },
     { name: 'Downtown ATL', mono: 'ATL', tag: 'CIVIC', sector: 'Civic · Downtown Atlanta' },
     { name: 'Japan Post', mono: 'JP', tag: 'POSTAL', sector: 'Postal and logistics' },
   ] as Client[],
