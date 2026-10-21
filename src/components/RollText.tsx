@@ -9,7 +9,8 @@ interface RollTextProps {
 
 /**
  * Hover label roll: the visible label sits in normal flow (so the wrapper is
- * exactly one line tall and clips the shadow copy); a second copy waits just
+ * one line tall, padded so accents like the Ü in KÜRA are not clipped, and
+ * clips the shadow copy); a second copy waits just
  * below and both slide up together on hover.
  */
 export default function RollText({ text, className = '' }: RollTextProps) {
@@ -28,16 +29,16 @@ export default function RollText({ text, className = '' }: RollTextProps) {
 
   return (
     <span
-      className={`relative inline-block overflow-hidden align-top ${className}`}
+      className={`relative -my-[0.16em] inline-block overflow-hidden align-top ${className}`}
       onMouseEnter={() => roll(-100)}
       onMouseLeave={() => roll(0)}
       onFocus={() => roll(-100)}
       onBlur={() => roll(0)}
     >
-      <span ref={topRef} className="block will-change-transform">
+      <span ref={topRef} className="block py-[0.16em] will-change-transform">
         {text}
       </span>
-      <span ref={bottomRef} className="absolute left-0 top-full block w-full will-change-transform" aria-hidden="true">
+      <span ref={bottomRef} className="absolute left-0 top-full block w-full py-[0.16em] will-change-transform" aria-hidden="true">
         {text}
       </span>
     </span>

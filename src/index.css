@@ -283,3 +283,14 @@ summary::-webkit-details-marker {
 .client-name--outline { color: transparent; -webkit-text-stroke: 1.5px #fff; }
 .client-name:hover { color: var(--signal); -webkit-text-stroke-color: var(--signal); }
 .client-name--outline:hover { color: transparent; }
+
+/* p+m Systems hero: an hour is lost (red), then comes back (lime), on a loop */
+.pm-hour {
+  animation: pm-hour 6s ease-in-out infinite both;
+}
+@keyframes pm-hour {
+  0%, 12% { background: rgba(10, 10, 10, 0.06); }
+  22%, 48% { background: #ff5a4e; }
+  58%, 88% { background: #c8ff2e; box-shadow: inset 0 0 0 1px #0a0a0a; }
+  100% { background: rgba(10, 10, 10, 0.06); }
+}

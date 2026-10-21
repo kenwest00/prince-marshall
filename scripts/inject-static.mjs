@@ -232,3 +232,40 @@ if (!kuraFile.includes('<!-- structured-data -->')) throw new Error('structured-
 kuraFile = kuraFile.replace('<div id="root"></div>', `<div id="root">${kuraHtml}</div>`).replace('<!-- structured-data -->', kuraLd)
 writeFileSync(kuraIndex, kuraFile)
 console.log('Injected static content and JSON-LD into dist/kura/index.html')
+
+/* ---------------- /systems/ ---------------- */
+const sy = c.systems
+const sysHtml = `
+<header><a href="../">prince + marshall</a></header>
+<main>
+  <section><p>${esc(sy.label)}</p><h1>${esc(sy.h1)}</h1><p>${esc(sy.sub)}</p></section>
+  <section><h2>${esc(sy.week.heading)}</h2>${li(sy.week.stages.map((x) => `<strong>${esc(x.name)}:</strong> ${esc(x.line)}`))}<p>${esc(sy.week.payoff)} ${esc(sy.week.payoffQuestion)}</p><p>${esc(sy.week.exampleNote)}</p></section>
+  <section><h2>${esc(sy.pains.eyebrow)}</h2>${li(sy.pains.items.map((x) => `${esc(x.who)}: “${esc(x.quote)}”`))}<p>${esc(sy.pains.bridge)}</p></section>
+  <section><h2>${esc(sy.fork.heading)}</h2>${li(sy.fork.options.map((o) => `<strong>${esc(o.label)}:</strong> ${esc(o.line)}`))}</section>
+  <section><h2>${esc(sy.method.heading)}</h2>${li(sy.method.steps.map((x) => `<strong>${esc(x.name)} (${esc(x.time)}):</strong> ${esc(x.what)} You get: ${esc(x.get)}`))}</section>
+  <section><h2>${esc(sy.examples.heading)}</h2>${li(sy.examples.items.map((x) => `<strong>${esc(x.title)}:</strong> before, ${esc(x.before)} After, ${esc(x.after)}`))}</section>
+  <section><h2>${esc(sy.offers.heading)}</h2>${sy.offers.items.map((o) => `<h3>${esc(o.name)}</h3><p>${esc(o.for)}. ${esc(o.promise)}</p>${li(o.stack.map(esc))}<p>${esc(o.price)}</p><p>${esc(o.guarantee)}</p>`).join('')}</section>
+  <section><h2>${esc(sy.why.heading)}</h2>${li(sy.why.items.map((x) => `<strong>${esc(x.title)}:</strong> ${esc(x.body)}`))}</section>
+  <section><h2>${esc(sy.faq.heading)}</h2>${sy.faq.items.map((i) => `<h3>${esc(i.q)}</h3><p>${esc(i.a)}</p>`).join('')}</section>
+  <section id="contact"><h2>${esc(sy.final.heading)}</h2><p>${esc(sy.final.sub)}</p><p><a href="mailto:${esc(c.site.email)}">${esc(c.site.email)}</a></p></section>
+</main>
+<footer><p>${esc(c.footer.left)}</p><p><a href="../">${esc(sy.footerHome.label)}</a></p></footer>`
+const sysLd = [
+  ld({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'p+m Systems',
+    serviceType: 'AI workflow design, build and operation',
+    url: sy.url,
+    description: sy.sub,
+    provider: { '@type': 'Organization', name: c.site.name, url: c.site.url, email: c.site.email },
+    areaServed: 'US',
+  }),
+  ld({ '@context': 'https://schema.org', '@type': 'FAQPage', url: sy.url, mainEntity: sy.faq.items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) }),
+].join('\n    ')
+const sysIndex = join(root, 'dist/systems/index.html')
+let sysFile = readFileSync(sysIndex, 'utf8')
+if (!sysFile.includes('<div id="root"></div>')) throw new Error('#root placeholder not found in dist/systems/index.html')
+sysFile = sysFile.replace('<div id="root"></div>', `<div id="root">${sysHtml}</div>`).replace('<!-- structured-data -->', sysLd)
+writeFileSync(sysIndex, sysFile)
+console.log('Injected static content and JSON-LD into dist/systems/index.html')

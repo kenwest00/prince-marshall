@@ -101,7 +101,7 @@ export default function MenuOverlay({ open, onClose, onNavigate }: MenuOverlayPr
                   </span>
                 )}
                 {!item.number && <span className="w-8 shrink-0 md:w-12" />}
-                <span className="menu-item-mask block overflow-hidden">
+                <span className="menu-item-mask -mt-[0.2em] block overflow-hidden pt-[0.2em]">
                   <span className="block font-display text-[clamp(2rem,min(7vw,5.8vh),5.5rem)] leading-[0.95] tracking-[-0.03em]">
                     <RollText text={item.label} />
                   </span>
@@ -123,7 +123,7 @@ export default function MenuOverlay({ open, onClose, onNavigate }: MenuOverlayPr
                 <span className="signal-dot" />
               </span>
               <span className="flex flex-wrap items-baseline gap-x-4 gap-y-0.5">
-                <span className="menu-item-mask block overflow-hidden">
+                <span className="menu-item-mask -mt-[0.2em] block overflow-hidden pt-[0.2em]">
                   <span className="block font-display text-[clamp(1.5rem,min(3.6vw,4.6vh),3rem)] leading-[0.95] tracking-[-0.03em]">
                     <RollText text={offer.label} />
                   </span>

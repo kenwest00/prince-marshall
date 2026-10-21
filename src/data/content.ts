@@ -53,7 +53,7 @@ export const audiences = {
   id: 'audiences',
   label: 'Where would you like to start?',
   items: [
-    { label: 'Building a tool', line: 'Research, design and build for your team.', href: '#method', page: false, dot: false },
+    { label: 'Getting time back', line: 'p+m Systems: AI that does real work.', href: 'systems/', page: true, dot: false },
     { label: 'Managing a collection', line: 'KÜRA replaces the notebook with one trustworthy record.', href: 'kura/', page: true, dot: true },
     { label: 'Running a trades business', line: 'The Ride-Along, from prince + marshall.', href: 'ride-along/', page: true, dot: false },
     { label: 'Partnering with us', line: 'Consultants, registrars, appraisers, insurers, integrators.', href: '#partners', page: false, dot: false },
@@ -517,7 +517,7 @@ export const contact = {
     email: 'Work email',
     organization: 'Organization',
     topic: 'Reason for contact',
-    topicOptions: ['A project or engagement', 'KÜRA walkthrough', 'KÜRA starter import', 'Partnership', 'Ride-Along', 'Something else'],
+    topicOptions: ['A project or engagement', 'KÜRA walkthrough', 'KÜRA starter import', 'p+m Systems', 'Partnership', 'Ride-Along', 'Something else'],
     kuraPrefill: 'I would like a walkthrough of KÜRA. ',
     environment: 'Environment',
     environmentOptions: [
@@ -560,6 +560,7 @@ export const menu = {
   ],
   /** A separate page, so it sits apart from the numbered in-page list. */
   offers: [
+    { label: 'p+m Systems', note: 'AI that does real work', href: 'systems/' },
     { label: 'KÜRA', note: 'Collection management platform', href: 'kura/' },
     { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
   ],
@@ -773,4 +774,177 @@ export const rideAlong = {
 
   footerLink: { label: 'The Ride-Along, for trades', href: 'ride-along/' },
   footerHome: { label: 'Back to prince + marshall', href: '../' },
+}
+
+/* ---------------------------------------------------------------------------
+ * p+m Systems: build-and-run AI workflows (served at /systems/).
+ * Every visible string on that page lives here. Empty fields stay hidden.
+ * ------------------------------------------------------------------------- */
+export type SystemsAudience = 'small' | 'team' | 'enterprise'
+
+export const systems = {
+  url: 'https://princeandmarshall.com/systems/',
+  label: 'p+m Systems',
+  h1: 'AI that does real work.',
+  sub: 'We watch how your team actually works, find the hours that disappear, and build AI systems that give them back. Then we keep them running.',
+  cta: 'Book a Fieldwork call',
+  seeHow: 'See what you get back',
+  topic: 'p+m Systems',
+
+  pains: {
+    eyebrow: 'Sound familiar?',
+    items: [
+      { who: 'Owner', quote: 'I miss calls while I’m on a job.' },
+      { who: 'Operations', quote: 'Half my day is copying things from one system to another.' },
+      { who: 'Leadership', quote: 'We bought the AI licenses. Nobody uses them.' },
+      { who: 'IT', quote: 'Every pilot works in the demo and dies in real life.' },
+    ],
+    bridge: 'The tools aren’t the problem. Nobody looked at the work first.',
+  },
+
+  fork: {
+    eyebrow: 'Who is it for?',
+    heading: 'Pick the one that sounds like you.',
+    options: [
+      { id: 'small', label: 'Small business', line: 'You and a small crew. You want time back, not software.' },
+      { id: 'team', label: 'Growing team', line: '10 to 200 people. Processes held together by spreadsheets and goodwill.' },
+      { id: 'enterprise', label: 'Enterprise and public sector', line: 'Pilots everywhere, results nowhere. Security and adoption matter.' },
+    ] as { id: SystemsAudience; label: string; line: string }[],
+  },
+
+  /** Scroll scene 1: a week fills with lost hours, then a system gives them back. */
+  week: {
+    eyebrow: 'What’s in it for you',
+    heading: 'Your week, before and after.',
+    label: 'A work week whose hours are taken by busywork, then handed back by an automated system',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    leaks: ['Copying data', 'Chasing quotes', 'Missed call', 'Weekly report', 'Finding files', 'Re-keying invoices', 'Status emails', 'Scheduling'],
+    stages: [
+      { name: 'Your week', line: 'Fifty working hours. Watch where they go.' },
+      { name: 'The leak', line: 'Busywork takes 14 of them. Every week.' },
+      { name: 'The system', line: 'We build one system around the leaks.' },
+      { name: 'Hours back', line: '10 hours a week come back to you. People stay in charge of the rest.' },
+    ],
+    lostLabel: 'Hours lost this week',
+    backLabel: 'Hours back',
+    systemLabel: 'p+m system',
+    keptLabel: 'Still yours: needs a person',
+    exampleNote: 'Example week. Your Fieldwork measures your real numbers.',
+    payoff: '10 hours a week is about 500 hours a year.',
+    payoffQuestion: 'What would you do with them?',
+  },
+
+  calc: {
+    eyebrow: 'Do the math',
+    heading: 'What are your lost hours worth?',
+    hoursLabel: 'Hours lost to busywork each week',
+    peopleLabel: 'People who lose them',
+    rateLabel: 'What an hour of their time is worth',
+    resultLabel: 'Back in your business each year',
+    note: 'An estimate from your own numbers, assuming 48 working weeks. Fieldwork measures the real ones.',
+    defaults: {
+      small: { hours: 10, people: 1, rate: 75 },
+      team: { hours: 6, people: 12, rate: 55 },
+      enterprise: { hours: 4, people: 80, rate: 70 },
+    } as Record<SystemsAudience, { hours: number; people: number; rate: number }>,
+  },
+
+  /** Scroll scene 2: a tangled process straightens through Fieldwork, Build, Run. */
+  method: {
+    eyebrow: 'How it works',
+    heading: 'From mess to one clean line.',
+    label: 'A tangled process between email, spreadsheets, phone, people and invoices straightens into one clean line',
+    nodes: ['Email', 'Phone', 'Spreadsheet', 'You', 'CRM', 'Invoice'],
+    steps: [
+      { name: 'Fieldwork', time: '1 to 2 weeks', what: 'We sit with your team and map every step, hand-off and workaround. Nothing gets automated until we have seen it.', get: 'A written Leak Map, ranked by hours and dollars. Yours to keep.' },
+      { name: 'Build', time: '2 to 6 weeks', what: 'We build the one or two systems worth building, test them with the people who will use them, and switch them on.', get: 'A working system, with a person approving every step that matters.' },
+      { name: 'Run', time: 'Monthly', what: 'We watch it, fix it, improve it and report what it gave back. If something breaks, it is our problem, not yours.', get: 'A monthly Hours Back report. Cancel any time.' },
+    ],
+  },
+
+  examples: {
+    eyebrow: 'What we automate',
+    heading: 'Before. After.',
+    items: [
+      { title: 'Intake and quoting', before: 'Requests by phone, web and email, answered when someone gets a minute.', after: 'Every request logged, a quote drafted and followed up automatically.', for: ['small', 'team'] },
+      { title: 'Missed calls', before: 'A missed call is a customer calling someone else.', after: 'Every missed call gets a text back in seconds, and a booking link.', for: ['small'] },
+      { title: 'Documents', before: 'Contracts, invoices and forms read and re-keyed by hand.', after: 'Read, checked and filed, with a person approving anything unusual.', for: ['team', 'enterprise'] },
+      { title: 'Reporting', before: 'A weekly report built by hand every Friday afternoon.', after: 'A report that writes itself on Monday at 7am.', for: ['small', 'team', 'enterprise'] },
+      { title: 'Team knowledge', before: '“Ask Sandra, she knows.”', after: 'An assistant that answers from your own documents, and says when it doesn’t know.', for: ['team', 'enterprise'] },
+      { title: 'AI adoption', before: 'Licenses bought, a pilot demoed, nothing changed.', after: 'One workflow in production and used every week, with numbers to show for it.', for: ['enterprise'] },
+      { title: 'Accessibility', before: 'A compliance deadline and no idea where to start.', after: 'Audits on a schedule, fixes tracked, a record you can show.', for: ['enterprise'] },
+    ] as { title: string; before: string; after: string; for: SystemsAudience[] }[],
+  },
+
+  offers: {
+    eyebrow: 'Two ways to start',
+    heading: 'Pick your starting line.',
+    items: [
+      {
+        id: 'small',
+        name: 'The Time-Back Build',
+        for: 'For owners and teams under 50',
+        promise: 'We find the hours your business loses every week, build the systems that win them back, and run them for you.',
+        stack: [
+          'A Fieldwork day with you and your team: we measure where time and money slip away',
+          'Your Leak Map: every leak in plain English, ranked by hours and dollars',
+          'Your first systems, built and switched on',
+          'Run included while it settles in: we watch it, fix it and tune it',
+          'A one-page Hours Back report every month',
+          'A short recorded walkthrough, so nobody has to learn software',
+        ],
+        price: 'Starts with a $2,500 Fieldwork. Build and Run are fixed prices, agreed before we start.',
+        guarantee: 'If Fieldwork finds nothing worth fixing, we stop there and you keep the written answer.',
+        tradesLink: { label: 'Run a trades business? The Ride-Along is built for you', href: '../ride-along/' },
+      },
+      {
+        id: 'enterprise',
+        name: 'Pilot to Production',
+        for: 'For corporate teams and public bodies',
+        promise: 'One real workflow, in production and used every week by your people, with the numbers to prove it.',
+        stack: [
+          'A two-week Fieldwork Sprint: observation, interviews and baseline numbers',
+          'An opportunity map and a business case your sponsor can take upstairs',
+          'Build and integration inside the tools you already use',
+          'An adoption plan: champions, short training, office hours',
+          'A governance pack: usage policy, data handling and an accessibility check',
+          'A results readout with measured hours and the next three opportunities',
+        ],
+        price: 'Fixed-price Fieldwork, then a scoped build. Works with purchase orders and small-purchase thresholds.',
+        guarantee: 'If Fieldwork finds nothing worth building, we say so in writing and you keep the map.',
+        tradesLink: null,
+      },
+    ] as { id: SystemsAudience; name: string; for: string; promise: string; stack: string[]; price: string; guarantee: string; tradesLink: { label: string; href: string } | null }[],
+    /** Fill in to show the time-back guarantee (left empty until the terms are confirmed). */
+    timeBackGuarantee: '',
+    /** e.g. 'We take three builds a month.' Empty = hidden. */
+    capacity: '',
+  },
+
+  why: {
+    eyebrow: 'Why p+m',
+    heading: 'We look at the work first.',
+    items: [
+      { title: 'Research first', body: 'We watch the work before we touch a tool. That is why our systems get used.' },
+      { title: 'People stay in charge', body: 'Every system has a person approving the steps that matter.' },
+      { title: 'Your data stays yours', body: 'Open exports, no lock-in, and nothing used to train anyone’s model.' },
+      { title: 'We stay', body: 'Run means someone is responsible after launch, not just a handover document.' },
+    ],
+  },
+
+  faq: {
+    eyebrow: 'Questions',
+    heading: 'Fair questions.',
+    items: [
+      { q: 'Do I have to learn new software?', a: 'No. We build around the tools you already use, and we record a short walkthrough for anything new.', for: ['small', 'team'] },
+      { q: 'Will this replace people?', a: 'It replaces busywork. The hours come back to the people doing the work, for the parts that need a person.', for: ['team', 'enterprise'] },
+      { q: 'Which AI models do you use, and where does our data go?', a: 'We choose models for the job and your rules, document where data goes, and can work inside your existing Microsoft, Google or vendor setup.', for: ['enterprise'] },
+      { q: 'What if Fieldwork finds nothing worth automating?', a: 'We tell you, in writing, and you keep the map. That is a useful answer too.', for: ['small', 'team', 'enterprise'] },
+      { q: 'What happens if it breaks?', a: 'While you are on Run, it is ours to fix. You get a monthly report either way.', for: ['small', 'team', 'enterprise'] },
+      { q: 'Can we stop Run?', a: 'Yes, any month. You keep everything we built and the documentation for it.', for: ['small', 'team', 'enterprise'] },
+    ] as { q: string; a: string; for: SystemsAudience[] }[],
+  },
+
+  final: { heading: 'Show us one process that eats your week.', sub: 'A 30-minute call. No pitch deck. If it is not a fit, we will say so.' },
+  footerHome: { label: 'Systems is one of four ways to work with prince + marshall', href: '../' },
 }

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>try{if(sessionStorage.getItem('pm-arrive')){sessionStorage.removeItem('pm-arrive');document.documentElement.classList.add('pm-arriving')}}catch(e){}</script>
+    <style>html.pm-arriving body::after{content:'';position:fixed;inset:0;z-index:100;background:#0a0a0a;pointer-events:none;animation:pm-arrive .6s .1s cubic-bezier(.76,0,.24,1) forwards}@keyframes pm-arrive{to{transform:translateY(-100%)}}@media (prefers-reduced-motion:reduce){html.pm-arriving body::after{display:none}}</style>
+    <meta name="description" content="p+m Systems: we watch how your team actually works, find the hours that disappear, and build AI systems that give them back. Then we keep them running." />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://princeandmarshall.com/systems/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="prince + marshall" />
+    <meta property="og:title" content="p+m Systems: AI that does real work" />
+    <meta property="og:description" content="We find the hours your team loses every week, build the AI systems that give them back, and keep them running." />
+    <meta property="og:url" content="https://princeandmarshall.com/systems/" />
+    <meta property="og:image" content="https://princeandmarshall.com/share/systems.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="p+m Systems: AI that does real work. Hours back, every week." />
+    <meta property="og:image:type" content="image/png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="p+m Systems: AI that does real work" />
+    <meta name="twitter:description" content="We find the hours your team loses every week, build the AI systems that give them back, and keep them running." />
+    <meta name="twitter:image" content="https://princeandmarshall.com/share/systems.png" />
+    <meta name="twitter:image:alt" content="p+m Systems: AI that does real work. Hours back, every week." />
+    <!-- structured-data -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>p+m Systems: AI that does real work | prince + marshall</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>p+m Systems, from prince + marshall: we find the hours your team loses every week, build AI systems that give them back, and keep them running. Write to hello@princeandmarshall.com.</noscript>
+    <script type="module" src="/src/systems/main.tsx"></script>
+  </body>
+</html>
