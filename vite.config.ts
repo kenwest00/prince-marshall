@@ -1,11 +1,26 @@
 import path from "path"
 import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import { defineConfig, type Plugin } from "vite"
+import { BLUEPRINT_GRID, BLUEPRINT_GRID_SIZE, blueprintDataUri } from "./src/lib/blueprint"
+
+/** Inline the finished blueprint drawing into each page's arrival cover. */
+function blueprintArrival(): Plugin {
+  const bg =
+    `background-color:#0a0a0a;background-image:${blueprintDataUri()},${BLUEPRINT_GRID};` +
+    `background-size:min(92vmin,880px) auto,${BLUEPRINT_GRID_SIZE};background-position:center,0 0,0 0,0 0,0 0;` +
+    `background-repeat:no-repeat,repeat,repeat,repeat,repeat;`
+  return {
+    name: 'pm-blueprint-arrival',
+    transformIndexHtml(html) {
+      return html.replace('background:#0a0a0a;pointer-events:none;animation:pm-arrive .6s .1s', `${bg}pointer-events:none;animation:pm-arrive .6s .3s`)
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [react()],
+  plugins: [react(), blueprintArrival()],
   build: {
     rollupOptions: {
       input: {
