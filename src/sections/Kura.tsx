@@ -19,6 +19,14 @@ export default function Kura() {
           <p className="font-display text-[clamp(1.75rem,3.6vw,3.25rem)] leading-[0.98] tracking-[-0.03em]">{kura.definition}</p>
           <div>
             <p className="max-w-2xl text-lg font-semibold leading-snug text-white/85 md:text-xl">{kura.definitionBody}</p>
+            <ul className="mt-5 flex flex-wrap gap-2" aria-label="What the on-site Collection Survey covers">
+              {kura.surveyLine.map((s) => (
+                <li key={s} className="type-label inline-flex items-center gap-2 border border-white/40 px-3 py-1.5 text-white/90">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 bg-[#c8ff2e]" />
+                  {s}
+                </li>
+              ))}
+            </ul>
             <a href={kura.pageLink.href} data-page-link className="type-label mt-5 inline-flex min-h-[44px] items-center underline underline-offset-4 hover:no-underline">
               {kura.pageLink.label} <span aria-hidden="true" className="ml-1">→</span>
             </a>

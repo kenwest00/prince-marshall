@@ -33,7 +33,7 @@ export const hero = {
   product: {
     eyebrow: 'Our product',
     name: 'KÜRA',
-    line: 'Collection management software for art. Know what you hold, where it is, its condition, where it came from and what it is worth.',
+    line: 'White-glove documentation for art collections, kept current in software. Know what you hold, where it is, its condition, where it came from and what it is worth.',
     cta: 'See KÜRA',
     href: 'kura/',
   },
@@ -54,7 +54,7 @@ export const audiences = {
   label: 'Where would you like to start?',
   items: [
     { label: 'Getting time back', line: 'p+m Systems: AI that does real work.', href: 'systems/', page: true, dot: false },
-    { label: 'Managing a collection', line: 'KÜRA replaces the notebook with one trustworthy record.', href: 'kura/', page: true, dot: true },
+    { label: 'Managing a collection', line: 'We document every work by hand. KÜRA keeps the record.', href: 'kura/', page: true, dot: true },
     { label: 'Running a trades business', line: 'The Ride-Along, from prince + marshall.', href: 'ride-along/', page: true, dot: false },
     { label: 'Partnering with us', line: 'Consultants, registrars, appraisers, insurers, integrators.', href: '#partners', page: false, dot: false },
   ],
@@ -154,9 +154,9 @@ export const kura = {
   eyebrow: 'Featured product',
   name: 'KÜRA',
   tagline: 'Full transparency into an art collection.',
-  status: 'Collection management platform',
+  status: 'Collection documentation service and platform',
   intro:
-    'KÜRA is a collection management platform for museums, municipalities, universities and private collections that need one trustworthy record of what they hold, where it is, what condition it is in, where it came from and what it is worth.',
+    'KÜRA is a white-glove collection documentation service and platform for museums, municipalities, universities and private collections. We photograph, catalogue and, if you want, tag every work on site, then keep one trustworthy record of what you hold, where it is, what condition it is in, where it came from and what it is worth.',
   pillars: [
     {
       title: 'What you hold',
@@ -192,9 +192,10 @@ export const kura = {
 
   /* --- Release 1: "From notebook to record" --- */
   flagEyebrow: 'Flagship · KÜRA',
-  definition: 'Collection management software for art.',
+  definition: 'White-glove documentation for art collections.',
   definitionBody:
-    'For museums, cities, universities and private collectors: one trustworthy record of every work, from what it is and where it hangs to its condition, provenance and value.',
+    'We come to you: every work photographed, measured, condition-checked, catalogued and, if you want, RFID-tagged on site. Then KÜRA keeps one trustworthy record current, from where each work hangs to its condition, provenance and value. For museums, cities, universities and private collectors.',
+  surveyLine: ['Photographed', 'Measured', 'Condition-checked', 'Catalogued', 'Located', 'Tagged (optional)'],
   heading: 'From notebook to record.',
   sceneIntro:
     'Most collections still live in a ledger, a spreadsheet and the memory of whoever has been there longest. That is the problem KÜRA solves. Scroll to watch one entry become a trustworthy record.',
@@ -274,12 +275,12 @@ export const kura = {
 /** The /kura/ page. Empty or disabled fields render nothing. */
 export const kuraPage = {
   url: 'https://princeandmarshall.com/kura/',
-  title: 'KÜRA: collection management for museums and public art | prince + marshall',
+  title: 'KÜRA: white-glove collection documentation and software | prince + marshall',
   description:
-    'KÜRA replaces notebooks and spreadsheets with one trustworthy record of every work: what you hold, where it is, condition, provenance and worth.',
+    'We photograph, catalogue and, if you want, RFID-tag every work on site, then keep one trustworthy record in KÜRA: what you hold, where it is, condition, provenance and worth.',
   label: 'KÜRA, from prince + marshall',
   h1: 'From notebook to record.',
-  sub: 'One trustworthy record of what you hold, where it is, its condition, where it came from and what it is worth. Built for museums, municipalities, universities and private collections.',
+  sub: 'We come to you and document every work by hand, then keep the record current in KÜRA: what you hold, where it is, its condition, where it came from and what it is worth. For museums, municipalities, universities and private collections.',
   seeHow: 'See how it works',
   replaces: {
     eyebrow: 'Where collections start',
@@ -289,6 +290,56 @@ export const kuraPage = {
       { title: 'The spreadsheet', body: 'a column for everything except the history.' },
       { title: 'Memory', body: 'accurate until the person who knows retires.' },
     ],
+  },
+  service: {
+    eyebrow: 'The service',
+    heading: 'Software can be copied. A collection documented by hand can’t.',
+    intro:
+      'KÜRA starts with people, not a login. Our team comes to you for a Collection Survey, led by Ken West, a documentary photographer, and then keeps the record current.',
+    survey: [
+      { title: 'White-glove handling', body: 'We work on site, so your works never leave your walls or your storage.' },
+      { title: 'Expert photography', body: 'Professional images of every piece: front, back, details, signatures, labels and marks.' },
+      { title: 'Measured and condition-checked', body: 'A dated condition baseline for every work, to compare against for years.' },
+      { title: 'Catalogued and located', body: 'Every work recorded to museum standards and mapped to where it lives.' },
+      { title: 'RFID tagging, if you want it', body: 'A discreet tag on each work, so an inventory becomes a walk through the room.' },
+      { title: 'A findings report', body: 'A short, board-ready summary: missing works, provenance gaps, works needing care and values due for review.' },
+    ],
+    imagesNote: 'The images are yours, for insurance, loans, grants and your online collection.',
+  },
+  plans: {
+    eyebrow: 'Ways to work with us',
+    heading: 'Pick the level of care your collection needs.',
+    tiers: [
+      {
+        name: 'Survey',
+        for: 'Small collections and estates',
+        items: ['On-site Collection Survey and findings report', 'Imaging, condition baseline and cataloguing', 'Optional RFID tagging', 'KÜRA for the first year'],
+        featured: false,
+      },
+      {
+        name: 'Steward',
+        for: 'Museums, universities and cities',
+        items: ['Everything in Survey', 'Annual Collection Check-up: re-walk, re-scan, re-photograph what changed', 'Loan and move documentation', 'KÜRA, kept current'],
+        featured: true,
+      },
+      {
+        name: 'Custodian',
+        for: 'Major or high-risk collections',
+        items: ['Everything in Steward', 'Disaster plan and recovery documentation', 'Object stories: recorded interviews', 'Priority response'],
+        featured: false,
+      },
+    ],
+    addonsHeading: 'Add any time',
+    addons: [
+      { title: 'Disaster readiness and recovery', body: 'which works to save first, an emergency plan, and documentation for the claim if the worst happens.' },
+      { title: 'Object stories', body: 'recorded interviews with the curator, collector or long-time staff, attached to each work, so what they know stays.' },
+      { title: 'Estate and transition records', body: 'a record ready for heirs, gifts or sale.' },
+      { title: 'Publication-quality images', body: 'for catalogues, your online collection, grant applications and donor campaigns.' },
+      { title: 'Funding support', body: 'help finding and applying for grants that pay for digitization and collection care.' },
+    ],
+    partnersNote:
+      'We document; we don’t appraise or treat works. Appraisals, conservation treatment and art transport are done by qualified specialists, and we coordinate them for you.',
+    cta: 'Book a Collection Survey',
   },
   outcomesEyebrow: 'What a record gives you',
   outcomesHeading: 'Answers you can hand to anyone who asks.',
@@ -308,7 +359,7 @@ export const kuraPage = {
   },
   /** [confirm] e.g. 'Priced by collection size, from $___ a month, onboarding included.' */
   pricing: '',
-  pricingFallback: 'Ask for a quote. We price KÜRA around your collection and your team.',
+  pricingFallback: 'Ask for a quote. The Collection Survey is priced per object, and plans by the year.',
   pricingEyebrow: 'Pricing',
   buyingEyebrow: 'For procurement',
   buyingHeading: 'Buying KÜRA.',
@@ -331,11 +382,19 @@ export const kuraPage = {
   faq: [
     {
       q: 'How do I get started with KÜRA?',
-      a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
+      a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then scope a Collection Survey: our team comes on site to photograph, catalogue and, if you want, tag every work.',
+    },
+    {
+      q: 'What happens during a Collection Survey?',
+      a: 'Our team comes to you. Every work is photographed front and back, measured, condition-checked, catalogued and mapped to where it lives, with optional RFID tags. Your works never leave your building. You get the full record in KÜRA and a short findings report for your board.',
+    },
+    {
+      q: 'Do you appraise or restore works?',
+      a: 'No. We document, which keeps us independent. Appraisals, conservation treatment and art transport are done by qualified specialists, and we coordinate them for you.',
     },
     {
       q: 'Who owns our data?',
-      a: 'You do. Your data leaves as easily as it arrives: open exports, no lock-in.',
+      a: 'You do. Your data leaves as easily as it arrives: open exports, no lock-in. The images we make are yours too.',
     },
   ],
   finalHeading: 'Every collection deserves a record.',
@@ -353,6 +412,7 @@ export const partners = {
     { title: 'Collection consultants and registrars', body: 'you bring the collection, we bring the record.' },
     { title: 'Appraisers and art insurers', body: 'valuations and review dates live in the KÜRA record.' },
     { title: 'Conservators', body: 'condition history, dated and attached to the work.' },
+    { title: 'Fine-art handlers and shippers', body: 'condition documented when a work leaves and when it arrives.' },
     { title: 'Public-art administrators', body: 'inventory, location and maintenance for works in public space.' },
     { title: 'Systems integrators and studios', body: 'research and design capacity for your enterprise clients.' },
     { title: 'Chambers and associations', body: 'practical help for your members, starting with the Ride-Along.' },
@@ -493,7 +553,7 @@ export const faq = {
     },
     {
       q: 'How do I get started with KÜRA?',
-      a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then talk through how it would fit your organization, your data and your team.',
+      a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then scope a Collection Survey: our team comes on site to photograph, catalogue and, if you want, tag every work.',
     },
   ] as FaqItem[],
 }
@@ -517,7 +577,7 @@ export const contact = {
     email: 'Work email',
     organization: 'Organization',
     topic: 'Reason for contact',
-    topicOptions: ['A project or engagement', 'KÜRA walkthrough', 'KÜRA starter import', 'p+m Systems', 'Partnership', 'Ride-Along', 'Something else'],
+    topicOptions: ['A project or engagement', 'KÜRA walkthrough', 'Collection Survey', 'KÜRA starter import', 'p+m Systems', 'Partnership', 'Ride-Along', 'Something else'],
     kuraPrefill: 'I would like a walkthrough of KÜRA. ',
     environment: 'Environment',
     environmentOptions: [
@@ -561,7 +621,7 @@ export const menu = {
   /** A separate page, so it sits apart from the numbered in-page list. */
   offers: [
     { label: 'p+m Systems', note: 'AI that does real work', href: 'systems/' },
-    { label: 'KÜRA', note: 'Collection management platform', href: 'kura/' },
+    { label: 'KÜRA', note: 'Collection documentation service', href: 'kura/' },
     { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
   ],
 }

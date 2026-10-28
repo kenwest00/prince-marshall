@@ -193,10 +193,12 @@ const kuraHtml = `
     <h2>${esc(kc.afterLabel)}: ${esc(kc.exampleLabel)}</h2>
     ${li(kc.card.map((r) => `<strong>${esc(r.label)}:</strong> ${esc(r.value)}`))}
   </section>
+  <section id="service"><h2>${esc(k.service.heading)}</h2><p>${esc(k.service.intro)}</p><ol>${k.service.survey.map((s) => `<li><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p></li>`).join('')}</ol><p>${esc(k.service.imagesNote)}</p></section>
   <section><h2>${esc(k.replaces.heading)}</h2>${li(k.replaces.items.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>
   <section><h2>${esc(k.outcomesHeading)}</h2>${li(kc.outcomes.map((o) => `<strong>${esc(o.title)}:</strong> ${esc(o.body)}`))}</section>
   <section><h2>${esc(k.anatomyHeading)}</h2><ol>${kc.pillars.map((p) => `<li><h3>${esc(p.title)}</h3><p>${esc(p.body)}</p></li>`).join('')}</ol></section>
   <section><h2>${esc(k.whoHeading)}</h2>${li(k.who.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>
+  <section id="plans"><h2>${esc(k.plans.heading)}</h2>${k.plans.tiers.map((t) => `<h3>${esc(t.name)}: ${esc(t.for)}</h3>${li(t.items.map(esc))}`).join('')}<h3>${esc(k.plans.addonsHeading)}</h3>${li(k.plans.addons.map((a) => `<strong>${esc(a.title)}:</strong> ${esc(a.body)}`))}<p>${esc(k.plans.partnersNote)}</p></section>
   ${kc.starterEnabled ? `<section><h2>${esc(k.starter.heading)}</h2><p>${esc(k.starter.body)}</p></section>` : ''}
   <section>
     <h2>${esc(k.buyingHeading)}</h2>
@@ -219,6 +221,21 @@ const kuraLd = [
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     publisher: { '@type': 'Organization', name: c.site.name, url: c.site.url, email: c.site.email },
+  }),
+  ld({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'KÜRA Collection Survey',
+    serviceType: 'Art collection documentation, photography and inventory tagging',
+    url: `${k.url}#service`,
+    description: k.service.intro,
+    provider: { '@type': 'Organization', name: c.site.name, url: c.site.url, email: c.site.email },
+    areaServed: 'US',
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: k.plans.heading,
+      itemListElement: k.plans.tiers.map((t) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: `KÜRA ${t.name}`, description: t.items.join('; ') } })),
+    },
   }),
   ...(k.faq.length
     ? [ld({ '@context': 'https://schema.org', '@type': 'FAQPage', url: k.url, mainEntity: k.faq.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) })]

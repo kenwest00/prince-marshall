@@ -53,6 +53,79 @@ function List({ items }: { items: { title: string; body: string }[] }) {
   )
 }
 
+function Survey() {
+  const ref = useFadeItems<HTMLOListElement>()
+  return (
+    <ol ref={ref} className={`${offset} grid grid-cols-1 border-t border-[#0a0a0a] md:grid-cols-2`}>
+      {k.service.survey.map((s, i) => (
+        <li
+          key={s.title}
+          className="fade-item grid grid-cols-[3rem_1fr] gap-x-4 border-b border-[#0a0a0a]/20 py-6 md:pr-10 md:[&:nth-child(even)]:pl-10 md:[&:nth-child(odd)]:border-r"
+        >
+          <span className="type-label pt-1 text-[#0a0a0a]/70">0{i + 1}</span>
+          <div>
+            <h3 className="font-display text-2xl leading-none tracking-[-0.02em] md:text-3xl">{s.title}</h3>
+            <p className="mt-3 max-w-xl font-semibold leading-snug text-[#0a0a0a]/80">{s.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function Plans() {
+  const ref = useFadeItems<HTMLDivElement>()
+  const p = k.plans
+  return (
+    <div ref={ref} className={offset}>
+      <ul className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {p.tiers.map((t) => (
+          <li
+            key={t.name}
+            className={`fade-item flex flex-col border border-[#0a0a0a] p-6 md:p-8 ${t.featured ? 'bg-[#0a0a0a] text-white' : 'bg-white'}`}
+          >
+            <p className={`type-label mb-3 inline-flex min-h-[1rem] items-center gap-2 ${t.featured ? 'text-[#c8ff2e]' : 'invisible'}`} aria-hidden={!t.featured}>
+              <span aria-hidden="true" className="h-2 w-2 bg-[#c8ff2e]" />
+              Recommended
+            </p>
+            <h3 className="font-display text-4xl leading-none tracking-[-0.03em] md:text-5xl">{t.name}</h3>
+            <p className={`type-label mt-3 ${t.featured ? 'text-white/70' : 'text-[#0a0a0a]/70'}`}>{t.for}</p>
+            <ul className={`mt-6 border-t ${t.featured ? 'border-white/40' : 'border-[#0a0a0a]/30'}`}>
+              {t.items.map((it) => (
+                <li key={it} className={`flex gap-3 border-b py-3 font-semibold leading-snug ${t.featured ? 'border-white/20 text-white/90' : 'border-[#0a0a0a]/15 text-[#0a0a0a]/85'}`}>
+                  <span aria-hidden="true" className={`mt-2 h-2 w-2 shrink-0 ${t.featured ? 'bg-[#c8ff2e]' : 'bg-[#0a0a0a]'}`} />
+                  {it}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+
+      <h3 className="type-label mt-14 text-[#0a0a0a]/70">{p.addonsHeading}</h3>
+      <ul className="mt-4 border-t border-[#0a0a0a]">
+        {p.addons.map((a) => (
+          <li key={a.title} className="fade-item border-b border-[#0a0a0a]/20 py-4 text-lg font-semibold leading-snug md:text-xl">
+            <strong className="font-extrabold">{a.title}:</strong> {a.body}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 max-w-3xl font-semibold leading-snug text-[#0a0a0a]/75">{p.partnersNote}</p>
+      <div className="mt-10">
+        <PillButton
+          href="#contact"
+          onClick={(e) => {
+            e?.preventDefault()
+            openContact(contact.form.topicOptions[2])
+          }}
+        >
+          <RollText text={p.cta} />
+        </PillButton>
+      </div>
+    </div>
+  )
+}
+
 export default function KuraPage() {
   const buying = k.buying.filter((b) => b.value)
   return (
@@ -92,6 +165,13 @@ export default function KuraPage() {
         {/* Scene */}
         <section id="record" aria-label={kura.sceneLabel} className="bg-[#0a0a0a] text-white">
           <KuraSceneBlock pinVh={400} />
+        </section>
+
+        {/* The service */}
+        <section id="service" aria-labelledby="service-h" className={section}>
+          <SectionHead id="service-h" eyebrow={k.service.eyebrow} heading={k.service.heading} intro={k.service.intro} />
+          <Survey />
+          <p className={`${offset} mt-8 max-w-2xl text-lg font-bold leading-snug`}>{k.service.imagesNote}</p>
         </section>
 
         {/* What it replaces */}
@@ -136,6 +216,12 @@ export default function KuraPage() {
         <section aria-labelledby="who-h" className={section}>
           <SectionHead id="who-h" eyebrow={k.whoEyebrow} heading={k.whoHeading} />
           <List items={k.who} />
+        </section>
+
+        {/* Plans */}
+        <section id="plans" aria-labelledby="plans-h" className={section}>
+          <SectionHead id="plans-h" eyebrow={k.plans.eyebrow} heading={k.plans.heading} />
+          <Plans />
         </section>
 
         {/* Starter offer: hidden until confirmed */}
