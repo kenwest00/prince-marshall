@@ -174,6 +174,34 @@ export default function KuraPage() {
           <p className={`${offset} mt-8 max-w-2xl text-lg font-bold leading-snug`}>{k.service.imagesNote}</p>
         </section>
 
+        {/* The catalogue */}
+        <section id="catalogue" aria-labelledby="catalogue-h" className={section}>
+          <SectionHead id="catalogue-h" eyebrow={k.catalogue.eyebrow} heading={k.catalogue.heading} intro={k.catalogue.intro} />
+          <div className={`${offset} grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16`}>
+            <div>
+              <h3 className="type-label text-[#0a0a0a]/70">{k.catalogue.holdsHeading}</h3>
+              <ul className="mt-4 border-t border-[#0a0a0a]">
+                {k.catalogue.holds.map((h) => (
+                  <li key={h} className="flex gap-3 border-b border-[#0a0a0a]/20 py-4 text-lg font-semibold leading-snug">
+                    <span aria-hidden="true" className="mt-2.5 h-2 w-2 shrink-0 bg-[#0a0a0a]" />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="type-label text-[#0a0a0a]/70">{k.catalogue.useHeading}</h3>
+              <ul className="mt-4 border-t border-[#0a0a0a]">
+                {k.catalogue.uses.map((u) => (
+                  <li key={u.title} className="border-b border-[#0a0a0a]/20 py-4 text-lg font-semibold leading-snug">
+                    <strong className="font-extrabold">{u.title}:</strong> {u.body}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* What it replaces */}
         <section aria-labelledby="replaces-h" className={section}>
           <SectionHead id="replaces-h" eyebrow={k.replaces.eyebrow} heading={k.replaces.heading} />

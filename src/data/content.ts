@@ -33,7 +33,7 @@ export const hero = {
   product: {
     eyebrow: 'Our product',
     name: 'KÜRA',
-    line: 'White-glove documentation for art collections, kept current in software. Know what you hold, where it is, its condition, where it came from and what it is worth.',
+    line: 'A complete catalogue of your art collection, documented by hand and kept current in software. Know what you hold, where it is, its condition, where it came from and what it is worth.',
     cta: 'See KÜRA',
     href: 'kura/',
   },
@@ -54,7 +54,7 @@ export const audiences = {
   label: 'Where would you like to start?',
   items: [
     { label: 'Getting time back', line: 'p+m Systems: AI that does real work.', href: 'systems/', page: true, dot: false },
-    { label: 'Managing a collection', line: 'We document every work by hand. KÜRA keeps the record.', href: 'kura/', page: true, dot: true },
+    { label: 'Managing a collection', line: 'A complete catalogue of your collection, documented by hand.', href: 'kura/', page: true, dot: true },
     { label: 'Running a trades business', line: 'The Ride-Along, from prince + marshall.', href: 'ride-along/', page: true, dot: false },
     { label: 'Partnering with us', line: 'Consultants, registrars, appraisers, insurers, integrators.', href: '#partners', page: false, dot: false },
   ],
@@ -192,9 +192,9 @@ export const kura = {
 
   /* --- Release 1: "From notebook to record" --- */
   flagEyebrow: 'Flagship · KÜRA',
-  definition: 'White-glove documentation for art collections.',
+  definition: 'A complete catalogue of your art collection, documented by hand.',
   definitionBody:
-    'We come to you: every work photographed, measured, condition-checked, catalogued and, if you want, RFID-tagged on site. Then KÜRA keeps one trustworthy record current, from where each work hangs to its condition, provenance and value. For museums, cities, universities and private collectors.',
+    'We come to you: every work photographed, measured, condition-checked, catalogued and, if you want, RFID-tagged on site. The result is a complete catalogue of your collection, and KÜRA keeps it current, from where each work hangs to its condition, provenance and value. For museums, cities, universities and private collectors.',
   surveyLine: ['Photographed', 'Measured', 'Condition-checked', 'Catalogued', 'Located', 'Tagged (optional)'],
   heading: 'From notebook to record.',
   sceneIntro:
@@ -277,10 +277,10 @@ export const kuraPage = {
   url: 'https://princeandmarshall.com/kura/',
   title: 'KÜRA: white-glove collection documentation and software | prince + marshall',
   description:
-    'We photograph, catalogue and, if you want, RFID-tag every work on site, then keep one trustworthy record in KÜRA: what you hold, where it is, condition, provenance and worth.',
+    'We photograph and catalogue every work on site, giving you a complete catalogue of your collection, then keep it current in KÜRA: what you hold, where it is, condition, provenance and worth.',
   label: 'KÜRA, from prince + marshall',
   h1: 'From notebook to record.',
-  sub: 'We come to you and document every work by hand, then keep the record current in KÜRA: what you hold, where it is, its condition, where it came from and what it is worth. For museums, municipalities, universities and private collections.',
+  sub: 'We come to you and build a complete catalogue of your collection, every work documented by hand, then keep it current in KÜRA: what you hold, where it is, its condition, where it came from and what it is worth. For museums, municipalities, universities and private collections.',
   seeHow: 'See how it works',
   replaces: {
     eyebrow: 'Where collections start',
@@ -306,6 +306,27 @@ export const kuraPage = {
     ],
     imagesNote: 'The images are yours, for insurance, loans, grants and your online collection.',
   },
+  catalogue: {
+    eyebrow: 'The catalogue',
+    heading: 'A complete catalogue of your collection.',
+    intro:
+      'Every work documented once, to museum standards, and kept current. Not a spreadsheet: a catalogue you are proud to share.',
+    holdsHeading: 'Every entry holds',
+    holds: [
+      'Professional images, front and back',
+      'Title, maker, date, medium and dimensions',
+      'Signatures, inscriptions and marks',
+      'Provenance and exhibition history',
+      'Condition, location and value, visible only to the people who need them',
+    ],
+    useHeading: 'Use it to',
+    uses: [
+      { title: 'Browse and search', body: 'the whole collection as a gallery, a list or a table.' },
+      { title: 'Share', body: 'a read-only researcher, lender or insurer view by link, with only the fields they need.' },
+      { title: 'Publish online', body: 'the works you choose, never showing where they are kept or what they are worth.' },
+      { title: 'Take it with you', body: 'open exports at any time, images included.' },
+    ],
+  },
   plans: {
     eyebrow: 'Ways to work with us',
     heading: 'Pick the level of care your collection needs.',
@@ -313,7 +334,7 @@ export const kuraPage = {
       {
         name: 'Survey',
         for: 'Small collections and estates',
-        items: ['On-site Collection Survey and findings report', 'Imaging, condition baseline and cataloguing', 'Optional RFID tagging', 'KÜRA for the first year'],
+        items: ['On-site Collection Survey and findings report', 'A complete, illustrated catalogue of your collection', 'Optional RFID tagging', 'KÜRA for the first year'],
         featured: false,
       },
       {
@@ -383,6 +404,10 @@ export const kuraPage = {
     {
       q: 'How do I get started with KÜRA?',
       a: 'Request a walkthrough. We show you KÜRA with your own kind of collection in mind, then scope a Collection Survey: our team comes on site to photograph, catalogue and, if you want, tag every work.',
+    },
+    {
+      q: 'Can KÜRA give us a catalogue of our collection?',
+      a: 'Yes. That is what the Collection Survey produces: every work photographed and catalogued to museum standards, with its marks, provenance and history. You can browse and search it, share it with researchers and lenders, publish chosen works online and export it at any time.',
     },
     {
       q: 'What happens during a Collection Survey?',

@@ -194,6 +194,7 @@ const kuraHtml = `
     ${li(kc.card.map((r) => `<strong>${esc(r.label)}:</strong> ${esc(r.value)}`))}
   </section>
   <section id="service"><h2>${esc(k.service.heading)}</h2><p>${esc(k.service.intro)}</p><ol>${k.service.survey.map((s) => `<li><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p></li>`).join('')}</ol><p>${esc(k.service.imagesNote)}</p></section>
+  <section id="catalogue"><h2>${esc(k.catalogue.heading)}</h2><p>${esc(k.catalogue.intro)}</p><h3>${esc(k.catalogue.holdsHeading)}</h3>${li(k.catalogue.holds.map(esc))}<h3>${esc(k.catalogue.useHeading)}</h3>${li(k.catalogue.uses.map((u) => `<strong>${esc(u.title)}:</strong> ${esc(u.body)}`))}</section>
   <section><h2>${esc(k.replaces.heading)}</h2>${li(k.replaces.items.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>
   <section><h2>${esc(k.outcomesHeading)}</h2>${li(kc.outcomes.map((o) => `<strong>${esc(o.title)}:</strong> ${esc(o.body)}`))}</section>
   <section><h2>${esc(k.anatomyHeading)}</h2><ol>${kc.pillars.map((p) => `<li><h3>${esc(p.title)}</h3><p>${esc(p.body)}</p></li>`).join('')}</ol></section>
