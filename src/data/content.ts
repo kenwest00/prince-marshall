@@ -325,6 +325,7 @@ export const kuraPage = {
       { title: 'Share', body: 'a read-only researcher, lender or insurer view by link, with only the fields they need.' },
       { title: 'Publish online', body: 'the works you choose, never showing where they are kept or what they are worth.' },
       { title: 'Take it with you', body: 'open exports at any time, images included.' },
+      { title: 'Publish a catalogue (optional)', body: 'a designed print or PDF catalogue of your collection, for donors, heirs, your board or a sale.' },
     ],
   },
   plans: {
@@ -354,6 +355,7 @@ export const kuraPage = {
     addons: [
       { title: 'Disaster readiness and recovery', body: 'which works to save first, an emergency plan, and documentation for the claim if the worst happens.' },
       { title: 'Object stories', body: 'recorded interviews with the curator, collector or long-time staff, attached to each work, so what they know stays.' },
+      { title: 'Published catalogue', body: 'a designed print or PDF catalogue built from your record, ready to share, gift or sell from.' },
       { title: 'Estate and transition records', body: 'a record ready for heirs, gifts or sale.' },
       { title: 'Publication-quality images', body: 'for catalogues, your online collection, grant applications and donor campaigns.' },
       { title: 'Funding support', body: 'help finding and applying for grants that pay for digitization and collection care.' },
@@ -407,7 +409,7 @@ export const kuraPage = {
     },
     {
       q: 'Can KÜRA give us a catalogue of our collection?',
-      a: 'Yes. That is what the Collection Survey produces: every work photographed and catalogued to museum standards, with its marks, provenance and history. You can browse and search it, share it with researchers and lenders, publish chosen works online and export it at any time.',
+      a: 'Yes. That is what the Collection Survey produces: every work photographed and catalogued to museum standards, with its marks, provenance and history. You can browse and search it, share it with researchers and lenders, publish chosen works online and export it at any time. If you want a designed print or PDF catalogue, we can produce one as an add-on.',
     },
     {
       q: 'What happens during a Collection Survey?',
