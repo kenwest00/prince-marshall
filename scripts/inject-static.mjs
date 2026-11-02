@@ -301,7 +301,7 @@ if (sw.enabled) {
 <main>
   <section><p>${esc(sw.label)}</p><h1>${esc(sw.h1)}</h1><p>${esc(sw.sub)}</p></section>
   ${steps.length ? `<section><h2>${esc(sw.stepsHeading)}</h2><ol>${steps.map((x) => `<li><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p></li>`).join('')}</ol></section>` : ''}
-  ${rows.length ? `<section><h2>${esc(sw.compareHeading)}</h2><table><thead><tr><th></th><th>${esc(sw.pastperfectLabel)}</th><th>${esc(sw.kuraLabel)}</th></tr></thead><tbody>${rows.map((r) => `<tr><th>${esc(r.topic)}</th><td>${esc(r.pastperfect)}${r.source ? ` <a href="${esc(r.source)}">${esc(sw.sourceLabel)}</a>` : ''}</td><td>${esc(r.kura)}</td></tr>`).join('')}</tbody></table><p>${esc(sw.asOfLabel)}: ${esc(sw.asOf)}. ${esc(sw.compareNote)}</p></section>` : ''}
+  ${rows.length ? `<section><h2>${esc(sw.compareHeading)}</h2><p>${esc(sw.compareIntro)}</p>${rows.map((r) => `<h3>${esc(r.topic)}</h3><p>${esc(sw.pastperfectLabel)}: ${esc(r.pastperfect)}${r.source ? ` <a href="${esc(r.source)}">${esc(sw.sourceLabel)}</a>` : ''}</p><p>${esc(sw.kuraLabel)}: ${esc(r.kura)}</p><p>${esc(sw.mattersLabel)}: ${esc(r.matters)}</p>`).join('')}<p>${esc(sw.asOfLabel)}: ${esc(sw.asOf)}. ${esc(sw.compareNote)}</p></section>` : ''}
   ${keep.length ? `<section><h2>${esc(sw.keepHeading)}</h2>${li(keep.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>` : ''}
   <section id="contact"><h2>${esc(sw.ctaHeading)}</h2><p>${esc(sw.ctaBody)}</p><p><a href="mailto:${esc(c.site.email)}">${esc(c.site.email)}</a></p></section>
 </main>

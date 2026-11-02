@@ -49,27 +49,24 @@ function Steps() {
 }
 
 function Compare() {
+  const ref = useFadeItems<HTMLOListElement>()
   const rows = s.rows.filter((r) => r.verified)
   if (!rows.length) return null
   return (
     <section aria-labelledby="compare-h" className={section}>
-      <SectionHead id="compare-h" eyebrow={s.compareEyebrow} heading={s.compareHeading} />
+      <SectionHead id="compare-h" eyebrow={s.compareEyebrow} heading={s.compareHeading} intro={s.compareIntro} />
       <div className={offset}>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] border-t border-[#0a0a0a] text-left">
-            <caption className="sr-only">{s.compareHeading}</caption>
-            <thead>
-              <tr className="type-label text-[#0a0a0a]/70">
-                <th scope="col" className="py-3 pr-6 text-left font-normal"><span className="sr-only">Topic</span></th>
-                <th scope="col" className="py-3 pr-6 text-left font-normal">{s.pastperfectLabel}</th>
-                <th scope="col" className="py-3 text-left font-normal">{s.kuraLabel}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.topic} className="border-t border-[#0a0a0a]/20 align-top">
-                  <th scope="row" className="py-5 pr-6 text-left font-extrabold">{r.topic}</th>
-                  <td className="py-5 pr-6 font-semibold leading-snug text-[#0a0a0a]/80">
+        <ol ref={ref} className="border-t border-[#0a0a0a]">
+          {rows.map((r, i) => (
+            <li key={r.topic} className="fade-item border-b border-[#0a0a0a]/20 py-8 md:py-10">
+              <div className="grid grid-cols-[3rem_1fr] gap-x-4">
+                <span className="type-label pt-2 text-[#0a0a0a]/70">0{i + 1}</span>
+                <h3 className="font-display text-2xl leading-[1.05] tracking-[-0.02em] md:text-4xl">{r.topic}</h3>
+              </div>
+              <dl className="mt-6 grid grid-cols-1 gap-6 md:ml-[4rem] md:grid-cols-2 md:gap-10">
+                <div>
+                  <dt className="type-label text-[#0a0a0a]/70">{s.pastperfectLabel}</dt>
+                  <dd className="mt-2 font-semibold leading-snug text-[#0a0a0a]/80">
                     {r.pastperfect}
                     {r.source && (
                       <>
@@ -79,13 +76,20 @@ function Compare() {
                         </a>
                       </>
                     )}
-                  </td>
-                  <td className="py-5 font-bold leading-snug">{r.kura}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </dd>
+                </div>
+                <div className="border-l-4 border-[#c8ff2e] pl-4">
+                  <dt className="type-label">{s.kuraLabel}</dt>
+                  <dd className="mt-2 text-lg font-bold leading-snug">{r.kura}</dd>
+                </div>
+              </dl>
+              <p className="mt-6 max-w-3xl font-semibold leading-snug md:ml-[4rem]">
+                <span className="type-label mr-2 text-[#0a0a0a]/70">{s.mattersLabel}</span>
+                {r.matters}
+              </p>
+            </li>
+          ))}
+        </ol>
         <p className="mt-6 max-w-3xl text-sm font-semibold text-[#0a0a0a]/75">
           {s.asOfLabel}: {s.asOf}. {s.compareNote}
         </p>
