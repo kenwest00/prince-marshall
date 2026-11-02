@@ -10,7 +10,7 @@ import { openContact } from '../lib/contactEvents'
 
 const section = 'hairline-t px-5 py-20 md:px-10 md:py-32'
 const offset = 'md:ml-[264px]'
-const ask = () => openContact('KÜRA starter import')
+const ask = () => openContact(contact.form.topicOptions[1])
 
 function Header() {
   return (
@@ -135,7 +135,7 @@ export default function SwitchingPage() {
         <Keep />
 
         <section aria-labelledby="sw-cta-h" className={section}>
-          <SectionHead id="sw-cta-h" eyebrow="Start small" heading={s.ctaHeading} intro={s.ctaBody} />
+          <SectionHead id="sw-cta-h" eyebrow="Next step" heading={s.ctaHeading} intro={s.ctaBody} />
           <div className={offset}>
             <PillButton
               href="#contact"
