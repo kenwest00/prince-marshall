@@ -567,6 +567,8 @@ export const kuraSwitching = {
   keepHeading: 'Everything you rely on today.',
   /** [confirm] Publish only after the parity build is done and demonstrable. */
   keep: [] as { title: string; body: string; verified: boolean }[],
+  /** Link shown on /kura/ only while enabled is true. */
+  entryLink: { lead: 'Using PastPerfect?', label: 'See how switching works', href: 'switching/' },
   ctaHeading: 'Send us a sample.',
   ctaBody: 'Send 25 records from your PastPerfect export. We will show them back to you as KÜRA records, free.',
   cta: 'Ask about switching',

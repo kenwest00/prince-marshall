@@ -1,4 +1,4 @@
-import { contact, kura, kuraPage as k } from '../data/content'
+import { contact, kura, kuraPage as k, kuraSwitching } from '../data/content'
 import LogoTile from '../components/LogoTile'
 import SectionHead from '../components/SectionHead'
 import PillButton from '../components/PillButton'
@@ -249,6 +249,14 @@ export default function KuraPage() {
 
         {/* Why KÜRA: verified claims only */}
         <KuraAdvantage />
+        {kuraSwitching.enabled && (
+          <p className="px-5 pb-12 text-lg font-bold md:ml-[304px] md:px-10">
+            {kuraSwitching.entryLink.lead}{' '}
+            <a href={kuraSwitching.entryLink.href} data-page-link className="underline underline-offset-4 hover:no-underline">
+              {kuraSwitching.entryLink.label} <span aria-hidden="true">→</span>
+            </a>
+          </p>
+        )}
 
         {/* Plans */}
         <section id="plans" aria-labelledby="plans-h" className={section}>
