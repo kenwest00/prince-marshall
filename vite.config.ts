@@ -1,6 +1,7 @@
 import path from "path"
 import react from "@vitejs/plugin-react"
 import { defineConfig, type Plugin } from "vite"
+import { kuraSwitching } from "./src/data/content"
 import { BLUEPRINT_GRID, BLUEPRINT_GRID_SIZE, blueprintDataUri } from "./src/lib/blueprint"
 
 /** Inline the finished blueprint drawing into each page's arrival cover. */
@@ -28,6 +29,7 @@ export default defineConfig({
         rideAlong: path.resolve(__dirname, 'ride-along/index.html'),
         kura: path.resolve(__dirname, 'kura/index.html'),
         systems: path.resolve(__dirname, 'systems/index.html'),
+        ...(kuraSwitching.enabled ? { kuraSwitching: path.resolve(__dirname, 'kura/switching/index.html') } : {}),
       },
     },
   },

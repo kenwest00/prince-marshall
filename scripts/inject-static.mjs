@@ -288,3 +288,32 @@ if (!sysFile.includes('<div id="root"></div>')) throw new Error('#root placehold
 sysFile = sysFile.replace('<div id="root"></div>', `<div id="root">${sysHtml}</div>`).replace('<!-- structured-data -->', sysLd)
 writeFileSync(sysIndex, sysFile)
 console.log('Injected static content and JSON-LD into dist/systems/index.html')
+
+/* ---------------- /kura/switching/ (only when enabled) ---------------- */
+const sw = c.kuraSwitching
+if (sw.enabled) {
+  const steps = sw.steps.filter((x) => x.verified)
+  const rows = sw.rows.filter((r) => r.verified)
+  const keep = sw.keep.filter((x) => x.verified)
+  const swHtml = `
+<header><p><a href="../../">${esc(c.site.name)}</a></p></header>
+<main>
+  <section><p>${esc(sw.label)}</p><h1>${esc(sw.h1)}</h1><p>${esc(sw.sub)}</p></section>
+  ${steps.length ? `<section><h2>${esc(sw.stepsHeading)}</h2><ol>${steps.map((x) => `<li><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p></li>`).join('')}</ol></section>` : ''}
+  ${rows.length ? `<section><h2>${esc(sw.compareHeading)}</h2><table><thead><tr><th></th><th>${esc(sw.pastperfectLabel)}</th><th>${esc(sw.kuraLabel)}</th></tr></thead><tbody>${rows.map((r) => `<tr><th>${esc(r.topic)}</th><td>${esc(r.pastperfect)}${r.source ? ` <a href="${esc(r.source)}">${esc(sw.sourceLabel)}</a>` : ''}</td><td>${esc(r.kura)}</td></tr>`).join('')}</tbody></table><p>${esc(sw.asOfLabel)}: ${esc(sw.asOf)}. ${esc(sw.compareNote)}</p></section>` : ''}
+  ${keep.length ? `<section><h2>${esc(sw.keepHeading)}</h2>${li(keep.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>` : ''}
+  <section id="contact"><h2>${esc(sw.ctaHeading)}</h2><p>${esc(sw.ctaBody)}</p><p><a href="mailto:${esc(c.site.email)}">${esc(c.site.email)}</a></p></section>
+</main>
+<footer><p>${esc(c.footer.left)}</p></footer>`
+  const swIndex = join(root, 'dist/kura/switching/index.html')
+  let swFile = readFileSync(swIndex, 'utf8')
+  if (!swFile.includes('<div id="root"></div>')) throw new Error('#root placeholder not found in dist/kura/switching/index.html')
+  swFile = swFile.replace('<div id="root"></div>', `<div id="root">${swHtml}</div>`).replace('<!-- structured-data -->', '')
+  writeFileSync(swIndex, swFile)
+  const smPath = join(root, 'dist/sitemap.xml')
+  const sm = readFileSync(smPath, 'utf8')
+  if (!sm.includes(sw.url)) {
+    writeFileSync(smPath, sm.replace('</urlset>', `  <url><loc>${sw.url}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>\n</urlset>`))
+  }
+  console.log('Injected static content into dist/kura/switching/index.html')
+}

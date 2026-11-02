@@ -487,6 +487,92 @@ export const kuraPage = {
   footerHome: { label: 'Back to prince + marshall', href: '../' },
 }
 
+/**
+ * /kura/switching/: a factual page for people leaving another collection system.
+ * OFF by default. While enabled is false the page is not built, not in the
+ * sitemap, and not linked. Turn on only after: (1) a real import from the
+ * named system has been run and checked, (2) each claim below is confirmed
+ * against a trial account and has a source URL, (3) legal has read the page.
+ * Rows and steps render only when verified is true.
+ */
+export const kuraSwitching = {
+  enabled: false,
+  url: 'https://princeandmarshall.com/kura/switching/',
+  /** Date the competitor facts were last checked. Shown on the page. */
+  asOf: 'November 2, 2026',
+  title: 'Moving from PastPerfect to KÜRA | prince + marshall',
+  description:
+    'Using PastPerfect and thinking of moving? How a switch to KÜRA works, what carries over, and how the two compare, with sources.',
+  label: 'Switching to KÜRA',
+  h1: 'Moving from PastPerfect to KÜRA.',
+  sub: 'You have years of work in your catalogue. A move should keep all of it. Here is how a switch works and how the two products compare, with sources and the date we checked.',
+  stepsEyebrow: 'How a switch works',
+  stepsHeading: 'Four steps. Your catalogue stays yours throughout.',
+  steps: [
+    {
+      title: 'Export from PastPerfect',
+      body: 'You export your catalogue records and images from PastPerfect. We can walk you through it, or work from a copy you send.',
+      /** [confirm] against a trial export. */
+      verified: false,
+    },
+    {
+      title: 'We map your fields',
+      body: 'We match your fields to KÜRA records, and show you the mapping before anything is imported.',
+      verified: false,
+    },
+    {
+      title: 'Import and check together',
+      body: 'We import into KÜRA, then check a sample with you, record by record, before you rely on it.',
+      verified: false,
+    },
+    {
+      title: 'Run side by side, then switch',
+      body: 'Keep PastPerfect as long as you need. Switch when you are satisfied.',
+      verified: false,
+    },
+  ],
+  compareEyebrow: 'Side by side',
+  compareHeading: 'How they compare.',
+  compareNote:
+    'PastPerfect is a trademark of its owner. prince + marshall is not affiliated with PastPerfect Software. PastPerfect information comes from its public website and documentation.',
+  asOfLabel: 'Information checked',
+  pastperfectLabel: 'PastPerfect Web Edition',
+  kuraLabel: 'KÜRA',
+  sourceLabel: 'Source',
+  rows: [
+    {
+      topic: 'Change history',
+      pastperfect: 'Its user history records logins and logouts.',
+      kura: 'Every change is logged: who, what, when and why.',
+      /** [confirm] against a trial account; add the documentation URL. */
+      source: '',
+      verified: false,
+    },
+    {
+      topic: 'Who does the cataloguing',
+      pastperfect: 'Your staff catalogue the collection. Data conversion is available at an hourly rate.',
+      kura: 'Our team photographs, measures and catalogues every work on site.',
+      source: '',
+      verified: false,
+    },
+    {
+      topic: 'Logins',
+      pastperfect: 'Shared logins are allowed.',
+      kura: 'Each person has their own login, so every change has a name on it.',
+      source: '',
+      verified: false,
+    },
+  ],
+  keepEyebrow: 'What you keep',
+  keepHeading: 'Everything you rely on today.',
+  /** [confirm] Publish only after the parity build is done and demonstrable. */
+  keep: [] as { title: string; body: string; verified: boolean }[],
+  ctaHeading: 'Send us a sample.',
+  ctaBody: 'Send 25 records from your PastPerfect export. We will show them back to you as KÜRA records, free.',
+  cta: 'Ask about switching',
+  footerHome: { label: 'Back to KÜRA', href: '../' },
+}
+
 export const partners = {
   id: 'partners',
   eyebrow: 'Partners',
