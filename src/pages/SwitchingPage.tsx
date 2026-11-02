@@ -103,7 +103,7 @@ function Keep() {
   if (!items.length) return null
   return (
     <section aria-labelledby="keep-h" className={section}>
-      <SectionHead id="keep-h" eyebrow={s.keepEyebrow} heading={s.keepHeading} />
+      <SectionHead id="keep-h" eyebrow={s.keepEyebrow} heading={s.keepHeading} intro={s.keepIntro} />
       <ul className={`${offset} border-t border-[#0a0a0a]`}>
         {items.map((i) => (
           <li key={i.title} className="border-b border-[#0a0a0a]/20 py-5 text-lg font-semibold leading-snug md:text-xl">
@@ -132,11 +132,23 @@ export default function SwitchingPage() {
             {s.h1}
           </h1>
           <p className="mt-8 max-w-2xl text-lg font-semibold leading-snug text-white/85 md:text-2xl">{s.sub}</p>
+          <div className="mt-8">
+            <PillButton
+              inverted
+              href="#contact"
+              onClick={(e) => {
+                e?.preventDefault()
+                ask()
+              }}
+            >
+              <RollText text={s.cta} />
+            </PillButton>
+          </div>
         </section>
 
-        <Steps />
         <Compare />
         <Keep />
+        <Steps />
 
         <section aria-labelledby="sw-cta-h" className={section}>
           <SectionHead id="sw-cta-h" eyebrow="Next step" heading={s.ctaHeading} intro={s.ctaBody} />
