@@ -4,6 +4,7 @@ import SectionHead from '../components/SectionHead'
 import PillButton from '../components/PillButton'
 import RollText from '../components/RollText'
 import KuraSceneBlock from '../components/KuraSceneBlock'
+import KuraAdvantage from '../sections/KuraAdvantage'
 import Contact from '../sections/Contact'
 import Footer from '../sections/Footer'
 import { RING_COLORS } from '../lib/palette'
@@ -245,6 +246,9 @@ export default function KuraPage() {
           <SectionHead id="who-h" eyebrow={k.whoEyebrow} heading={k.whoHeading} />
           <List items={k.who} />
         </section>
+
+        {/* Why KÜRA: verified claims only */}
+        <KuraAdvantage />
 
         {/* Plans */}
         <section id="plans" aria-labelledby="plans-h" className={section}>

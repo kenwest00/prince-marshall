@@ -376,6 +376,65 @@ export const kuraPage = {
     { title: 'Universities', body: 'collections spread across departments, buildings and decades.' },
     { title: 'Private collections and estates', body: 'insurance, loans and succession with nothing left to memory.' },
   ],
+  /**
+   * "Why KÜRA" accordion on /kura/. Names no competitor. Only items with
+   * verified: true render; the section hides itself when none do.
+   * Keep verified: false until the capability is built and demonstrable
+   * (see LAUNCH-CHECKLIST.md: publish only what a walkthrough can show).
+   */
+  advantage: {
+    eyebrow: 'Why KÜRA',
+    heading: 'What other collection software leaves out.',
+    intro: 'Cataloguing is the easy part. These are the things most systems do not do for you.',
+    typicalLabel: 'Often',
+    kuraLabel: 'In KÜRA',
+    items: [
+      {
+        title: 'We build the record for you',
+        typical: 'You get an empty database and a manual. The cataloguing is your staff’s weekend project.',
+        kura: 'Our team photographs, measures, condition-checks and catalogues every work on site, then hands you the finished record.',
+        verified: true,
+      },
+      {
+        title: 'Every change has a name on it',
+        typical: 'Some systems record only who signed in, not what they changed.',
+        kura: 'Every change is logged: who, what, when and why. Records are archived with a reason, never hard-deleted.',
+        verified: true,
+      },
+      {
+        title: 'Sensitive fields stay with the people who need them',
+        typical: 'Value and location are visible to anyone with a login, or the whole record is locked down.',
+        kura: 'Value, location and condition are visible only to the roles that need them, field by field.',
+        verified: true,
+      },
+      {
+        title: 'Share exactly what a lender or insurer needs',
+        typical: 'Sharing means exporting a spreadsheet and hoping it goes no further.',
+        kura: 'A read-only view by link, with only the fields that person needs.',
+        verified: true,
+      },
+      {
+        title: 'Your data walks out as easily as it walked in',
+        typical: 'Exports are partial, or the vendor charges by the hour to move your own records.',
+        kura: 'Open exports at any time, images included. No lock-in.',
+        verified: true,
+      },
+      {
+        title: 'Switching does not mean starting over',
+        typical: 'Moving systems means re-keying records or paying for a conversion.',
+        kura: 'We bring your existing catalogue across, images and history included, and check it with you.',
+        /** [confirm] only after a real import from a prior system has been run and checked. */
+        verified: false,
+      },
+      {
+        title: 'Donors and members in the same record',
+        typical: 'Donor and membership tools live in a separate system from the collection.',
+        kura: 'Gifts, pledges, memberships and the works they relate to, in one place.',
+        /** [confirm] only after membership and donor management ships. */
+        verified: false,
+      },
+    ],
+  },
   starter: {
     heading: 'Start with 25 records.',
     body: 'Send us 25 entries from your notebook or spreadsheet. We will show them back to you as KÜRA records, free, so you can judge it with your own collection.',

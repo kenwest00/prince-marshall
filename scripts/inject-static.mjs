@@ -199,6 +199,7 @@ const kuraHtml = `
   <section><h2>${esc(k.outcomesHeading)}</h2>${li(kc.outcomes.map((o) => `<strong>${esc(o.title)}:</strong> ${esc(o.body)}`))}</section>
   <section><h2>${esc(k.anatomyHeading)}</h2><ol>${kc.pillars.map((p) => `<li><h3>${esc(p.title)}</h3><p>${esc(p.body)}</p></li>`).join('')}</ol></section>
   <section><h2>${esc(k.whoHeading)}</h2>${li(k.who.map((i) => `<strong>${esc(i.title)}:</strong> ${esc(i.body)}`))}</section>
+  ${k.advantage.items.some((i) => i.verified) ? `<section id="why"><h2>${esc(k.advantage.heading)}</h2><p>${esc(k.advantage.intro)}</p>${k.advantage.items.filter((i) => i.verified).map((i) => `<h3>${esc(i.title)}</h3><p>${esc(k.advantage.typicalLabel)}: ${esc(i.typical)}</p><p>${esc(k.advantage.kuraLabel)}: ${esc(i.kura)}</p>`).join('')}</section>` : ''}
   <section id="plans"><h2>${esc(k.plans.heading)}</h2>${k.plans.tiers.map((t) => `<h3>${esc(t.name)}: ${esc(t.for)}</h3>${li(t.items.map(esc))}`).join('')}<h3>${esc(k.plans.addonsHeading)}</h3>${li(k.plans.addons.map((a) => `<strong>${esc(a.title)}:</strong> ${esc(a.body)}`))}<p>${esc(k.plans.partnersNote)}</p></section>
   ${kc.starterEnabled ? `<section><h2>${esc(k.starter.heading)}</h2><p>${esc(k.starter.body)}</p></section>` : ''}
   <section>
