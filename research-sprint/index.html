@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>90-Day Research Sprint</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://princeandmarshall.com/research-sprint/">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="prince + marshall">
+<meta property="og:title" content="90-Day Research Sprint: know it's right before you build it">
+<meta property="og:description" content="A fixed-scope, 90-day research sprint from prince + marshall. Real users, real evidence and one clear decision before you commit the build budget.">
+<meta property="og:url" content="https://princeandmarshall.com/research-sprint/">
+<meta property="og:image" content="https://princeandmarshall.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="90-Day Research Sprint: know it's right before you build it">
+<meta name="twitter:description" content="A fixed-scope, 90-day research sprint from prince + marshall. Real users, real evidence and one clear decision before you commit the build budget.">
+<meta name="twitter:image" content="https://princeandmarshall.com/og-image.png">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A fixed-scope, 90-day research sprint from prince + marshall. Real users, real evidence and one clear decision before you commit the build budget.">
+<style>
+@font-face{font-family:'Archivo';font-style:normal;font-weight:500;font-display:swap;src:url('./fonts/archivo-latin-500.woff2') format('woff2');}
+@font-face{font-family:'Archivo';font-style:normal;font-weight:600;font-display:swap;src:url('./fonts/archivo-latin-600.woff2') format('woff2');}
+@font-face{font-family:'Archivo';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/archivo-latin-700.woff2') format('woff2');}
+@font-face{font-family:'Archivo';font-style:normal;font-weight:800;font-display:swap;src:url('./fonts/archivo-latin-800.woff2') format('woff2');}
+/* Layout concept: a white studio page ruled in hairlines, like a measured drawing. Two black bands (the exposure calculator and the start) hold the interactive moments; the middle reads like an instrument panel. Brand system follows the prince + marshall site: Archivo throughout, lime as a signal only, square corners, pill buttons, no gradients or shadows. */
+:root {
+  --paper: #ffffff;
+  --ink: #0a0a0a;
+  --ink-2: rgba(10, 10, 10, .78);
+  --ink-3: rgba(10, 10, 10, .68);
+  --rule: #0a0a0a;
+  --rule-soft: rgba(10, 10, 10, .18);
+  --mat: #f4f3f0;
+  --signal: #c8ff2e;
+  --on-signal: #0a0a0a;
+  --band: #0a0a0a;
+  --band-ink: #ffffff;
+  --band-2: rgba(255, 255, 255, .8);
+  --band-rule: rgba(255, 255, 255, .3);
+  --btn-bg: #0a0a0a;
+  --btn-fg: #ffffff;
+  --focus: #0a0a0a;
+  --grain-blend: multiply;
+  --grain-op: .05;
+  --font: 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --ease: cubic-bezier(.76, 0, .24, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121211; --ink: #f2f1ed; --ink-2: rgba(242, 241, 237, .8); --ink-3: rgba(242, 241, 237, .7);
+    --rule: #f2f1ed; --rule-soft: rgba(242, 241, 237, .22); --mat: #1b1b19;
+    --band: #000000; --band-ink: #f2f1ed; --band-2: rgba(242, 241, 237, .8); --band-rule: rgba(242, 241, 237, .3);
+    --btn-bg: #f2f1ed; --btn-fg: #0a0a0a; --focus: #f2f1ed;
+    --grain-blend: screen; --grain-op: .045;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121211; --ink: #f2f1ed; --ink-2: rgba(242, 241, 237, .8); --ink-3: rgba(242, 241, 237, .7);
+  --rule: #f2f1ed; --rule-soft: rgba(242, 241, 237, .22); --mat: #1b1b19;
+  --band: #000000; --band-ink: #f2f1ed; --band-2: rgba(242, 241, 237, .8); --band-rule: rgba(242, 241, 237, .3);
+  --btn-bg: #f2f1ed; --btn-fg: #0a0a0a; --focus: #f2f1ed;
+  --grain-blend: screen; --grain-op: .045;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--paper); z-index: 40; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; background-image: var(--grain); opacity: var(--grain-op); mix-blend-mode: var(--grain-blend); z-index: 100; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: inherit; }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+[id] { scroll-margin-top: 84px; }
+.wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.label { font-weight: 700; font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.muted { color: var(--ink-2); }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); border: 1px solid var(--ink); vertical-align: 1px; margin-right: .6rem; }
+h1, h2, h3 { font-weight: 800; letter-spacing: -.03em; text-wrap: balance; }
+h2 { font-size: clamp(2rem, 4.6vw, 3.5rem); line-height: 1; }
+h3 { font-size: 1.35rem; line-height: 1.15; letter-spacing: -.02em; }
+.lead { font-size: clamp(1.1rem, 1.6vw, 1.3rem); line-height: 1.5; color: var(--ink-2); max-width: 36em; }
+.prose { max-width: 38em; color: var(--ink-2); }
+.prose + .prose { margin-top: 1rem; }
+
+/* header */
+.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 64px; }
+.brand { display: inline-flex; align-items: center; gap: .65rem; text-decoration: none; font-weight: 800; letter-spacing: -.03em; font-size: 1.15rem; }
+.tile { width: 32px; height: 32px; background: #0a0a0a; display: grid; place-items: center; border: 1px solid var(--rule); }
+.tile svg { width: 20px; height: 20px; }
+.site nav { display: flex; align-items: center; gap: 1.6rem; }
+.site nav a { text-decoration: none; font-weight: 700; font-size: .92rem; }
+.site nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.site nav .nav-cta { border: 1px solid var(--rule); padding: .55rem 1rem; border-radius: 999px; }
+.site nav .nav-cta:hover { background: var(--signal); color: var(--on-signal); text-decoration: none; }
+@media (max-width: 760px) { .site nav .opt { display: none; } .site nav { gap: 0; } }
+
+/* buttons */
+.pill { display: inline-flex; align-items: center; gap: 1rem; min-height: 48px; padding: .35rem .35rem .35rem 1.4rem; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); font-weight: 700; text-decoration: none; border: 0; cursor: pointer; }
+.pill .go { width: 40px; height: 40px; border-radius: 50%; background: var(--signal); color: var(--on-signal); display: grid; place-items: center; transition: transform .5s var(--ease); font-weight: 800; }
+.pill:hover .go { transform: translateX(3px); }
+.pill.small { padding-left: 1.1rem; min-height: 44px; }
+.pill.small .go { width: 34px; height: 34px; }
+.tlink { font-weight: 700; text-underline-offset: 5px; }
+.tlink:hover { text-decoration-thickness: 2px; }
+.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem 2rem; }
+
+/* hero */
+.hero { padding-block: clamp(2.5rem, 6vw, 5rem) 0; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.eyebrow { display: flex; align-items: center; margin-bottom: 1.6rem; }
+.hero h1 { font-size: clamp(2.4rem, 8.4vw, 6rem); line-height: .93; letter-spacing: -.04em; }
+.hero h1 span { display: block; }
+.hero .lead { margin-top: 1.8rem; }
+.hero .cta-row { margin-top: 2.2rem; }
+.ring-fig { display: grid; gap: 1.4rem; justify-items: center; }
+.ring { position: relative; width: min(100%, 400px); aspect-ratio: 1; }
+.ring svg { width: 100%; height: 100%; display: block; }
+.ring .arc { stroke: var(--ink); fill: none; stroke-width: 10; opacity: .2; transition: opacity .5s var(--ease); }
+.ring .arc.on { opacity: 1; }
+.ring .base { stroke: var(--ink); fill: none; stroke-width: 1; opacity: .5; }
+.ring .tick { stroke: var(--ink); stroke-width: 1; }
+.ring .mark { fill: var(--signal); stroke: var(--ink); stroke-width: 1.5; }
+.readout { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: .1rem; }
+.readout .n { font-size: clamp(3.4rem, 11vw, 5.4rem); font-weight: 800; letter-spacing: -.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+.readout .ph { font-weight: 700; }
+.legend { width: 100%; max-width: 400px; border-top: 1px solid var(--rule); }
+.legend li { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--rule-soft); font-weight: 700; font-size: .95rem; transition: opacity .5s var(--ease); opacity: .55; }
+.legend li.on { opacity: 1; }
+.legend .rng { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(2.5rem, 6vw, 4.5rem); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.facts li { padding: 1.3rem 1.2rem 1.3rem 0; display: grid; gap: .25rem; align-content: start; }
+.facts li + li { border-left: 1px solid var(--rule); padding-left: 1.2rem; }
+.facts .big { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.facts .sm { font-size: .93rem; color: var(--ink-2); }
+
+/* sections and bands */
+.sect { padding-block: clamp(4rem, 9vw, 7.5rem); }
+.band { background: var(--band); color: var(--band-ink); --btn-bg: var(--band-ink); --btn-fg: var(--band); --focus: var(--band-ink); }
+.band .dot { border-color: var(--band-ink); }
+.band .prose, .band .lead { color: var(--band-2); }
+.band .tlink { color: var(--band-ink); }
+.split { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.split > div > * + * { margin-top: 1.4rem; }
+.head > * + * { margin-top: 1.1rem; }
+
+/* calculator */
+.calc { display: grid; gap: 1.6rem; border-top: 1px solid var(--band-rule); padding-top: 1.6rem; }
+.field { display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; align-items: baseline; }
+.field label { font-weight: 700; }
+.field .hint { grid-column: 1 / -1; font-size: .85rem; color: var(--band-2); font-weight: 500; }
+.field output { font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.field input { grid-column: 1 / -1; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 30px; background: transparent; margin: 0; color: inherit; cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 1px; background: currentColor; }
+input[type="range"]::-moz-range-track { height: 1px; background: currentColor; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -10px; background: var(--signal); border: 1.5px solid #0a0a0a; border-radius: 0; }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; background: var(--signal); border: 1.5px solid #0a0a0a; border-radius: 0; }
+.results { display: grid; gap: 1.1rem; border-top: 1px solid var(--band-rule); padding-top: 1.6rem; }
+.res-row { display: grid; gap: .5rem; }
+.res-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.res-top .v { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.bar-track { height: 10px; border: 1px solid var(--band-rule); }
+.bar-fill { height: 100%; transition: width .6s var(--ease); }
+.bar-fill.ex { background: var(--band-ink); width: 100%; }
+.bar-fill.fee { background: var(--signal); width: 25%; }
+.verdict { font-size: 1.15rem; font-weight: 700; line-height: 1.35; max-width: 28em; }
+.fine { font-size: .85rem; font-weight: 500; color: var(--band-2); max-width: 36em; }
+
+/* policy schedule */
+.policy { border-top: 1px solid var(--rule); }
+.policy .row { display: grid; grid-template-columns: minmax(120px, .32fr) minmax(0, 1fr); gap: 1.4rem; padding: 1rem 0; border-bottom: 1px solid var(--rule-soft); }
+.policy dt { font-weight: 700; font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; padding-top: .35rem; font-variant-numeric: tabular-nums; }
+.policy dd { font-weight: 700; }
+.policy dd .muted { font-weight: 600; }
+.policy .row.claim { background: var(--mat); padding-inline: 1rem; margin-inline: -1rem; border-bottom: 1px solid var(--rule); border-top: 1px solid var(--rule); }
+.note { font-size: .85rem; font-weight: 500; color: var(--ink-3); margin-top: 1rem; max-width: 40em; }
+
+/* tabs */
+.tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.tabs [role="tab"] { text-align: left; background: transparent; border: 0; padding: 1rem 1rem 1rem 0; cursor: pointer; display: grid; gap: .2rem; min-height: 72px; align-content: start; }
+.tabs [role="tab"] + [role="tab"] { border-left: 1px solid var(--rule); padding-left: 1rem; }
+.tabs [role="tab"] .t { font-weight: 800; font-size: 1.05rem; letter-spacing: -.02em; }
+.tabs [role="tab"] .s { font-size: .82rem; color: var(--ink-3); font-weight: 600; }
+.tabs [role="tab"][aria-selected="true"] { background: var(--ink); color: var(--paper); padding-left: 1rem; }
+.tabs [role="tab"][aria-selected="true"] .s { color: inherit; opacity: .8; }
+.tabs [role="tab"]:hover:not([aria-selected="true"]) { background: var(--mat); }
+.tabs [role="tab"]:focus-visible { outline-offset: -4px; }
+.panel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.4rem, 3vw, 3rem); padding-top: 2rem; }
+.panel h3 { font-size: 1.05rem; letter-spacing: -.01em; }
+.panel .col > * + * { margin-top: .7rem; }
+.panel .col p { color: var(--ink-2); }
+.panel .quote { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; color: var(--ink); }
+
+/* timeline */
+.track { position: relative; display: flex; height: 44px; border: 1px solid var(--rule); }
+.track .seg { flex: var(--w) 1 0; min-width: 0; border: 0; border-left: 1px solid var(--rule); background: transparent; padding: 0; cursor: pointer; position: relative; transition: background .5s var(--ease); }
+.track .seg:first-child { border-left: 0; }
+.track .seg.past { background: var(--rule-soft); }
+.track .seg.on { background: var(--ink); }
+.track .seg:focus-visible { outline-offset: -4px; }
+.needle { position: absolute; top: -9px; bottom: -9px; width: 0; border-left: 1.5px solid var(--ink); pointer-events: none; left: 0; }
+.needle::before { content: ""; position: absolute; top: -2px; left: -7px; width: 12px; height: 12px; background: var(--signal); border: 1.5px solid var(--ink); }
+.scrub { display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; align-items: baseline; margin-top: 1.1rem; }
+.scrub output { font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.scrub input { grid-column: 1 / -1; }
+.ticks { display: flex; justify-content: space-between; font-size: .72rem; font-weight: 700; color: var(--ink-3); font-variant-numeric: tabular-nums; margin-top: -.2rem; }
+.phase-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin-top: 2rem; }
+.phase-tabs [role="tab"] { border: 1px solid var(--rule); background: transparent; border-radius: 999px; padding: .6rem .8rem; cursor: pointer; font-weight: 700; text-align: center; min-height: 44px; }
+.phase-tabs [role="tab"][aria-selected="true"] { background: var(--ink); color: var(--paper); }
+.phase-tabs [role="tab"]:hover:not([aria-selected="true"]) { background: var(--signal); color: var(--on-signal); }
+.phase { margin-top: 2rem; display: grid; gap: 1.8rem; }
+.phase-head { display: grid; gap: .7rem; max-width: 40em; }
+.phase-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.4rem, 3vw, 3rem); }
+.list { border-top: 1px solid var(--rule); }
+.list li { padding: .75rem 0; border-bottom: 1px solid var(--rule-soft); display: grid; grid-template-columns: 14px 1fr; gap: .8rem; }
+.list li::before { content: ""; width: 7px; height: 7px; margin-top: .55rem; background: var(--ink); }
+.list.get li::before { background: var(--signal); border: 1px solid var(--ink); width: 9px; height: 9px; margin-top: .5rem; }
+.list-title { margin-bottom: .6rem; }
+.milestone { border: 1px solid var(--rule); padding: .9rem 1.1rem; font-weight: 700; display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+
+/* decision */
+.memo { margin-top: 2rem; border: 1px solid var(--rule); background: var(--mat); }
+.memo-top { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: .8rem 1.2rem; border-bottom: 1px solid var(--rule); }
+.memo-body { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.memo-side { padding: 1.4rem 1.2rem; border-right: 1px solid var(--rule); display: grid; gap: 1rem; align-content: start; }
+.memo-side .verdict-word { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: -.05em; line-height: 1; }
+.memo-main { padding: 1.4rem 1.2rem; display: grid; gap: 1.2rem; }
+.memo-main dt { font-weight: 700; font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; margin-bottom: .3rem; }
+.memo-main dd { color: var(--ink-2); }
+.memo-main dd + dt { margin-top: 1.2rem; }
+
+/* audience and fit */
+.aud { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.aud li { padding: 1.3rem 1.2rem 1.5rem 0; display: grid; gap: .5rem; align-content: start; }
+.aud li + li { border-left: 1px solid var(--rule); padding-left: 1.2rem; }
+.aud .sm { font-size: .93rem; color: var(--ink-2); }
+.fit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.4rem, 3vw, 3rem); margin-top: 3rem; }
+.why-list { border-top: 1px solid var(--rule); }
+.why-list li { padding: 1.1rem 0; border-bottom: 1px solid var(--rule-soft); }
+.why-list b { font-weight: 800; }
+.why-list span { color: var(--ink-2); }
+
+/* faq */
+.faq { border-top: 1px solid var(--rule); max-width: 52rem; }
+.faq details { border-bottom: 1px solid var(--rule); }
+.faq summary { list-style: none; cursor: pointer; padding: 1.15rem 0; display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-weight: 700; font-size: 1.4rem; line-height: 1; }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 0 1.3rem; color: var(--ink-2); max-width: 40em; }
+
+/* start */
+.steps { counter-reset: s; border-top: 1px solid var(--band-rule); }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 2.4rem 1fr; padding: .85rem 0; border-bottom: 1px solid var(--band-rule); font-weight: 700; }
+.steps li::before { content: "0" counter(s); font-size: .72rem; letter-spacing: .09em; padding-top: .3rem; font-variant-numeric: tabular-nums; }
+.steps li span { color: var(--band-2); font-weight: 600; display: block; }
+.scoper { display: grid; gap: 1.5rem; border-top: 1px solid var(--band-rule); padding-top: 1.6rem; }
+.scoper fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.scoper legend { padding: 0; margin-bottom: .7rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chips label { display: inline-block; border: 1px solid var(--band-rule); border-radius: 999px; padding: .5rem 1rem; font-weight: 700; font-size: .95rem; cursor: pointer; min-height: 40px; line-height: 1.4; }
+.chips label:hover { border-color: var(--band-ink); }
+.chips input:checked + label { background: var(--band-ink); color: var(--band); border-color: var(--band-ink); }
+.chips input:focus-visible + label { outline: 2px solid var(--band-ink); outline-offset: 3px; }
+.suggest { display: grid; gap: .8rem; border-top: 1px solid var(--band-rule); padding-top: 1.4rem; }
+.suggest ul { display: grid; gap: .5rem; }
+.suggest li { display: grid; grid-template-columns: 14px 1fr; gap: .7rem; color: var(--band-2); }
+.suggest li::before { content: ""; width: 7px; height: 7px; margin-top: .6rem; background: var(--signal); }
+.brief { width: 100%; min-height: 9.5rem; resize: vertical; background: transparent; border: 1px solid var(--band-rule); color: var(--band-ink); padding: .9rem 1rem; font-weight: 500; font-size: .95rem; line-height: 1.5; border-radius: 0; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem; }
+.mail .addr { font-weight: 800; font-size: 1.15rem; user-select: all; word-break: break-all; }
+.copy { background: transparent; border: 1px solid var(--band-ink); color: var(--band-ink); border-radius: 999px; padding: .5rem 1.1rem; font-weight: 700; cursor: pointer; min-height: 40px; min-width: 7.5rem; }
+.copy:hover { background: var(--signal); color: var(--on-signal); border-color: var(--signal); }
+
+footer.site-foot { padding-block: 2rem 3rem; border-top: 1px solid var(--rule); }
+.foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-weight: 700; font-size: .92rem; }
+
+@media (max-width: 920px) {
+  .hero-grid, .split, .fit { grid-template-columns: minmax(0, 1fr); }
+  .panel { grid-template-columns: minmax(0, 1fr); }
+  .memo-body { grid-template-columns: minmax(0, 1fr); }
+  .memo-side { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .phase-cols { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .facts, .aud { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts li:nth-child(3), .aud li:nth-child(3) { border-left: 0; padding-left: 0; }
+  .facts li:nth-child(n+3), .aud li:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tabs [role="tab"]:nth-child(3) { border-left: 0; padding-left: 0; }
+  .tabs [role="tab"]:nth-child(3)[aria-selected="true"] { padding-left: 1rem; }
+  .tabs [role="tab"]:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .phase-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .policy .row { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+</head>
+<body>
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="../" aria-label="prince + marshall, home">
+      <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z" fill="#c8ff2e"/></svg></span>
+      <span>prince + marshall</span>
+    </a>
+    <nav aria-label="Primary">
+      <a class="opt" href="#days">The 90 days</a>
+      <a class="opt" href="../#studio">Studio</a>
+      <a class="nav-cta" href="#start">Start a conversation</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <p class="label eyebrow"><span class="dot" aria-hidden="true"></span>Research Sprint · 90 days</p>
+          <h1><span>Know it’s right</span><span>before you build it.</span></h1>
+          <p class="lead">A 90-day research sprint from prince + marshall. Real users, real evidence and one clear decision, before you commit the build budget.</p>
+          <div class="cta-row">
+            <a class="pill" href="#start"><span>Start a conversation</span><span class="go" aria-hidden="true">→</span></a>
+            <a class="tlink" href="#days">See how the 90 days run ↓</a>
+          </div>
+        </div>
+        <figure class="ring-fig">
+          <div class="ring" aria-hidden="true">
+            <svg id="ringSvg" viewBox="0 0 400 400"></svg>
+            <div class="readout"><span class="label" id="rdLabel">Day</span><span class="n" id="rdN">1</span><span class="ph" id="rdPh">Frame</span></div>
+          </div>
+          <ol class="legend" id="legend" aria-label="The four phases of the sprint"></ol>
+        </figure>
+      </div>
+      <ul class="facts">
+        <li><span class="big">90 days</span><span class="sm">Fixed term and fixed scope.</span></li>
+        <li><span class="big">4 phases</span><span class="sm">Frame, field, synthesize, hand over.</span></li>
+        <li><span class="big">Weekly</span><span class="sm">Readouts while the work runs.</span></li>
+        <li><span class="big">1 decision</span><span class="sm">Go, change or stop, with the evidence.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band sect" id="number" style="margin-top: clamp(3rem, 7vw, 6rem);">
+    <div class="wrap split">
+      <div>
+        <p class="label"><span class="dot" aria-hidden="true"></span>The exposure</p>
+        <h2>Software gets funded on a guess.</h2>
+        <p class="lead">Most teams commit the budget, build, and find out afterward whether it worked. By then the price of being wrong is the whole build.</p>
+        <p class="prose">A research sprint moves the finding to the front, when changing course costs a few weeks of effort and not a few quarters. Set the sliders to your own situation and see what the sprint has to catch to pay for itself.</p>
+      </div>
+      <form class="calc" id="calc" aria-label="Sprint break-even calculator">
+        <div class="field">
+          <label for="budget">Build budget</label><output id="budgetOut" for="budget"></output>
+          <input type="range" id="budget" min="100000" max="5000000" step="50000" value="1000000">
+        </div>
+        <div class="field">
+          <label for="share">Share of scope that may miss what users need</label><output id="shareOut" for="share"></output>
+          <input type="range" id="share" min="5" max="50" step="1" value="20">
+          <span class="hint">Your estimate. Be as cautious or as bold as you like.</span>
+        </div>
+        <div class="field">
+          <label for="fee">Sprint fee as a share of the build</label><output id="feeOut" for="fee"></output>
+          <input type="range" id="fee" min="2" max="15" step="0.5" value="5">
+          <span class="hint">Illustrative. The real fee is fixed at scoping.</span>
+        </div>
+        <div class="results" aria-live="polite">
+          <div class="res-row">
+            <div class="res-top"><span class="label">Exposed to a miss</span><span class="v" id="exV"></span></div>
+            <div class="bar-track"><div class="bar-fill ex"></div></div>
+          </div>
+          <div class="res-row">
+            <div class="res-top"><span class="label">Sprint fee</span><span class="v" id="feeV"></span></div>
+            <div class="bar-track"><div class="bar-fill fee" id="feeBar"></div></div>
+          </div>
+          <p class="verdict" id="verdict"></p>
+          <p class="fine">Simple arithmetic on the numbers you choose. It is not a forecast, and no result is promised.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="sect" id="schedule">
+    <div class="wrap split">
+      <div>
+        <p class="label"><span class="dot" aria-hidden="true"></span>Insurance on the build</p>
+        <h2>Pay a small premium early. Protect the large sum later.</h2>
+        <p class="lead">You already insure what is expensive to lose. A research sprint does the same for a software budget.</p>
+        <p class="prose">The premium is fixed and paid up front. The coverage is the build you have not yet committed. The claim is a decision you can defend to a board, a funder or a procurement office.</p>
+      </div>
+      <div>
+        <dl class="policy" aria-label="Policy schedule">
+          <div class="row"><dt>Insured</dt><dd>Your build budget, and the decision to commit it.</dd></div>
+          <div class="row"><dt>Term</dt><dd>90 days. <span class="muted">Fixed start, fixed end.</span></dd></div>
+          <div class="row"><dt>Premium</dt><dd>A fixed fee. <span class="muted">Quoted in writing at scoping, with no hourly meter.</span></dd></div>
+          <div class="row"><dt>Coverage</dt><dd>Wrong problem, wrong audience, wrong design, wrong priority.</dd></div>
+          <div class="row"><dt>Evidence</dt><dd>Interviews, usability tests, survey data, field notes and recordings.</dd></div>
+          <div class="row claim"><dt>Claim</dt><dd>A Go, Change or Stop memo with the evidence attached.</dd></div>
+          <div class="row"><dt>Limits</dt><dd>No build work inside the sprint. <span class="muted">The sprint cannot make an idea right. It shows whether it is.</span></dd></div>
+        </dl>
+        <p class="note">A figure of speech. This is a research engagement and not an insurance product.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect" id="risks" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="head">
+        <p class="label"><span class="dot" aria-hidden="true"></span>What gets tested</p>
+        <h2>Four ways a build goes wrong.</h2>
+        <p class="lead">Each one is a risk you can test cheaply before the build starts. Pick one to see how.</p>
+      </div>
+      <div id="riskTabs" style="margin-top: 2.4rem;">
+        <div class="tabs" role="tablist" aria-label="Four build risks">
+          <button class="tab" role="tab" id="rt0" aria-controls="riskPanel" aria-selected="true"><span class="t">Wrong problem</span><span class="s">Solving what nobody struggles with</span></button>
+          <button class="tab" role="tab" id="rt1" aria-controls="riskPanel" aria-selected="false" tabindex="-1"><span class="t">Wrong audience</span><span class="s">Buyers and users disagree</span></button>
+          <button class="tab" role="tab" id="rt2" aria-controls="riskPanel" aria-selected="false" tabindex="-1"><span class="t">Wrong design</span><span class="s">Clear to the team, not to users</span></button>
+          <button class="tab" role="tab" id="rt3" aria-controls="riskPanel" aria-selected="false" tabindex="-1"><span class="t">Wrong priority</span><span class="s">Features ahead of the need</span></button>
+        </div>
+        <div class="panel" id="riskPanel" role="tabpanel" aria-labelledby="rt0"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect" id="days" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="head">
+        <p class="label"><span class="dot" aria-hidden="true"></span>The 90 days</p>
+        <h2>Four phases. One decision on day 90.</h2>
+        <p class="lead">Drag through the sprint, or pick a phase. Each one ends with something you can hold.</p>
+      </div>
+      <div style="margin-top: 2.6rem;">
+        <div class="track" id="track" aria-hidden="true"></div>
+        <div class="scrub">
+          <label class="label" for="day">Scrub the 90 days</label><output id="dayOut" for="day">Day 1</output>
+          <input type="range" id="day" min="1" max="90" step="1" value="1">
+        </div>
+        <div class="ticks" aria-hidden="true"><span>1</span><span>30</span><span>60</span><span>90</span></div>
+        <div id="phaseTabs">
+          <div class="phase-tabs" role="tablist" aria-label="Sprint phases">
+            <button role="tab" id="pt0" aria-controls="phasePanel" aria-selected="true">Frame</button>
+            <button role="tab" id="pt1" aria-controls="phasePanel" aria-selected="false" tabindex="-1">Field</button>
+            <button role="tab" id="pt2" aria-controls="phasePanel" aria-selected="false" tabindex="-1">Synthesize</button>
+            <button role="tab" id="pt3" aria-controls="phasePanel" aria-selected="false" tabindex="-1">Hand over</button>
+          </div>
+          <div class="phase" id="phasePanel" role="tabpanel" aria-labelledby="pt0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect" id="decision" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="head">
+        <p class="label"><span class="dot" aria-hidden="true"></span>The decision</p>
+        <h2>Every sprint ends in a call you can act on.</h2>
+        <p class="lead">Go, change or stop. All three are good outcomes, because all three are cheaper now than after the build.</p>
+      </div>
+      <div id="memoTabs" style="margin-top: 2.4rem;">
+        <div class="tabs" role="tablist" aria-label="Possible outcomes" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+          <button class="tab" role="tab" id="mt0" aria-controls="memoPanel" aria-selected="true"><span class="t">Go</span><span class="s">The evidence supports the plan</span></button>
+          <button class="tab" role="tab" id="mt1" aria-controls="memoPanel" aria-selected="false" tabindex="-1"><span class="t">Change</span><span class="s">The need is real, the plan misses it</span></button>
+          <button class="tab" role="tab" id="mt2" aria-controls="memoPanel" aria-selected="false" tabindex="-1"><span class="t">Stop</span><span class="s">The idea will not land</span></button>
+        </div>
+        <div class="memo" id="memoPanel" role="tabpanel" aria-labelledby="mt0"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect" id="fit" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="head">
+        <p class="label"><span class="dot" aria-hidden="true"></span>Who it is for</p>
+        <h2>For teams about to spend real money.</h2>
+      </div>
+      <ul class="aud" style="margin-top: 2.4rem;">
+        <li><span class="label">Civic and public sector</span><span class="sm">Programs that must show evidence of need to funders and oversight.</span></li>
+        <li><span class="label">Mid-market companies</span><span class="sm">Teams that need senior research without a permanent hire.</span></li>
+        <li><span class="label">Integrators and studios</span><span class="sm">Partners who want research depth behind their own client work.</span></li>
+        <li><span class="label">Collections and cultural groups</span><span class="sm">Organizations choosing tools to run what they hold, including with KURA.</span></li>
+      </ul>
+      <div class="fit">
+        <div>
+          <h3 class="list-title">A strong fit</h3>
+          <ul class="list">
+            <li>You are about to fund a build or a rebuild and want evidence first.</li>
+            <li>Several groups must agree, such as leadership, funders and users.</li>
+            <li>You are mid-build and suspect the backlog is wrong.</li>
+            <li>You want senior research depth without hiring for it.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="list-title">Probably not yet</h3>
+          <ul class="list">
+            <li>Nobody with authority can act on what the research finds.</li>
+            <li>The idea is small enough to build and test in a few weeks.</li>
+            <li>The decision is made and no result would change it.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect" id="why" style="padding-top: 0;">
+    <div class="wrap split">
+      <div>
+        <p class="label"><span class="dot" aria-hidden="true"></span>Why prince + marshall</p>
+        <h2>Research, design and build under one roof.</h2>
+        <p class="lead">We are a senior studio. We research, design and build enterprise tools, so the findings go somewhere.</p>
+      </div>
+      <ul class="why-list">
+        <li><b>A senior researcher runs it.</b> <span>The person who scopes the sprint is the person who does the work.</span></li>
+        <li><b>Research that reaches the build.</b> <span>Findings land in the backlog, the designs and the code, with no handoff loss.</span></li>
+        <li><b>Yours to take anywhere.</b> <span>The memo, backlog and playbook belong to you. Build with us or with anyone.</span></li>
+        <li><b>Your team can repeat it.</b> <span>The playbook and training let staff run the next round without us.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sect" id="faq" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="head">
+        <p class="label"><span class="dot" aria-hidden="true"></span>Questions</p>
+        <h2>The objections, answered.</h2>
+      </div>
+      <div class="faq" style="margin-top: 2.4rem;">
+        <details open><summary>We already know our users.</summary><p>Then the sprint confirms it quickly and gives you evidence to show funders and stakeholders. If something has changed, you learn that before the build and not after it.</p></details>
+        <details><summary>We work in sprints and learn as we ship.</summary><p>Shipping teaches you after the money is spent. The research sprint sharpens the bets your delivery sprints make, and it can run alongside them.</p></details>
+        <details><summary>We do not have 90 days.</summary><p>The sprint runs in parallel with planning and procurement, and weekly readouts put evidence in front of you from the first month. Ask on the scoping call whether a narrower scope fits.</p></details>
+        <details><summary>Why not hire a researcher?</summary><p>A permanent hire takes months to find and onboard, and one role cannot run fieldwork, synthesis and strategy at once. The sprint gives you senior depth now, a defined result and a playbook, without a long commitment.</p></details>
+        <details><summary>What do you need from us?</summary><p>A sponsor with authority to act, access to users or a way to reach them, and one point of contact for the weekly readouts. We handle the plan, recruiting support, fieldwork, analysis and the memo.</p></details>
+        <details><summary>What does it cost?</summary><p>A fixed fee, set at scoping from the number of user groups, the methods and the amount of recruiting involved. You get the figure in writing before anything starts.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="band sect" id="start">
+    <div class="wrap split">
+      <div>
+        <p class="label"><span class="dot" aria-hidden="true"></span>Start</p>
+        <h2>Every build deserves a decision first.</h2>
+        <p class="lead">Sketch your sprint on the right. It gives you a starting point and a short brief to send. Scope and fee are set on a call.</p>
+        <ol class="steps">
+          <li><div>Scoping call.<span>Thirty minutes on your decision and your users.</span></div></li>
+          <li><div>Written scope and fixed quote.<span>Before anything starts.</span></div></li>
+          <li><div>Kickoff.<span>Recruiting begins in week one.</span></div></li>
+          <li><div>Day 90.<span>The decision memo and a live readout.</span></div></li>
+        </ol>
+      </div>
+      <form class="scoper" id="scoper" aria-label="Sprint sketch">
+        <fieldset>
+          <legend class="label">What are you validating</legend>
+          <div class="chips">
+            <input type="radio" name="what" id="w0" value="product" checked><label for="w0">A new product</label>
+            <input type="radio" name="what" id="w1" value="redesign"><label for="w1">A redesign</label>
+            <input type="radio" name="what" id="w2" value="program"><label for="w2">A service or program</label>
+            <input type="radio" name="what" id="w3" value="internal"><label for="w3">A tool for staff</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Where it stands</legend>
+          <div class="chips">
+            <input type="radio" name="stage" id="s0" value="idea" checked><label for="s0">An idea</label>
+            <input type="radio" name="stage" id="s1" value="prototype"><label for="s1">A prototype</label>
+            <input type="radio" name="stage" id="s2" value="build"><label for="s2">In build</label>
+            <input type="radio" name="stage" id="s3" value="live"><label for="s3">Live</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Who needs the evidence</legend>
+          <div class="chips">
+            <input type="radio" name="who" id="a0" value="execs" checked><label for="a0">Executives</label>
+            <input type="radio" name="who" id="a1" value="board"><label for="a1">A board or funder</label>
+            <input type="radio" name="who" id="a2" value="procurement"><label for="a2">Procurement</label>
+            <input type="radio" name="who" id="a3" value="users"><label for="a3">The delivery team</label>
+          </div>
+        </fieldset>
+        <div class="suggest" aria-live="polite">
+          <span class="label">Suggested starting point</span>
+          <ul id="suggestList"></ul>
+          <label class="label" for="brief" style="margin-top: .6rem;">Brief to send</label>
+          <textarea class="brief" id="brief" readonly></textarea>
+          <div class="mail">
+            <button class="copy" type="button" id="copyBrief">Copy brief</button>
+            <span class="label">Send it to</span>
+            <span class="addr" id="addr">hello@princeandmarshall.com</span>
+            <button class="copy" type="button" id="copyAddr">Copy address</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot">
+    <a href="../">Back to prince + marshall →</a>
+    <span>© 2026 prince + marshall</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+
+  /* paper grain, generated once */
+  try {
+    var c = document.createElement('canvas'); c.width = c.height = 160;
+    var x = c.getContext('2d'); var d = x.createImageData(160, 160);
+    for (var i = 0; i < d.data.length; i += 4) { var v = (Math.random() * 255) | 0; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+    x.putImageData(d, 0, 0);
+    document.documentElement.style.setProperty('--grain', 'url(' + c.toDataURL('image/png') + ')');
+  } catch (e) {}
+
+  /* shared data */
+  var PHASES = [
+    { key: 'Frame', from: 1, to: 14,
+      line: 'Agree on the question before asking anyone.',
+      what: ['Interview sponsors to name the decision this research must inform.', 'Review existing analytics, support requests, prior studies and the current product.', 'Write the research plan and the criteria for a Go, Change or Stop call.', 'Recruit participants who match your real users.'],
+      get: ['Research plan.', 'Decision criteria, agreed in writing.', 'Participant roster with screening notes.'],
+      mile: 'Day 14', miletext: 'Plan and decision criteria signed off.' },
+    { key: 'Field', from: 15, to: 56,
+      line: 'Go where the work happens.',
+      what: ['Interview users, and the people who approve or fund the work.', 'Observe the work in context wherever possible.', 'Run moderated usability tests in rounds, on prototypes or the current product.', 'Field a survey to size what the interviews surface.'],
+      get: ['Weekly evidence notes and a readout.', 'Organized recordings and clips, with consent.', 'A running log of findings against your decision criteria.'],
+      mile: 'Day 56', miletext: 'Fieldwork closes. Typical plan: 12 to 20 interviews and three rounds of usability tests, set at scoping.' },
+    { key: 'Synthesize', from: 57, to: 77,
+      line: 'Turn evidence into ranked bets.',
+      what: ['Cluster observations into themes, with evidence counts.', 'Map the journey across steps, roles and touchpoints.', 'Build personas from observed behavior.', 'Score opportunities on user value and effort.'],
+      get: ['Journey maps.', 'Insight report with evidence behind every claim.', 'Ranked backlog.'],
+      mile: 'Day 77', miletext: 'Draft findings reviewed with your team.' },
+    { key: 'Hand over', from: 78, to: 90,
+      line: 'Leave with a decision and a way to repeat it.',
+      what: ['Present findings to decision-makers in a live readout.', 'Deliver the Go, Change or Stop memo.', 'Hand your team a roadmap and a research playbook.', 'Train staff to run the next round themselves.'],
+      get: ['Decision memo.', 'Roadmap for the first release.', 'Research playbook and templates.'],
+      mile: 'Day 90', miletext: 'Decision memo delivered.' }
+  ];
+  function phaseOf(day) { for (var i = 0; i < PHASES.length; i++) if (day >= PHASES[i].from && day <= PHASES[i].to) return i; return 3; }
+  function li(arr) { return arr.map(function (t) { return '<li><span>' + t + '</span></li>'; }).join(''); }
+
+  /* hero ring */
+  var svg = $('#ringSvg'), rdN = $('#rdN'), rdPh = $('#rdPh'), rdLabel = $('#rdLabel'), legend = $('#legend');
+  function pt(r, a) { var t = (a - 90) * Math.PI / 180; return [200 + r * Math.cos(t), 200 + r * Math.sin(t)]; }
+  function arcPath(r, a0, a1) { var p0 = pt(r, a0), p1 = pt(r, a1); return 'M' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + 'A' + r + ' ' + r + ' 0 ' + ((a1 - a0) > 180 ? 1 : 0) + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2); }
+  var html = '<circle class="base" cx="200" cy="200" r="168"/>';
+  for (var k = 0; k < 90; k++) { var major = k % 10 === 0; var a = k / 90 * 360; var p0 = pt(major ? 166 : 168, a), p1 = pt(major ? 182 : 174, a); html += '<line class="tick" style="opacity:' + (major ? .85 : .28) + '" x1="' + p0[0].toFixed(2) + '" y1="' + p0[1].toFixed(2) + '" x2="' + p1[0].toFixed(2) + '" y2="' + p1[1].toFixed(2) + '"/>'; }
+  PHASES.forEach(function (p, i) { html += '<path class="arc" data-i="' + i + '" d="' + arcPath(144, (p.from - 1) / 90 * 360 + 1.6, p.to / 90 * 360 - 1.6) + '"/>'; });
+  html += '<circle class="mark" id="ringMark" r="8" cx="200" cy="56"/>';
+  svg.innerHTML = html;
+  legend.innerHTML = PHASES.map(function (p, i) { return '<li data-i="' + i + '"><span>' + p.key + '</span><span class="rng">Days ' + p.from + ' to ' + p.to + '</span></li>'; }).join('');
+  var arcs = svg.querySelectorAll('.arc'), lis = legend.querySelectorAll('li'), mark = $('#ringMark');
+  function setRing(day) {
+    var pi = phaseOf(day), m = pt(144, (day - .5) / 90 * 360);
+    mark.setAttribute('cx', m[0].toFixed(2)); mark.setAttribute('cy', m[1].toFixed(2));
+    arcs.forEach(function (el, i) { el.classList.toggle('on', i === pi); });
+    lis.forEach(function (el, i) { el.classList.toggle('on', i === pi); });
+    rdN.textContent = day; rdPh.textContent = PHASES[pi].key; rdLabel.textContent = 'Day';
+  }
+  if (reduce) {
+    arcs.forEach(function (el) { el.classList.add('on'); }); lis.forEach(function (el) { el.classList.add('on'); });
+    mark.style.display = 'none'; rdN.textContent = '90'; rdLabel.textContent = 'Days'; rdPh.textContent = '1 decision';
+  } else {
+    var t0 = null, last = 0, vis = true, CYCLE = 15000;
+    setRing(1);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { vis = e[0].isIntersecting; }).observe($('.ring'));
+    (function frame(ts) {
+      if (t0 === null) t0 = ts;
+      if (vis) { var day = 1 + Math.floor(((ts - t0) % CYCLE) / CYCLE * 90); if (day !== last) { last = day; setRing(day); } }
+      requestAnimationFrame(frame);
+    })(performance.now());
+  }
+
+  /* generic tabs */
+  function tabs(rootSel, onSelect) {
+    var root = $(rootSel), list = $('[role=tablist]', root), ts = Array.prototype.slice.call(list.querySelectorAll('[role=tab]'));
+    function sel(i, focus) {
+      ts.forEach(function (t, j) { t.setAttribute('aria-selected', i === j ? 'true' : 'false'); t.tabIndex = i === j ? 0 : -1; });
+      onSelect(i); if (focus) ts[i].focus();
+    }
+    ts.forEach(function (t, i) {
+      t.addEventListener('click', function () { sel(i); });
+      t.addEventListener('keydown', function (e) {
+        var n = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (i + 1) % ts.length;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (i - 1 + ts.length) % ts.length;
+        else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = ts.length - 1;
+        if (n !== null) { e.preventDefault(); sel(n, true); }
+      });
+    });
+    return sel;
+  }
+
+  /* risks */
+  var RISKS = [
+    { q: 'You solve something users do not struggle with.', test: 'Interviews and observation with the people who do the work today, so the problem is seen in context and counted.', out: 'A problem statement backed by clips and notes, ranked by how often each issue appears.' },
+    { q: 'The people who approve it are not the people who use it.', test: 'Interviews across user and buyer roles, then a survey to size which needs matter to which group.', out: 'Personas built from evidence, and a map of who decides, who uses and who is affected.' },
+    { q: 'The flow makes sense to the team and confuses everyone else.', test: 'Moderated usability tests on prototypes or the current product, repeated in rounds.', out: 'Findings ranked by severity, with annotated recordings and recommended fixes.' },
+    { q: 'The first release carries features nobody asked for and misses the one they did.', test: 'Survey ranking and task analysis, then a backlog scored on user value and effort.', out: 'A prioritized backlog your team can start from on day 91.' }
+  ];
+  var riskPanel = $('#riskPanel');
+  tabs('#riskTabs', function (i) {
+    var r = RISKS[i];
+    riskPanel.setAttribute('aria-labelledby', 'rt' + i);
+    riskPanel.innerHTML = '<div class="col"><span class="label">The risk</span><p class="quote">' + r.q + '</p></div><div class="col"><span class="label">How the sprint tests it</span><p>' + r.test + '</p></div><div class="col"><span class="label">What you receive</span><p>' + r.out + '</p></div>';
+  })(0);
+
+  /* timeline */
+  var track = $('#track'), day = $('#day'), dayOut = $('#dayOut'), phasePanel = $('#phasePanel');
+  track.innerHTML = PHASES.map(function (p, i) { return '<span class="seg" style="--w:' + (p.to - p.from + 1) + '" data-i="' + i + '"></span>'; }).join('') + '<span class="needle" id="needle"></span>';
+  var segs = track.querySelectorAll('.seg'), needle = $('#needle'), curPhase = -1, selPhase;
+  function drawPhase(i) {
+    var p = PHASES[i];
+    phasePanel.setAttribute('aria-labelledby', 'pt' + i);
+    phasePanel.innerHTML = '<div class="phase-head"><span class="label">Days ' + p.from + ' to ' + p.to + ' · ' + (p.to - p.from + 1) + ' days</span><h3 style="font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.05;">' + p.line + '</h3></div>' +
+      '<div class="phase-cols"><div><p class="label list-title">What happens</p><ul class="list">' + li(p.what) + '</ul></div><div><p class="label list-title">What you receive</p><ul class="list get">' + li(p.get) + '</ul></div></div>' +
+      '<p class="milestone"><span class="label">' + p.mile + '</span><span>' + p.miletext + '</span></p>';
+  }
+  function setDay(d, fromSlider) {
+    d = Math.max(1, Math.min(90, d)); var pi = phaseOf(d);
+    day.value = d; dayOut.textContent = 'Day ' + d;
+    needle.style.left = ((d - .5) / 90 * 100) + '%';
+    segs.forEach(function (s, i) { s.classList.toggle('on', i === pi); s.classList.toggle('past', i < pi); });
+    if (pi !== curPhase) { curPhase = pi; drawPhase(pi); selPhase(pi, false, true); }
+  }
+  selPhase = (function () {
+    var base = tabs('#phaseTabs', function (i) { if (i !== curPhase) setDay(PHASES[i].from); });
+    return function (i) { var ts = document.querySelectorAll('#phaseTabs [role=tab]'); ts.forEach(function (t, j) { t.setAttribute('aria-selected', i === j ? 'true' : 'false'); t.tabIndex = i === j ? 0 : -1; }); };
+  })();
+  day.addEventListener('input', function () { setDay(+day.value); });
+  segs.forEach(function (s, i) { s.addEventListener('click', function () { setDay(PHASES[i].from); }); });
+  setDay(1);
+
+  /* calculator */
+  var fmt = function (n) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n); };
+  var bI = $('#budget'), sI = $('#share'), fI = $('#fee');
+  function calc() {
+    var b = +bI.value, s = +sI.value, f = +fI.value, ex = b * s / 100, fee = b * f / 100, be = fee / ex;
+    $('#budgetOut').textContent = fmt(b); $('#shareOut').textContent = s + '%'; $('#feeOut').textContent = f + '%';
+    $('#exV').textContent = fmt(ex); $('#feeV').textContent = fmt(fee);
+    $('#feeBar').style.width = Math.min(100, be * 100) + '%';
+    $('#verdict').textContent = be <= 1
+      ? 'The sprint pays for itself if it redirects ' + Math.max(1, Math.round(be * 100)) + '% of the exposure, which is ' + fmt(fee) + ' of ' + fmt(ex) + '.'
+      : 'At these settings the exposure is smaller than the fee. A sprint fits best where the build is large or the risk is high.';
+  }
+  [bI, sI, fI].forEach(function (el) { el.addEventListener('input', calc); });
+  $('#calc').addEventListener('submit', function (e) { e.preventDefault(); });
+  calc();
+
+  /* decision memos (examples) */
+  var MEMOS = [
+    { word: 'Go', proj: 'County permit status portal', why: 'Residents and clerks both named status checks as the most frequent reason for calls.',
+      found: 'Most applicants in interviews phoned the office to check status. Clerks confirmed the same calls take the largest share of counter time.',
+      change: 'Keep the plan. Reorder the backlog so status tracking ships first and applications second.', next: 'Fund the build. Start with the status view and the notification flow.' },
+    { word: 'Change', proj: 'Field crew work order app', why: 'The need is real, but the plan puts the effort in the wrong place.',
+      found: 'Crew leads said the hard part is closing out orders on site with weak signal, and the plan assumed steady connectivity. Tests failed at the close-out step in every round.',
+      change: 'Redirect scope to offline close-out. Move the dispatcher dashboard to a later release.', next: 'Revise the brief, then fund an offline-first first release.' },
+    { word: 'Stop', proj: 'Residents’ loyalty and rewards app', why: 'Residents did not want a separate app, and no group named it as a priority.',
+      found: 'Interviews and the survey ranked the app last among ten possible improvements. Participants said they would not install it.',
+      change: 'Do not build. Put the budget toward the two improvements residents ranked first.', next: 'Return the budget to the portfolio and scope the top-ranked improvement.' }
+  ];
+  var memoPanel = $('#memoPanel');
+  tabs('#memoTabs', function (i) {
+    var m = MEMOS[i];
+    memoPanel.setAttribute('aria-labelledby', 'mt' + i);
+    memoPanel.innerHTML = '<div class="memo-top"><span class="label">Decision memo · Example, not a client</span><span class="label">Day 90</span></div>' +
+      '<div class="memo-body"><div class="memo-side"><span class="label">Decision</span><span class="verdict-word">' + m.word + '.</span><p class="muted">' + m.why + '</p></div>' +
+      '<dl class="memo-main"><div><dt>Project</dt><dd>' + m.proj + '</dd></div><div><dt>What we found</dt><dd>' + m.found + '</dd></div><div><dt>What changes</dt><dd>' + m.change + '</dd></div><div><dt>Next step</dt><dd>' + m.next + '</dd></div></dl></div>';
+  })(0);
+
+  /* scoper */
+  var EMPH = {
+    product: ['Open with field interviews to confirm the problem is real and frequent.', 'Test concepts with clickable prototypes before any code.'],
+    redesign: ['Start with usability tests on what exists, to find where people struggle today.', 'Review analytics and support requests for patterns worth testing.'],
+    program: ['Map the journey across every touchpoint, including the offline steps.', 'Interview people on both sides of the service.'],
+    internal: ['Observe staff doing the work in place.', 'Test with the people who will be required to use it, not volunteers.']
+  };
+  var STAGE = {
+    idea: 'At idea stage the sprint weights discovery, with most field time on interviews and observation.',
+    prototype: 'With a prototype in hand, the sprint weights usability rounds and concept comparison.',
+    build: 'Mid-build, the sprint runs alongside delivery, and findings feed the backlog while the team keeps moving.',
+    live: 'On a live product, the sprint weights behavior data plus usability tests on the flows that underperform.'
+  };
+  var WHO = {
+    execs: 'The decision memo is written for a leadership readout, with the evidence behind each recommendation.',
+    board: 'Findings are packaged for a board or funder, in plain language with a clear ask.',
+    procurement: 'Documentation supports procurement and review, with sources and method notes.',
+    users: 'Findings include clips and quotes, so the delivery team hears users directly.'
+  };
+  var LBL = {
+    what: { product: 'a new product', redesign: 'a redesign', program: 'a service or program', internal: 'a tool for staff' },
+    stage: { idea: 'an idea', prototype: 'a prototype', build: 'in build', live: 'live' },
+    who: { execs: 'executives', board: 'a board or funder', procurement: 'procurement', users: 'the delivery team' }
+  };
+  var form = $('#scoper');
+  function val(n) { return form.querySelector('input[name=' + n + ']:checked').value; }
+  function scope() {
+    var w = val('what'), s = val('stage'), a = val('who');
+    $('#suggestList').innerHTML = EMPH[w].concat([STAGE[s], WHO[a]]).map(function (t) { return '<li><span>' + t + '</span></li>'; }).join('');
+    $('#brief').value = 'Hello prince + marshall,\n\nI would like to scope a 90-day research sprint.\n\nWe are validating: ' + LBL.what[w] + '\nWhere it stands: ' + LBL.stage[s] + '\nWho needs the evidence: ' + LBL.who[a] + '\nBuild budget and timing: [add]\n\nName and organization: [add]';
+  }
+  form.addEventListener('change', scope); form.addEventListener('submit', function (e) { e.preventDefault(); });
+  scope();
+  function copyText(text, btn) {
+    var label = btn.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = label; }, 1600); };
+    var fb = function () { var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) {} ta.remove(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fb); else fb();
+  }
+  $('#copyBrief').addEventListener('click', function () { copyText($('#brief').value, this); });
+  $('#copyAddr').addEventListener('click', function () { copyText($('#addr').textContent, this); });
+  $('#brief').addEventListener('focus', function () { this.select(); });
+})();
+</script>
+</body>
+</html>
