@@ -834,6 +834,7 @@ export const menu = {
     { label: 'p+m Systems', note: 'AI that does real work', href: 'systems/' },
     { label: 'KÜRA', note: 'Collection documentation service', href: 'kura/' },
     { label: 'The Ride-Along', note: 'For trades businesses', href: 'ride-along/' },
+    { label: 'Research Sprint', note: '90 days to a decision', href: 'research-sprint/' },
   ],
 }
 
