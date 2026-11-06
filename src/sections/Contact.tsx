@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { contact, site } from '../data/content'
 import RollText from '../components/RollText'
 import SectionHead from '../components/SectionHead'
@@ -19,7 +19,7 @@ type Status = 'idle' | 'sending' | 'sent' | 'mailto' | 'error'
 const fieldClass =
   'mt-2 block w-full min-h-[44px] border border-[#0a0a0a] bg-white px-3 py-2.5 text-base font-semibold text-[#0a0a0a] placeholder:text-[#0a0a0a]/70 rounded-none'
 
-export default function Contact({ defaultTopic }: { defaultTopic?: string } = {}) {
+export default function Contact({ defaultTopic, afterSent }: { defaultTopic?: string; afterSent?: ReactNode } = {}) {
   const f = contact.form
   const [status, setStatus] = useState<Status>('idle')
   const sideRef = useFadeItems<HTMLDivElement>()
@@ -158,6 +158,7 @@ export default function Contact({ defaultTopic }: { defaultTopic?: string } = {}
 
           <p id="form-status" role="status" aria-live="polite" className="type-label min-h-[1.25rem]">
             {status === 'sent' && f.success}
+            {status === 'sent' && afterSent && <span className="mt-2 block font-semibold text-[#0a0a0a]/80">{afterSent}</span>}
             {status === 'mailto' && (
               <>
                 {f.successMailto}{' '}

@@ -1063,6 +1063,16 @@ export const systems = {
   seeHow: 'See what you get back',
   topic: 'p+m Systems',
 
+  /** Links into the self-serve Leak Check at /systems/leak-check/. */
+  leakCheck: {
+    href: 'leak-check/',
+    calcLead: 'Want your real numbers, workflow by workflow?',
+    calcLink: 'Take the 15-minute Leak Check',
+    finalLink: 'Not ready for a call? Start with the Leak Check',
+    afterSent: 'While you wait, the 15-minute Leak Check gives us a head start on your call.',
+    afterSentLink: 'Take the Leak Check',
+  },
+
   pains: {
     eyebrow: 'Sound familiar?',
     items: [

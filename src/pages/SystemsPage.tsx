@@ -352,6 +352,12 @@ export default function SystemsPage() {
           <div className="mt-20">
             <SectionHead eyebrow={s.calc.eyebrow} heading={s.calc.heading} />
             <Calculator audience={audience} />
+            <p className={`${offset} mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t border-[#0a0a0a] pt-5`}>
+              <span className="text-lg font-bold">{s.leakCheck.calcLead}</span>
+              <a href={`${s.leakCheck.href}?for=${audience}`} data-page-link className="type-label inline-flex min-h-[44px] items-center underline underline-offset-4 hover:no-underline">
+                {s.leakCheck.calcLink} <span aria-hidden="true" className="ml-1">→</span>
+              </a>
+            </p>
           </div>
         </section>
 
@@ -497,9 +503,24 @@ export default function SystemsPage() {
             {s.final.heading}
           </h2>
           <p className="mt-6 max-w-2xl text-lg font-semibold text-white/80 md:text-xl">{s.final.sub}</p>
-          <div className="mt-10">{cta(true)}</div>
+          <div className="mt-10 flex flex-wrap items-center gap-5">
+            {cta(true)}
+            <a href={`${s.leakCheck.href}?for=${audience}`} data-page-link className="type-label inline-flex min-h-[44px] items-center text-white underline underline-offset-4 hover:no-underline">
+              {s.leakCheck.finalLink} <span aria-hidden="true" className="ml-1">→</span>
+            </a>
+          </div>
         </section>
-        <Contact defaultTopic={s.topic} />
+        <Contact
+          defaultTopic={s.topic}
+          afterSent={
+            <>
+              {s.leakCheck.afterSent}{' '}
+              <a href={`${s.leakCheck.href}?for=${audience}`} data-page-link className="underline underline-offset-4 hover:no-underline">
+                {s.leakCheck.afterSentLink} →
+              </a>
+            </>
+          }
+        />
       </main>
       <Footer link={s.footerHome} />
     </>

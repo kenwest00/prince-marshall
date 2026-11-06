@@ -29,6 +29,7 @@ export default defineConfig({
         rideAlong: path.resolve(__dirname, 'ride-along/index.html'),
         kura: path.resolve(__dirname, 'kura/index.html'),
         systems: path.resolve(__dirname, 'systems/index.html'),
+        leakCheck: path.resolve(__dirname, 'systems/leak-check/index.html'),
         ...(kuraSwitching.enabled ? { kuraSwitching: path.resolve(__dirname, 'kura/switching/index.html') } : {}),
       },
     },
